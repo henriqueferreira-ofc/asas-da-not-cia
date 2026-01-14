@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Calendar, TrendingUp, FileText } from "lucide-react";
 
 const upcomingEvents = [
@@ -8,16 +9,16 @@ const upcomingEvents = [
 ];
 
 const trendingNews = [
-  { id: 1, title: "FAB adquire novos caças de quinta geração", views: "12.5k" },
-  { id: 2, title: "Brasil assume liderança em operação multinacional", views: "8.2k" },
-  { id: 3, title: "Novo radar nacional entra em operação", views: "6.8k" },
-  { id: 4, title: "Acordo de cooperação com países do BRICS", views: "5.4k" },
+  { id: "fab-exercicio-defesa-aerea", title: "FAB adquire novos caças de quinta geração", views: "12.5k" },
+  { id: "brasil-comando-forca-paz", title: "Brasil assume liderança em operação multinacional", views: "8.2k" },
+  { id: "fab-sistema-radar", title: "Novo radar nacional entra em operação", views: "6.8k" },
+  { id: "cooperacao-brics-defesa", title: "Acordo de cooperação com países do BRICS", views: "5.4k" },
 ];
 
 const officialDocuments = [
-  { title: "Comunicado Oficial nº 001/2026", date: "10 Jan 2026" },
-  { title: "Nota à Imprensa - Janeiro/2026", date: "08 Jan 2026" },
-  { title: "Relatório Anual 2025", date: "02 Jan 2026" },
+  { id: "comunicado-001", title: "Comunicado Oficial nº 001/2026", date: "10 Jan 2026" },
+  { id: "nota-janeiro", title: "Nota à Imprensa - Janeiro/2026", date: "08 Jan 2026" },
+  { id: "relatorio-2025", title: "Relatório Anual 2025", date: "02 Jan 2026" },
 ];
 
 export function Sidebar() {
@@ -42,9 +43,12 @@ export function Sidebar() {
             </li>
           ))}
         </ul>
-        <a href="#" className="block mt-4 text-center text-sm text-link hover:text-primary font-medium transition-colors">
+        <Link 
+          to="/categoria/aafab" 
+          className="block mt-4 text-center text-sm text-link hover:text-primary font-medium transition-colors"
+        >
           Ver agenda completa
-        </a>
+        </Link>
       </div>
 
       {/* Trending */}
@@ -55,16 +59,21 @@ export function Sidebar() {
         </div>
         <ul className="space-y-4">
           {trendingNews.map((news, index) => (
-            <li key={news.id} className="flex items-start gap-3 group cursor-pointer">
-              <span className="text-2xl font-serif font-bold text-accent/60">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-              <div className="flex-1">
-                <p className="text-sm font-medium text-foreground group-hover:text-link transition-colors leading-snug">
-                  {news.title}
-                </p>
-                <span className="text-xs text-muted-foreground">{news.views} visualizações</span>
-              </div>
+            <li key={news.id}>
+              <Link 
+                to={`/noticia/${news.id}`}
+                className="flex items-start gap-3 group"
+              >
+                <span className="text-2xl font-serif font-bold text-accent/60">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-foreground group-hover:text-link transition-colors leading-snug">
+                    {news.title}
+                  </p>
+                  <span className="text-xs text-muted-foreground">{news.views} visualizações</span>
+                </div>
+              </Link>
             </li>
           ))}
         </ul>
@@ -77,8 +86,8 @@ export function Sidebar() {
           <h3 className="font-serif font-bold text-lg">Comunicados Oficiais</h3>
         </div>
         <ul className="space-y-3">
-          {officialDocuments.map((doc, index) => (
-            <li key={index} className="group cursor-pointer">
+          {officialDocuments.map((doc) => (
+            <li key={doc.id} className="group cursor-pointer">
               <p className="text-sm font-medium group-hover:text-accent transition-colors">
                 {doc.title}
               </p>
@@ -86,9 +95,12 @@ export function Sidebar() {
             </li>
           ))}
         </ul>
-        <a href="#" className="block mt-4 text-center text-sm text-accent hover:text-accent/80 font-medium transition-colors">
+        <Link 
+          to="/categoria/aafab" 
+          className="block mt-4 text-center text-sm text-accent hover:text-accent/80 font-medium transition-colors"
+        >
           Ver todos os comunicados
-        </a>
+        </Link>
       </div>
 
       {/* Associate CTA */}
@@ -99,9 +111,12 @@ export function Sidebar() {
         <p className="text-sm text-accent-foreground/80 mb-4">
           Junte-se a milhares de associados que apoiam a Força Aérea Brasileira
         </p>
-        <button className="w-full py-3 bg-primary text-primary-foreground rounded-lg font-semibold text-sm hover:bg-primary/90 transition-colors">
+        <Link 
+          to="/associe-se"
+          className="block w-full py-3 bg-primary text-primary-foreground rounded-lg font-semibold text-sm hover:bg-primary/90 transition-colors"
+        >
           Associe-se Agora
-        </button>
+        </Link>
       </div>
     </aside>
   );
