@@ -1,14 +1,15 @@
 import { useState } from "react";
-import { Menu, X, Search, ChevronDown } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Menu, X, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const categories = [
-  { name: "AAFAB", href: "#aafab" },
-  { name: "Política Nacional", href: "#politica" },
-  { name: "Internacional", href: "#internacional" },
-  { name: "Defesa", href: "#defesa" },
-  { name: "Força Aérea", href: "#fab" },
-  { name: "Opinião", href: "#opiniao" },
+  { name: "AAFAB", href: "/categoria/aafab" },
+  { name: "Política Nacional", href: "/categoria/politica" },
+  { name: "Internacional", href: "/categoria/internacional" },
+  { name: "Defesa", href: "/categoria/defesa" },
+  { name: "Força Aérea", href: "/categoria/fab" },
+  { name: "Opinião", href: "/categoria/opiniao" },
 ];
 
 export function Header() {
@@ -23,15 +24,15 @@ export function Header() {
             <span>Segunda-feira, 13 de Janeiro de 2026</span>
           </div>
           <div className="hidden md:flex items-center gap-4">
-            <a href="#" className="hover:text-primary-foreground transition-colors">
+            <Link to="/sobre" className="hover:text-primary-foreground transition-colors">
               Sobre a AAFAB
-            </a>
-            <a href="#" className="hover:text-primary-foreground transition-colors">
+            </Link>
+            <Link to="/contato" className="hover:text-primary-foreground transition-colors">
               Contato
-            </a>
-            <a href="#" className="hover:text-primary-foreground transition-colors">
+            </Link>
+            <Link to="/associe-se" className="hover:text-primary-foreground transition-colors">
               Associe-se
-            </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -40,7 +41,7 @@ export function Header() {
       <div className="container py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <a href="/" className="flex items-center gap-3">
+          <Link to="/" className="flex items-center gap-3">
             <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center">
               <span className="text-xl font-bold text-primary">A</span>
             </div>
@@ -52,7 +53,7 @@ export function Header() {
                 Amigos da Força Aérea Brasileira
               </p>
             </div>
-          </a>
+          </Link>
 
           {/* Search */}
           <div className="hidden lg:flex items-center bg-primary-foreground/10 rounded-lg px-4 py-2 w-72">
@@ -81,21 +82,21 @@ export function Header() {
         <div className="container">
           <ul className="flex items-center gap-1">
             <li>
-              <a
-                href="/"
+              <Link
+                to="/"
                 className="nav-link block px-4 py-3 text-sm font-semibold uppercase tracking-wide"
               >
                 Início
-              </a>
+              </Link>
             </li>
             {categories.map((category) => (
               <li key={category.name}>
-                <a
-                  href={category.href}
+                <Link
+                  to={category.href}
                   className="nav-link block px-4 py-3 text-sm font-semibold uppercase tracking-wide"
                 >
                   {category.name}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
@@ -116,34 +117,48 @@ export function Header() {
             </div>
             <ul className="space-y-1">
               <li>
-                <a
-                  href="/"
+                <Link
+                  to="/"
                   className="block px-4 py-3 text-primary-foreground font-medium rounded-lg hover:bg-primary-foreground/10 transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
                 >
                   Início
-                </a>
+                </Link>
               </li>
               {categories.map((category) => (
                 <li key={category.name}>
-                  <a
-                    href={category.href}
+                  <Link
+                    to={category.href}
                     className="block px-4 py-3 text-primary-foreground font-medium rounded-lg hover:bg-primary-foreground/10 transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
                   >
                     {category.name}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
             <div className="mt-4 pt-4 border-t border-primary-foreground/10 space-y-2">
-              <a href="#" className="block px-4 py-2 text-primary-foreground/80 text-sm">
+              <Link 
+                to="/sobre" 
+                className="block px-4 py-2 text-primary-foreground/80 text-sm"
+                onClick={() => setMobileMenuOpen(false)}
+              >
                 Sobre a AAFAB
-              </a>
-              <a href="#" className="block px-4 py-2 text-primary-foreground/80 text-sm">
+              </Link>
+              <Link 
+                to="/contato" 
+                className="block px-4 py-2 text-primary-foreground/80 text-sm"
+                onClick={() => setMobileMenuOpen(false)}
+              >
                 Contato
-              </a>
-              <a href="#" className="block px-4 py-2 text-primary-foreground/80 text-sm">
+              </Link>
+              <Link 
+                to="/associe-se" 
+                className="block px-4 py-2 text-primary-foreground/80 text-sm"
+                onClick={() => setMobileMenuOpen(false)}
+              >
                 Associe-se
-              </a>
+              </Link>
             </div>
           </div>
         </div>

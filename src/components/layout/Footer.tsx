@@ -1,25 +1,26 @@
+import { Link } from "react-router-dom";
 import { Facebook, Instagram, Twitter, Youtube, Mail, Phone, MapPin } from "lucide-react";
 
 const categories = [
-  "AAFAB Institucional",
-  "Política Brasileira",
-  "Política Internacional",
-  "Defesa Nacional",
-  "Força Aérea Brasileira",
-  "Geopolítica",
-  "Artigos e Análises",
-  "Opinião",
+  { name: "AAFAB Institucional", href: "/categoria/aafab" },
+  { name: "Política Brasileira", href: "/categoria/politica" },
+  { name: "Política Internacional", href: "/categoria/internacional" },
+  { name: "Defesa Nacional", href: "/categoria/defesa" },
+  { name: "Força Aérea Brasileira", href: "/categoria/fab" },
+  { name: "Geopolítica", href: "/categoria/internacional" },
+  { name: "Artigos e Análises", href: "/categoria/opiniao" },
+  { name: "Opinião", href: "/categoria/opiniao" },
 ];
 
 const links = [
-  "Sobre a AAFAB",
-  "Nossa Missão",
-  "Diretoria",
-  "Política Editorial",
-  "Código de Ética",
-  "Associe-se",
-  "Contato",
-  "Trabalhe Conosco",
+  { name: "Sobre a AAFAB", href: "/sobre" },
+  { name: "Nossa Missão", href: "/sobre" },
+  { name: "Diretoria", href: "/sobre" },
+  { name: "Política Editorial", href: "/sobre" },
+  { name: "Código de Ética", href: "/sobre" },
+  { name: "Associe-se", href: "/associe-se" },
+  { name: "Contato", href: "/contato" },
+  { name: "Trabalhe Conosco", href: "/contato" },
 ];
 
 export function Footer() {
@@ -30,7 +31,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* About */}
           <div>
-            <div className="flex items-center gap-3 mb-4">
+            <Link to="/" className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 bg-accent rounded-full flex items-center justify-center">
                 <span className="text-lg font-bold text-primary">A</span>
               </div>
@@ -38,7 +39,7 @@ export function Footer() {
                 <h3 className="font-serif font-bold text-lg">AAFAB</h3>
                 <p className="text-xs text-primary-foreground/70">Amigos da Força Aérea Brasileira</p>
               </div>
-            </div>
+            </Link>
             <p className="text-sm text-primary-foreground/80 leading-relaxed mb-4">
               Portal de notícias institucional dedicado à informação qualificada sobre defesa, 
               política e assuntos relacionados à Força Aérea Brasileira.
@@ -64,10 +65,13 @@ export function Footer() {
             <h4 className="font-serif font-bold text-lg mb-4">Categorias</h4>
             <ul className="space-y-2">
               {categories.map((category) => (
-                <li key={category}>
-                  <a href="#" className="text-sm text-primary-foreground/80 hover:text-primary-foreground transition-colors">
-                    {category}
-                  </a>
+                <li key={category.name}>
+                  <Link 
+                    to={category.href} 
+                    className="text-sm text-primary-foreground/80 hover:text-primary-foreground transition-colors"
+                  >
+                    {category.name}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -78,10 +82,13 @@ export function Footer() {
             <h4 className="font-serif font-bold text-lg mb-4">Institucional</h4>
             <ul className="space-y-2">
               {links.map((link) => (
-                <li key={link}>
-                  <a href="#" className="text-sm text-primary-foreground/80 hover:text-primary-foreground transition-colors">
-                    {link}
-                  </a>
+                <li key={link.name}>
+                  <Link 
+                    to={link.href} 
+                    className="text-sm text-primary-foreground/80 hover:text-primary-foreground transition-colors"
+                  >
+                    {link.name}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -138,15 +145,15 @@ export function Footer() {
               © 2026 AAFAB - Amigos da Força Aérea Brasileira. Todos os direitos reservados.
             </p>
             <div className="flex items-center gap-4">
-              <a href="#" className="hover:text-primary-foreground transition-colors">
+              <Link to="/sobre" className="hover:text-primary-foreground transition-colors">
                 Política de Privacidade
-              </a>
-              <a href="#" className="hover:text-primary-foreground transition-colors">
+              </Link>
+              <Link to="/sobre" className="hover:text-primary-foreground transition-colors">
                 Termos de Uso
-              </a>
-              <a href="#" className="hover:text-primary-foreground transition-colors">
+              </Link>
+              <Link to="/sobre" className="hover:text-primary-foreground transition-colors">
                 Aviso Legal
-              </a>
+              </Link>
             </div>
           </div>
         </div>
