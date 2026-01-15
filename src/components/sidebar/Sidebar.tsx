@@ -116,21 +116,21 @@ export function Sidebar() {
         </Link>
       </div>
 
-      {/* Associate CTA */}
+      {/* Help CTA */}
       <div className="bg-gradient-to-br from-accent via-accent to-accent/80 rounded-xl p-6 text-center shadow-lg relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzRjMC0yLjIgMS44LTQgNC00czQgMS44IDQgNC0xLjggNC00IDQtNC0xLjgtNC00eiIvPjwvZz48L2c+PC9zdmc+')] opacity-30"></div>
         <div className="relative">
           <h3 className="font-serif font-bold text-xl text-accent-foreground mb-2">
-            Faça Parte da AAFAB
+            Ajude a AAFAB
           </h3>
           <p className="text-sm text-accent-foreground/80 mb-5 leading-relaxed">
-            Junte-se a milhares de associados que apoiam a Força Aérea Brasileira
+            Contribua com nossa missão e fortaleça a Força Aérea Brasileira
           </p>
           <Link 
-            to="/associe-se"
+            to="/ajude-nos"
             className="block w-full py-3 bg-primary text-primary-foreground rounded-lg font-bold text-sm hover:bg-primary/90 transition-all hover:shadow-lg active:scale-[0.98]"
           >
-            Associe-se Agora
+            Ajude-nos Agora
           </Link>
         </div>
       </div>
