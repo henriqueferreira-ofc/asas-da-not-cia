@@ -122,11 +122,11 @@
   }
 
   .news-card:hover {
-    @apply shadow-md -translate-y-0.5;
+    @apply shadow-lg -translate-y-1 border-accent/30;
   }
 
   .category-badge {
-    @apply inline-block px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded;
+    @apply inline-block px-3 py-1.5 text-xs font-bold uppercase tracking-wider rounded-sm shadow-sm;
   }
 
   .category-politics {
@@ -149,20 +149,24 @@
     @apply bg-orange-500 text-white;
   }
 
+  .category-fab {
+    @apply bg-sky-600 text-white;
+  }
+
   .highlight-bar {
     @apply h-1 bg-accent;
   }
 
   .section-title {
-    @apply text-xl font-bold text-headline border-l-4 border-accent pl-4 mb-6;
+    @apply text-xl md:text-2xl font-bold text-headline border-l-4 border-accent pl-4 mb-6 py-1;
   }
 
   .article-meta {
-    @apply text-sm text-muted-foreground flex items-center gap-2;
+    @apply text-sm text-muted-foreground flex items-center gap-2 flex-wrap;
   }
 
   .nav-link {
-    @apply text-primary-foreground/90 hover:text-primary-foreground font-medium transition-colors relative;
+    @apply text-primary-foreground/90 hover:text-primary-foreground font-semibold transition-colors relative;
   }
 
   .nav-link::after {
@@ -175,7 +179,28 @@
   }
 
   .breaking-news {
-    @apply bg-red-600 text-white px-3 py-1 text-xs font-bold uppercase animate-pulse;
+    @apply bg-red-600 text-white px-4 py-1.5 text-xs font-bold uppercase tracking-wide;
+  }
+
+  /* Professional card hover states */
+  .card-hover-effect {
+    @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+  }
+
+  /* Smooth animations */
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }
 

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Clock, User } from "lucide-react";
+import { Clock, User, ArrowRight } from "lucide-react";
 
 export type NewsCategory = "aafab" | "politics" | "international" | "defense" | "opinion" | "fab";
 
@@ -21,7 +21,7 @@ const categoryStyles: Record<NewsCategory, string> = {
   international: "category-international",
   defense: "category-defense",
   opinion: "category-opinion",
-  fab: "category-aafab",
+  fab: "category-fab",
 };
 
 export function NewsCard({
@@ -39,36 +39,52 @@ export function NewsCard({
   const isSmall = size === "small";
 
   return (
-    <Link to={`/noticia/${id}`}>
+    <Link to={`/noticia/${id}`} className="block h-full">
       <article className="news-card group cursor-pointer h-full flex flex-col">
-        <div className={`relative overflow-hidden ${isLarge ? "h-64 md:h-80" : isSmall ? "h-32" : "h-48"}`}>
+        <div className={`relative overflow-hidden ${isLarge ? "h-56 md:h-72" : isSmall ? "h-36" : "h-44 md:h-52"}`}>
           <img
             src={image}
             alt={title}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            loading="lazy"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-          <span className={`category-badge ${categoryStyles[category]} absolute top-3 left-3`}>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
+          <span className={`category-badge ${categoryStyles[category]} absolute top-3 left-3 shadow-lg`}>
             {categoryLabel}
           </span>
+          
+          {/* Hover indicator */}
+          <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+            <span className="flex items-center gap-1 bg-accent text-accent-foreground px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg">
+              Ler mais
+              <ArrowRight className="w-3 h-3" />
+            </span>
+          </div>
         </div>
-        <div className={`p-4 flex-1 flex flex-col ${isSmall ? "p-3" : ""}`}>
-          <h3 className={`font-serif font-bold text-headline leading-tight mb-2 group-hover:text-link transition-colors ${
-            isLarge ? "text-xl md:text-2xl" : isSmall ? "text-sm" : "text-lg"
+        
+        <div className={`flex-1 flex flex-col ${isSmall ? "p-3" : "p-4 md:p-5"}`}>
+          <h3 className={`font-serif font-bold text-headline leading-snug mb-2 group-hover:text-link transition-colors line-clamp-2 ${
+            isLarge ? "text-lg md:text-xl" : isSmall ? "text-sm" : "text-base md:text-lg"
           }`}>
             {title}
           </h3>
+          
           {!isSmall && (
             <p className="text-muted-foreground text-sm leading-relaxed mb-3 line-clamp-2 flex-1">
               {excerpt}
             </p>
           )}
-          <div className={`article-meta mt-auto ${isSmall ? "text-xs" : ""}`}>
-            <User className="w-3 h-3" />
-            <span>{author}</span>
-            <span className="text-muted-foreground/50">•</span>
-            <Clock className="w-3 h-3" />
-            <span>{date}</span>
+          
+          <div className={`article-meta mt-auto pt-3 border-t border-border/50 ${isSmall ? "text-xs pt-2" : ""}`}>
+            <div className="flex items-center gap-1.5">
+              <User className="w-3.5 h-3.5 text-muted-foreground" />
+              <span className="font-medium text-foreground/80">{author}</span>
+            </div>
+            <span className="text-muted-foreground/40">•</span>
+            <div className="flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5 text-muted-foreground" />
+              <span>{date}</span>
+            </div>
           </div>
         </div>
       </article>
