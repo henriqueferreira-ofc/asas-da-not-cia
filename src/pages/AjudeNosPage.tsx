@@ -123,7 +123,7 @@ const AjudeNosPage = () => {
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Sua contribuição fortalece nossa missão de informar, educar e apoiar 
-              a Força Aérea Brasileira e seus admiradores.
+              a AAFAB e seus admiradores.
             </p>
           </div>
 
@@ -238,9 +238,9 @@ const AjudeNosPage = () => {
                 <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-4">
                   <Heart className="w-6 h-6 text-accent" />
                 </div>
-                <h3 className="font-bold text-headline mb-2">Apoio à FAB</h3>
+                <h3 className="font-bold text-headline mb-2">Apoio à AAFAB</h3>
                 <p className="text-sm text-muted-foreground">
-                  Iniciativas de valorização e apoio à Força Aérea Brasileira e seus membros
+                  Iniciativas de valorização e apoio à Associação Amigos da Força Aérea Brasileira
                 </p>
               </div>
               <div className="bg-card rounded-xl border border-border p-6">

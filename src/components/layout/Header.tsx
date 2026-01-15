@@ -57,7 +57,7 @@ export function Header() {
             <img 
               src={logoAafab} 
               alt="AAFAB - Amigos da Força Aérea Brasileira" 
-              className="w-14 h-14 md:w-16 md:h-16 object-contain"
+              className="w-14 h-14 md:w-16 md:h-16 object-contain bg-white rounded-lg p-1"
             />
             <div className="hidden sm:block">
               <h1 className="text-xl md:text-2xl font-serif font-bold text-primary-foreground tracking-tight leading-tight">
