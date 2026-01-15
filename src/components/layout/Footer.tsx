@@ -11,6 +11,7 @@ const links = [
   { name: "Contato", href: "/contato" },
 ];
 
+// Newsletter form component
 function NewsletterForm() {
   const [email, setEmail] = useState("");
 
