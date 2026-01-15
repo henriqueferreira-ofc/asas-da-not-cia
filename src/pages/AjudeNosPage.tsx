@@ -47,36 +47,53 @@ const ebooks = [
 ];
 
 const donationValues = [
-  { value: "19,90", label: "R$ 19,90" },
-  { value: "29,90", label: "R$ 29,90" },
-  { value: "49,90", label: "R$ 49,90" },
+  { 
+    value: "19,90", 
+    label: "R$ 19,90",
+    pixCode: "00020126360014BR.GOV.BCB.PIX0114+5561983021315520400005303986540519.905802BR5925Henrique Cesar Araujo Fer6009SAO PAULO62140510KVtdFiyJbU63042255"
+  },
+  { 
+    value: "29,90", 
+    label: "R$ 29,90",
+    pixCode: "00020126360014BR.GOV.BCB.PIX0114+5561983021315520400005303986540529.905802BR5925Henrique Cesar Araujo Fer6009SAO PAULO62140510KtJcU9ctRT63048B2D"
+  },
+  { 
+    value: "49,90", 
+    label: "R$ 49,90",
+    pixCode: "00020126360014BR.GOV.BCB.PIX0114+5561983021315520400005303986540549.905802BR5925Henrique Cesar Araujo Fer6009SAO PAULO62140510KUuE78YEUt6304707A"
+  },
 ];
 
 const AjudeNosPage = () => {
   const [pixModalOpen, setPixModalOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState("");
   const [selectedItem, setSelectedItem] = useState("");
+  const [selectedPixCode, setSelectedPixCode] = useState("");
   const [copied, setCopied] = useState(false);
 
-  const pixKey = "contato@aafab.org.br";
-  const pixBeneficiary = "AAFAB - Amigos da Força Aérea Brasileira";
+  const pixBeneficiary = "Henrique Cesar Araujo Fer";
 
-  const handleDonation = (value: string) => {
+  const handleDonation = (value: string, pixCode: string) => {
     setSelectedValue(value);
     setSelectedItem("Doação");
+    setSelectedPixCode(pixCode);
     setPixModalOpen(true);
   };
 
   const handleEbookPurchase = (title: string, price: string) => {
     setSelectedValue(price);
     setSelectedItem(title);
+    // Para e-books, usar o código PIX de R$ 29,90 como padrão (pode ajustar depois)
+    setSelectedPixCode("");
     setPixModalOpen(true);
   };
 
-  const copyPixKey = async () => {
-    await navigator.clipboard.writeText(pixKey);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const copyPixCode = async () => {
+    if (selectedPixCode) {
+      await navigator.clipboard.writeText(selectedPixCode);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
   return (
@@ -186,7 +203,7 @@ const AjudeNosPage = () => {
                 {donationValues.map((donation) => (
                   <button
                     key={donation.value}
-                    onClick={() => handleDonation(donation.value)}
+                    onClick={() => handleDonation(donation.value, donation.pixCode)}
                     className="group relative px-8 py-4 bg-card border-2 border-accent/30 rounded-xl hover:border-accent hover:bg-accent/5 transition-all hover:shadow-lg hover:-translate-y-1"
                   >
                     <span className="text-2xl font-bold text-headline group-hover:text-accent transition-colors">
@@ -256,47 +273,54 @@ const AjudeNosPage = () => {
               <p className="text-3xl font-bold text-headline">R$ {selectedValue}</p>
             </div>
 
-            {/* QR Code Placeholder */}
-            <div className="flex flex-col items-center gap-4">
-              <div className="w-48 h-48 bg-secondary rounded-xl flex items-center justify-center border-2 border-dashed border-border">
-                <div className="text-center">
-                  <QrCode className="w-16 h-16 text-muted-foreground mx-auto mb-2" />
-                  <p className="text-xs text-muted-foreground">QR Code PIX</p>
+            {/* PIX Copia e Cola */}
+            {selectedPixCode ? (
+              <div className="space-y-4">
+                <div className="flex items-center justify-center gap-2 text-green-600">
+                  <Check className="w-5 h-5" />
+                  <p className="text-sm font-medium">PIX Copia e Cola pronto!</p>
+                </div>
+                
+                <div className="space-y-2">
+                  <p className="text-xs text-muted-foreground uppercase tracking-wide">Código PIX</p>
+                  <div className="bg-secondary rounded-lg p-3">
+                    <p className="text-xs font-mono text-foreground break-all mb-3 max-h-20 overflow-y-auto">
+                      {selectedPixCode}
+                    </p>
+                    <Button
+                      variant="default"
+                      size="sm"
+                      onClick={copyPixCode}
+                      className="w-full gap-2"
+                    >
+                      {copied ? (
+                        <>
+                          <Check className="w-4 h-4" />
+                          Código Copiado!
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-4 h-4" />
+                          Copiar Código PIX
+                        </>
+                      )}
+                    </Button>
+                  </div>
                 </div>
               </div>
-              
-              <p className="text-sm text-muted-foreground">
-                Escaneie o QR Code ou copie a chave abaixo
-              </p>
-            </div>
-
-            {/* PIX Key */}
-            <div className="space-y-2">
-              <p className="text-xs text-muted-foreground uppercase tracking-wide">Chave PIX (E-mail)</p>
-              <div className="flex items-center gap-2 bg-secondary rounded-lg p-3">
-                <span className="flex-1 text-sm font-mono text-foreground truncate">
-                  {pixKey}
-                </span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={copyPixKey}
-                  className="shrink-0 gap-2"
-                >
-                  {copied ? (
-                    <>
-                      <Check className="w-4 h-4 text-green-600" />
-                      Copiado!
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-4 h-4" />
-                      Copiar
-                    </>
-                  )}
-                </Button>
+            ) : (
+              <div className="flex flex-col items-center gap-4">
+                <div className="w-48 h-48 bg-secondary rounded-xl flex items-center justify-center border-2 border-dashed border-border">
+                  <div className="text-center">
+                    <QrCode className="w-16 h-16 text-muted-foreground mx-auto mb-2" />
+                    <p className="text-xs text-muted-foreground">Entre em contato para PIX</p>
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Para E-Books, entre em contato conosco
+                </p>
               </div>
-            </div>
+            )}
 
             {/* Beneficiary */}
             <div className="text-sm text-muted-foreground">
