@@ -16,7 +16,7 @@ const links = [
   { name: "Nossa Missão", href: "/sobre" },
   { name: "Diretoria", href: "/sobre" },
   { name: "Política Editorial", href: "/sobre" },
-  { name: "Associe-se", href: "/associe-se" },
+  { name: "Ajude-nos", href: "/ajude-nos" },
   { name: "Contato", href: "/contato" },
 ];
 

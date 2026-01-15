@@ -40,10 +40,10 @@ export function Header() {
               Contato
             </Link>
             <Link 
-              to="/associe-se" 
+              to="/ajude-nos" 
               className="bg-accent text-accent-foreground px-4 py-1 rounded font-semibold hover:bg-accent/90 transition-colors"
             >
-              Associe-se
+              Ajude-nos
             </Link>
           </div>
         </div>
@@ -183,11 +183,11 @@ export function Header() {
                 Contato
               </Link>
               <Link 
-                to="/associe-se" 
+                to="/ajude-nos" 
                 className="block mx-4 mt-2 py-3 bg-accent text-accent-foreground text-center rounded-lg font-semibold hover:bg-accent/90 transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Associe-se
+                Ajude-nos
               </Link>
             </div>
           </div>
