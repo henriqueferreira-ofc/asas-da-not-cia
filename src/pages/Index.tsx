@@ -6,6 +6,7 @@ import { BreakingNews } from "@/components/news/BreakingNews";
 import { NewsSection } from "@/components/news/NewsSection";
 import { NewsCard } from "@/components/news/NewsCard";
 import { Sidebar } from "@/components/sidebar/Sidebar";
+import { ArrowRight, BookOpen } from "lucide-react";
 
 import heroImage from "@/assets/hero-fab.jpg";
 import ceremonyImage from "@/assets/news-ceremony.jpg";
@@ -117,7 +118,7 @@ const opinionNews = [
   {
     id: "analise-brasil-seguranca-hemisferica",
     title: "Análise: O papel estratégico do Brasil na segurança hemisférica",
-    excerpt: "Especialistas avaliam posicionamento brasileiro em cenário geopolítico marcado por novas tensões globais.",
+    excerpt: "Especialistas avaliam posicionamento brasileiro em cenário geopolítico marcado por novas tensões globais e oportunidades de cooperação regional.",
     image: internationalImage,
     category: "opinion" as const,
     categoryLabel: "Opinião",
@@ -132,9 +133,9 @@ const Index = () => {
       <Header />
       <BreakingNews />
       
-      <main className="container py-8">
+      <main className="container py-8 md:py-10">
         {/* Featured News */}
-        <section className="mb-10">
+        <section className="mb-10 md:mb-12">
           <FeaturedNews
             id="fab-exercicio-defesa-aerea"
             title="FAB realiza maior exercício de defesa aérea da história do Brasil"
@@ -146,7 +147,7 @@ const Index = () => {
           />
         </section>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
           {/* Main Content */}
           <div className="lg:col-span-2">
             {/* Latest News */}
@@ -172,26 +173,41 @@ const Index = () => {
 
             {/* Opinion Section */}
             <section className="mb-10">
-              <h2 className="section-title">Artigos e Análises</h2>
+              <div className="flex items-center justify-between mb-6 gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="hidden sm:flex w-10 h-10 rounded-lg bg-orange-500/10 items-center justify-center">
+                    <BookOpen className="w-5 h-5 text-orange-500" />
+                  </div>
+                  <h2 className="section-title !mb-0">Artigos e Análises</h2>
+                </div>
+                <Link 
+                  to="/categoria/opiniao" 
+                  className="flex items-center gap-2 text-link hover:text-primary font-semibold text-sm transition-colors group shrink-0 bg-secondary/50 hover:bg-secondary px-4 py-2 rounded-full"
+                >
+                  Ver todas
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </div>
               <div className="grid grid-cols-1 gap-6">
                 {opinionNews.map((news) => (
                   <Link key={news.id} to={`/noticia/${news.id}`}>
                     <article className="news-card flex flex-col md:flex-row overflow-hidden group cursor-pointer">
-                      <div className="md:w-1/3 h-48 md:h-auto relative overflow-hidden">
+                      <div className="md:w-2/5 h-52 md:h-auto relative overflow-hidden">
                         <img
                           src={news.image}
                           alt={news.title}
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                         />
-                        <span className="category-badge category-opinion absolute top-3 left-3">
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent md:bg-gradient-to-r" />
+                        <span className="category-badge category-opinion absolute top-4 left-4 shadow-lg">
                           {news.categoryLabel}
                         </span>
                       </div>
-                      <div className="flex-1 p-6">
-                        <h3 className="font-serif text-xl font-bold text-headline mb-3 group-hover:text-link transition-colors">
+                      <div className="flex-1 p-5 md:p-6 flex flex-col justify-center">
+                        <h3 className="font-serif text-lg md:text-xl font-bold text-headline mb-3 group-hover:text-link transition-colors leading-snug">
                           {news.title}
                         </h3>
-                        <p className="text-muted-foreground leading-relaxed mb-4">
+                        <p className="text-muted-foreground leading-relaxed mb-4 text-sm md:text-base line-clamp-2">
                           {news.excerpt}
                         </p>
                         <div className="article-meta">
@@ -209,7 +225,9 @@ const Index = () => {
 
           {/* Sidebar */}
           <div className="lg:col-span-1">
-            <Sidebar />
+            <div className="lg:sticky lg:top-[140px]">
+              <Sidebar />
+            </div>
           </div>
         </div>
       </main>
