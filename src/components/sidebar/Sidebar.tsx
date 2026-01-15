@@ -124,7 +124,7 @@ export function Sidebar() {
             Ajude a AAFAB
           </h3>
           <p className="text-sm text-accent-foreground/80 mb-5 leading-relaxed">
-            Contribua com nossa missão e fortaleça a Força Aérea Brasileira
+            Contribua com nossa missão e fortaleça a AAFAB (Associação Amigos da Força Aérea Brasileira)
           </p>
           <Link 
             to="/ajude-nos"

@@ -56,7 +56,7 @@ export function Footer() {
       <div className="border-b border-primary-foreground/10">
         <div className="container py-8">
           <div className="max-w-2xl mx-auto text-center">
-            <h3 className="font-serif font-bold text-2xl mb-2">Fique por dentro das notícias</h3>
+            <h3 className="font-serif font-bold text-2xl mb-2 text-white">Fique por dentro das notícias</h3>
             <p className="text-primary-foreground/70 mb-6">
               Receba as principais informações da AAFAB sobre o processo Internacional, diretamente em seu e-mail
             </p>
@@ -74,10 +74,10 @@ export function Footer() {
               <img 
                 src={logoAafab} 
                 alt="AAFAB" 
-                className="w-14 h-14 object-contain bg-white rounded-lg p-1"
+                className="w-14 h-14 object-contain bg-white rounded-full p-1"
               />
               <div>
-                <h3 className="font-serif font-bold text-lg leading-tight">AAFAB</h3>
+                <h3 className="font-serif font-bold text-lg leading-tight text-white">AAFAB</h3>
                 <p className="text-xs text-primary-foreground/70 leading-tight">
                   Amigos da Força Aérea Brasileira
                 </p>
@@ -122,7 +122,7 @@ export function Footer() {
 
           {/* Links */}
           <div>
-            <h4 className="font-serif font-bold text-lg mb-4 pb-2 border-b border-primary-foreground/20">
+            <h4 className="font-serif font-bold text-lg mb-4 pb-2 border-b border-primary-foreground/20 text-white">
               Institucional
             </h4>
             <ul className="space-y-2.5">
@@ -142,7 +142,7 @@ export function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="font-serif font-bold text-lg mb-4 pb-2 border-b border-primary-foreground/20">
+            <h4 className="font-serif font-bold text-lg mb-4 pb-2 border-b border-primary-foreground/20 text-white">
               Contato
             </h4>
             <ul className="space-y-4">
