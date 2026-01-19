@@ -199,8 +199,8 @@ export function Footer() {
                 Termos de Uso
               </Link>
               <span className="text-primary-foreground/30">|</span>
-              <Link to="/sobre" className="hover:text-primary-foreground transition-colors">
-                Aviso Legal
+              <Link to="/admin/login" className="hover:text-primary-foreground transition-colors">
+                Admin
               </Link>
             </div>
           </div>
