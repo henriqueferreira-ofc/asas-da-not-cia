@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Facebook, Instagram, Twitter, Youtube, Mail, Phone, MapPin, Send } from "lucide-react";
 import logoAafab from "@/assets/logo-aafab.png";
-
+import { AdminLoginModal } from "@/components/admin/AdminLoginModal";
 const links = [
   { name: "Sobre a AAFAB", href: "/sobre" },
   { name: "Nossa Missão", href: "/sobre#missao" },
@@ -50,7 +50,10 @@ function NewsletterForm() {
 }
 
 export function Footer() {
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
+
   return (
+    <>
     <footer className="bg-primary text-primary-foreground">
       {/* Newsletter Section */}
       <div className="border-b border-primary-foreground/10">
@@ -199,13 +202,19 @@ export function Footer() {
                 Termos de Uso
               </Link>
               <span className="text-primary-foreground/30">|</span>
-              <Link to="/admin/login" className="hover:text-primary-foreground transition-colors">
+              <button 
+                onClick={() => setLoginModalOpen(true)}
+                className="hover:text-primary-foreground transition-colors"
+              >
                 Admin
-              </Link>
+              </button>
             </div>
           </div>
         </div>
       </div>
     </footer>
+    
+    <AdminLoginModal open={loginModalOpen} onOpenChange={setLoginModalOpen} />
+    </>
   );
 }
