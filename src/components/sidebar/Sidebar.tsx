@@ -1,12 +1,8 @@
 import { Link } from "react-router-dom";
-import { Calendar, TrendingUp, FileText, ChevronRight, Flame } from "lucide-react";
-
-const upcomingEvents = [
-  { date: "15 Jan", title: "Assembleia Geral AAFAB" },
-  { date: "22 Jan", title: "Cerimônia Dia do Aviador" },
-  { date: "28 Jan", title: "Seminário de Defesa Aérea" },
-  { date: "05 Fev", title: "Encontro Nacional de Associados" },
-];
+import { Calendar, TrendingUp, FileText, ChevronRight, Flame, Loader2 } from "lucide-react";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { useUpcomingEventos } from "@/hooks/useEventos";
 
 const trendingNews = [
   { id: "fab-exercicio-defesa-aerea", title: "FAB adquire novos caças de quinta geração", views: "12.5k" },
@@ -22,6 +18,8 @@ const officialDocuments = [
 ];
 
 export function Sidebar() {
+  const { data: eventos, isLoading: isLoadingEventos } = useUpcomingEventos(4);
+
   return (
     <aside className="space-y-6">
       {/* Events */}
@@ -32,23 +30,49 @@ export function Sidebar() {
           </div>
           <h3 className="font-serif font-bold text-lg text-headline">Agenda</h3>
         </div>
-        <ul className="space-y-3">
-          {upcomingEvents.map((event, index) => (
-            <li key={index} className="flex items-start gap-3 group cursor-pointer p-2 rounded-lg hover:bg-secondary/50 transition-colors">
-              <div className="w-14 h-14 bg-secondary rounded-lg flex flex-col items-center justify-center shrink-0 group-hover:bg-accent/10 transition-colors">
-                <span className="text-[10px] text-muted-foreground uppercase tracking-wide">{event.date.split(" ")[1]}</span>
-                <span className="text-lg font-bold text-headline">{event.date.split(" ")[0]}</span>
-              </div>
-              <div className="flex-1 pt-1">
-                <p className="text-sm font-medium text-foreground group-hover:text-link transition-colors leading-snug">
-                  {event.title}
-                </p>
-              </div>
-            </li>
-          ))}
-        </ul>
+        
+        {isLoadingEventos ? (
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+          </div>
+        ) : eventos && eventos.length > 0 ? (
+          <ul className="space-y-3">
+            {eventos.map((evento) => {
+              const eventDate = new Date(evento.event_date);
+              const day = format(eventDate, "dd", { locale: ptBR });
+              const month = format(eventDate, "MMM", { locale: ptBR });
+              
+              return (
+                <li 
+                  key={evento.id} 
+                  className="flex items-start gap-3 group cursor-pointer p-2 rounded-lg hover:bg-secondary/50 transition-colors"
+                >
+                  <div className="w-14 h-14 bg-secondary rounded-lg flex flex-col items-center justify-center shrink-0 group-hover:bg-accent/10 transition-colors">
+                    <span className="text-[10px] text-muted-foreground uppercase tracking-wide">{month}</span>
+                    <span className="text-lg font-bold text-headline">{day}</span>
+                  </div>
+                  <div className="flex-1 pt-1">
+                    <p className="text-sm font-medium text-foreground group-hover:text-link transition-colors leading-snug line-clamp-2">
+                      {evento.title}
+                    </p>
+                    {evento.location && (
+                      <span className="text-xs text-muted-foreground mt-0.5 block truncate">
+                        {evento.location}
+                      </span>
+                    )}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          <p className="text-sm text-muted-foreground text-center py-4">
+            Nenhum evento agendado
+          </p>
+        )}
+        
         <Link 
-          to="/categoria/aafab" 
+          to="/agenda" 
           className="flex items-center justify-center gap-1 mt-4 pt-3 border-t border-border text-sm text-link hover:text-primary font-medium transition-colors"
         >
           Ver agenda completa

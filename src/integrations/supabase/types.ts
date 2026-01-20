@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      eventos: {
+        Row: {
+          created_at: string
+          description: string | null
+          end_date: string | null
+          event_date: string
+          featured: boolean
+          id: string
+          image_url: string | null
+          location: string | null
+          published: boolean
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          event_date: string
+          featured?: boolean
+          id?: string
+          image_url?: string | null
+          location?: string | null
+          published?: boolean
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          event_date?: string
+          featured?: boolean
+          id?: string
+          image_url?: string | null
+          location?: string | null
+          published?: boolean
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       noticias: {
         Row: {
           author: string
