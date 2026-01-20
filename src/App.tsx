@@ -17,6 +17,8 @@ import AdminLayout from "./pages/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminNoticias from "./pages/admin/AdminNoticias";
 import AdminNoticiaForm from "./pages/admin/AdminNoticiaForm";
+import AdminEventos from "./pages/admin/AdminEventos";
+import AdminEventoForm from "./pages/admin/AdminEventoForm";
 import AdminSetup from "./pages/admin/AdminSetup";
 import ResetPassword from "./pages/admin/ResetPassword";
 
@@ -45,6 +47,9 @@ const App = () => (
             <Route path="noticias" element={<AdminNoticias />} />
             <Route path="noticias/nova" element={<AdminNoticiaForm />} />
             <Route path="noticias/editar/:id" element={<AdminNoticiaForm />} />
+            <Route path="eventos" element={<AdminEventos />} />
+            <Route path="eventos/novo" element={<AdminEventoForm />} />
+            <Route path="eventos/editar/:id" element={<AdminEventoForm />} />
           </Route>
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

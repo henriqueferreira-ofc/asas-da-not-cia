@@ -4,7 +4,8 @@ import {
   Newspaper, 
   LogOut, 
   Plus,
-  ChevronLeft
+  ChevronLeft,
+  Calendar
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
@@ -13,6 +14,7 @@ import logoAafab from '@/assets/logo-aafab.png';
 const navItems = [
   { icon: LayoutDashboard, label: 'Dashboard', href: '/admin' },
   { icon: Newspaper, label: 'Notícias', href: '/admin/noticias' },
+  { icon: Calendar, label: 'Agenda / Eventos', href: '/admin/eventos' },
 ];
 
 export function AdminSidebar() {
