@@ -5,12 +5,10 @@ import { Button } from "@/components/ui/button";
 import logoAafab from "@/assets/logo-aafab.png";
 
 const categories = [
-  { name: "AAFAB", href: "/categoria/aafab" },
+  { name: "Sobre a AAFAB", href: "/sobre" },
   { name: "Política Nacional", href: "/categoria/politica" },
   { name: "Internacional", href: "/categoria/internacional" },
-  { name: "Defesa", href: "/categoria/defesa" },
-  { name: "Força Aérea", href: "/categoria/fab" },
-  { name: "Opinião", href: "/categoria/opiniao" },
+  { name: "Ajude-nos", href: "/ajude-nos" },
 ];
 
 export function Header() {
@@ -33,17 +31,8 @@ export function Header() {
             <span className="capitalize">{currentDate}</span>
           </div>
           <div className="hidden md:flex items-center gap-6">
-            <Link to="/sobre" className="hover:text-primary-foreground transition-colors hover:underline">
-              Sobre a AAFAB
-            </Link>
             <Link to="/contato" className="hover:text-primary-foreground transition-colors hover:underline">
               Contato
-            </Link>
-            <Link 
-              to="/ajude-nos" 
-              className="bg-accent text-accent-foreground px-4 py-1 rounded font-semibold hover:bg-accent/90 transition-colors"
-            >
-              Ajude-nos
             </Link>
           </div>
         </div>
@@ -169,25 +158,11 @@ export function Header() {
             </ul>
             <div className="mt-4 pt-4 border-t border-primary-foreground/10 space-y-2">
               <Link 
-                to="/sobre" 
-                className="block px-4 py-2.5 text-primary-foreground/80 hover:text-primary-foreground transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Sobre a AAFAB
-              </Link>
-              <Link 
                 to="/contato" 
                 className="block px-4 py-2.5 text-primary-foreground/80 hover:text-primary-foreground transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Contato
-              </Link>
-              <Link 
-                to="/ajude-nos" 
-                className="block mx-4 mt-2 py-3 bg-accent text-accent-foreground text-center rounded-lg font-semibold hover:bg-accent/90 transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Ajude-nos
               </Link>
             </div>
           </div>
