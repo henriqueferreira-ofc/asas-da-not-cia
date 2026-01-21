@@ -5,7 +5,8 @@ import {
   LogOut, 
   Plus,
   ChevronLeft,
-  Calendar
+  Calendar,
+  FileText
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
@@ -15,6 +16,7 @@ const navItems = [
   { icon: LayoutDashboard, label: 'Dashboard', href: '/admin' },
   { icon: Newspaper, label: 'Notícias', href: '/admin/noticias' },
   { icon: Calendar, label: 'Agenda / Eventos', href: '/admin/eventos' },
+  { icon: FileText, label: 'Comunicados', href: '/admin/comunicados' },
 ];
 
 export function AdminSidebar() {

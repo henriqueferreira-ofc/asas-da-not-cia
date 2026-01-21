@@ -9,6 +9,8 @@ import NoticiaPage from "./pages/NoticiaPage";
 import SobrePage from "./pages/SobrePage";
 import ContatoPage from "./pages/ContatoPage";
 import AjudeNosPage from "./pages/AjudeNosPage";
+import AgendaPage from "./pages/AgendaPage";
+import ComunicadosPage from "./pages/ComunicadosPage";
 import NotFound from "./pages/NotFound";
 
 // Admin pages
@@ -19,6 +21,7 @@ import AdminNoticias from "./pages/admin/AdminNoticias";
 import AdminNoticiaForm from "./pages/admin/AdminNoticiaForm";
 import AdminEventos from "./pages/admin/AdminEventos";
 import AdminEventoForm from "./pages/admin/AdminEventoForm";
+import AdminComunicados from "./pages/admin/AdminComunicados";
 import AdminSetup from "./pages/admin/AdminSetup";
 import ResetPassword from "./pages/admin/ResetPassword";
 
@@ -37,6 +40,8 @@ const App = () => (
           <Route path="/sobre" element={<SobrePage />} />
           <Route path="/contato" element={<ContatoPage />} />
           <Route path="/ajude-nos" element={<AjudeNosPage />} />
+          <Route path="/agenda" element={<AgendaPage />} />
+          <Route path="/comunicados" element={<ComunicadosPage />} />
           
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
@@ -50,6 +55,7 @@ const App = () => (
             <Route path="eventos" element={<AdminEventos />} />
             <Route path="eventos/novo" element={<AdminEventoForm />} />
             <Route path="eventos/editar/:id" element={<AdminEventoForm />} />
+            <Route path="comunicados" element={<AdminComunicados />} />
           </Route>
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
