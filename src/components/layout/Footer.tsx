@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Facebook, Instagram, Twitter, Youtube, Mail, Phone, MapPin, Send } from "lucide-react";
-import logoAafab from "@/assets/logo-aafab.png";
 import { AdminLoginModal } from "@/components/admin/AdminLoginModal";
 const links = [
   { name: "Sobre a AAFAB", href: "/sobre" },
@@ -73,18 +72,11 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
           {/* About */}
           <div className="lg:col-span-1">
-            <Link to="/" className="flex items-center gap-3 mb-4">
-              <img 
-                src={logoAafab} 
-                alt="AAFAB" 
-                className="w-14 h-14 object-contain bg-white rounded-full p-1"
-              />
-              <div>
-                <h3 className="font-serif font-bold text-lg leading-tight text-white">AAFAB</h3>
-                <p className="text-xs text-primary-foreground/70 leading-tight">
-                  Amigos da Força Aérea Brasileira
-                </p>
-              </div>
+            <Link to="/" className="block mb-4">
+              <h3 className="font-serif font-bold text-2xl leading-tight text-white">AAFAB</h3>
+              <p className="text-sm text-primary-foreground/70 leading-tight mt-1">
+                Associação Amigos da Força Aérea Brasileira
+              </p>
             </Link>
             <p className="text-sm text-primary-foreground/80 leading-relaxed mb-5">
               Portal de notícias institucional dedicado à informação qualificada sobre defesa, 

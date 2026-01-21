@@ -73,7 +73,7 @@ export function Sidebar() {
         
         <Link 
           to="/agenda" 
-          className="flex items-center justify-center gap-1 mt-4 pt-3 border-t border-border text-sm text-link hover:text-primary font-medium transition-colors"
+          className="flex items-center justify-center gap-1 mt-4 pt-3 border-t border-border text-base text-link hover:text-primary font-medium transition-colors"
         >
           Ver agenda completa
           <ChevronRight className="w-4 h-4" />
@@ -114,26 +114,26 @@ export function Sidebar() {
       </div>
 
       {/* Official Documents */}
-      <div className="bg-primary rounded-xl p-5 text-primary-foreground shadow-lg">
-        <div className="flex items-center gap-2 mb-4 pb-3 border-b border-primary-foreground/20">
-          <div className="w-8 h-8 rounded-lg bg-primary-foreground/10 flex items-center justify-center">
-            <FileText className="w-4 h-4 text-accent" />
+      <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
+        <div className="flex items-center gap-2 mb-4 pb-3 border-b border-border">
+          <div className="w-9 h-9 rounded-lg bg-accent/10 flex items-center justify-center">
+            <FileText className="w-5 h-5 text-accent" />
           </div>
-          <h3 className="font-serif font-bold text-lg">Comunicados Oficiais</h3>
+          <h3 className="font-serif font-bold text-xl text-headline">Comunicados Oficiais</h3>
         </div>
         <ul className="space-y-3">
           {officialDocuments.map((doc) => (
-            <li key={doc.id} className="group cursor-pointer p-2 rounded-lg hover:bg-primary-foreground/10 transition-colors -mx-2">
-              <p className="text-sm font-medium group-hover:text-accent transition-colors line-clamp-2">
+            <li key={doc.id} className="group cursor-pointer p-3 rounded-lg hover:bg-secondary/50 transition-colors -mx-2">
+              <p className="text-base font-medium text-foreground group-hover:text-link transition-colors line-clamp-2">
                 {doc.title}
               </p>
-              <span className="text-xs text-primary-foreground/60 mt-0.5 block">{doc.date}</span>
+              <span className="text-sm text-muted-foreground mt-1 block">{doc.date}</span>
             </li>
           ))}
         </ul>
         <Link 
-          to="/categoria/aafab" 
-          className="flex items-center justify-center gap-1 mt-4 pt-3 border-t border-primary-foreground/20 text-sm text-accent hover:text-accent/80 font-medium transition-colors"
+          to="/comunicados" 
+          className="flex items-center justify-center gap-1 mt-4 pt-3 border-t border-border text-sm text-link hover:text-primary font-medium transition-colors"
         >
           Ver todos os comunicados
           <ChevronRight className="w-4 h-4" />
