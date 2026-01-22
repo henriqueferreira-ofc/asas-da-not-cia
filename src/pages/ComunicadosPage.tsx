@@ -7,7 +7,23 @@ import { ptBR } from "date-fns/locale";
 import { useNoticiasByCategory } from "@/hooks/useNoticias";
 
 export default function ComunicadosPage() {
-  const { data: comunicados, isLoading } = useNoticiasByCategory("comunicados");
+  const { data: comunicados, isLoading, error } = useNoticiasByCategory("comunicados");
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex flex-col bg-background">
+        <Header />
+        <main className="flex-1 container py-16">
+          <div className="text-center">
+            <FileText className="w-12 h-12 text-destructive mx-auto mb-4" />
+            <h1 className="font-serif text-2xl font-bold text-headline mb-2">Erro ao carregar comunicados</h1>
+            <p className="text-muted-foreground">Tente novamente mais tarde</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-background">

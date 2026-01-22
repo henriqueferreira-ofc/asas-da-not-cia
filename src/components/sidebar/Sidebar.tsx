@@ -14,8 +14,8 @@ const trendingNews = [
 
 
 export function Sidebar() {
-  const { data: eventos, isLoading: isLoadingEventos } = useUpcomingEventos(4);
-  const { data: comunicados, isLoading: isLoadingComunicados } = useNoticiasByCategory("comunicados");
+  const { data: eventos, isLoading: isLoadingEventos, error: errorEventos } = useUpcomingEventos(4);
+  const { data: comunicados, isLoading: isLoadingComunicados, error: errorComunicados } = useNoticiasByCategory("comunicados");
 
   return (
     <aside className="space-y-6">
@@ -32,6 +32,10 @@ export function Sidebar() {
           <div className="flex items-center justify-center py-8">
             <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
           </div>
+        ) : errorEventos ? (
+          <p className="text-sm text-destructive text-center py-4">
+            Erro ao carregar eventos
+          </p>
         ) : eventos && eventos.length > 0 ? (
           <ul className="space-y-3">
             {eventos.map((evento) => {
@@ -123,6 +127,10 @@ export function Sidebar() {
           <div className="flex items-center justify-center py-8">
             <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
           </div>
+        ) : errorComunicados ? (
+          <p className="text-sm text-destructive text-center py-4">
+            Erro ao carregar comunicados
+          </p>
         ) : comunicados && comunicados.length > 0 ? (
           <ul className="space-y-3">
             {comunicados.slice(0, 3).map((doc) => {
