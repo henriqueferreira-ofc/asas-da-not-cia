@@ -7,7 +7,7 @@ import { ptBR } from "date-fns/locale";
 import { usePublishedEventos } from "@/hooks/useEventos";
 
 export default function AgendaPage() {
-  const { data: eventos, isLoading } = usePublishedEventos();
+  const { data: eventos, isLoading, error } = usePublishedEventos();
 
   const upcomingEvents = eventos?.filter(
     (e) => new Date(e.event_date) >= new Date()
@@ -16,6 +16,22 @@ export default function AgendaPage() {
   const pastEvents = eventos?.filter(
     (e) => new Date(e.event_date) < new Date()
   ) || [];
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex flex-col bg-background">
+        <Header />
+        <main className="flex-1 container py-16">
+          <div className="text-center">
+            <Calendar className="w-12 h-12 text-destructive mx-auto mb-4" />
+            <h1 className="font-serif text-2xl font-bold text-headline mb-2">Erro ao carregar eventos</h1>
+            <p className="text-muted-foreground">Tente novamente mais tarde</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
