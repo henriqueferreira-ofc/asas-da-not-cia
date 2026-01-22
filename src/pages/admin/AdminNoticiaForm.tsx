@@ -45,6 +45,7 @@ const categories = [
   { value: 'defesa', label: 'Defesa' },
   { value: 'fab', label: 'Força Aérea' },
   { value: 'opiniao', label: 'Opinião' },
+  { value: 'comunicados', label: 'Comunicados' },
 ];
 
 const categoryLabels: Record<string, string> = {
@@ -54,6 +55,7 @@ const categoryLabels: Record<string, string> = {
   defesa: 'Defesa',
   fab: 'Força Aérea',
   opiniao: 'Opinião',
+  comunicados: 'Comunicados',
 };
 
 const AdminNoticiaForm = () => {

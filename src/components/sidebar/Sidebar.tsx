@@ -3,6 +3,7 @@ import { Calendar, TrendingUp, FileText, ChevronRight, Flame, Loader2 } from "lu
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useUpcomingEventos } from "@/hooks/useEventos";
+import { useNoticiasByCategory } from "@/hooks/useNoticias";
 
 const trendingNews = [
   { id: "fab-exercicio-defesa-aerea", title: "FAB adquire novos caças de quinta geração", views: "12.5k" },
@@ -11,14 +12,10 @@ const trendingNews = [
   { id: "cooperacao-brics-defesa", title: "Acordo de cooperação com países do BRICS", views: "5.4k" },
 ];
 
-const officialDocuments = [
-  { id: "comunicado-001", title: "Comunicado Oficial nº 001/2026", date: "10 Jan 2026" },
-  { id: "nota-janeiro", title: "Nota à Imprensa - Janeiro/2026", date: "08 Jan 2026" },
-  { id: "relatorio-2025", title: "Relatório Anual 2025", date: "02 Jan 2026" },
-];
 
 export function Sidebar() {
   const { data: eventos, isLoading: isLoadingEventos } = useUpcomingEventos(4);
+  const { data: comunicados, isLoading: isLoadingComunicados } = useNoticiasByCategory("comunicados");
 
   return (
     <aside className="space-y-6">
@@ -121,16 +118,38 @@ export function Sidebar() {
           </div>
           <h3 className="font-serif font-bold text-xl text-headline">Comunicados Oficiais</h3>
         </div>
-        <ul className="space-y-3">
-          {officialDocuments.map((doc) => (
-            <li key={doc.id} className="group cursor-pointer p-3 rounded-lg hover:bg-secondary/50 transition-colors -mx-2">
-              <p className="text-base font-medium text-foreground group-hover:text-link transition-colors line-clamp-2">
-                {doc.title}
-              </p>
-              <span className="text-sm text-muted-foreground mt-1 block">{doc.date}</span>
-            </li>
-          ))}
-        </ul>
+        
+        {isLoadingComunicados ? (
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+          </div>
+        ) : comunicados && comunicados.length > 0 ? (
+          <ul className="space-y-3">
+            {comunicados.slice(0, 3).map((doc) => {
+              const docDate = new Date(doc.created_at);
+              const formattedDate = format(docDate, "dd MMM yyyy", { locale: ptBR });
+              
+              return (
+                <li key={doc.id}>
+                  <Link 
+                    to={`/noticia/${doc.id}`}
+                    className="block group p-3 rounded-lg hover:bg-secondary/50 transition-colors -mx-2"
+                  >
+                    <p className="text-base font-medium text-foreground group-hover:text-link transition-colors line-clamp-2">
+                      {doc.title}
+                    </p>
+                    <span className="text-sm text-muted-foreground mt-1 block">{formattedDate}</span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          <p className="text-sm text-muted-foreground text-center py-4">
+            Nenhum comunicado disponível
+          </p>
+        )}
+        
         <Link 
           to="/comunicados" 
           className="flex items-center justify-center gap-1 mt-4 pt-3 border-t border-border text-sm text-link hover:text-primary font-medium transition-colors"

@@ -46,6 +46,10 @@ export const categoryInfo: Record<string, { name: string; description: string }>
     name: "Artigos e Análises",
     description: "Análises aprofundadas e artigos de opinião de especialistas.",
   },
+  comunicados: {
+    name: "Comunicados Oficiais",
+    description: "Notas, comunicados e documentos oficiais da AAFAB.",
+  },
 };
 
 export const allNews: NewsItem[] = [
