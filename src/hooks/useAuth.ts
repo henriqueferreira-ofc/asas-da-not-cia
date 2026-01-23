@@ -45,43 +45,52 @@ export function useAuth() {
   useEffect(() => {
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
         const user = session?.user || null;
         
+        // Update basic auth state immediately (synchronous)
+        setState(prev => ({
+          ...prev,
+          user,
+          session,
+          isLoading: user ? prev.isLoading : false,
+          isAdmin: user ? prev.isAdmin : false,
+          isEditor: user ? prev.isEditor : false,
+        }));
+        
+        // CRITICAL: Defer Supabase calls with setTimeout to prevent deadlock
         if (user) {
-          const { isAdmin, isEditor } = await checkUserRoles(user.id);
-          setState({
-            user,
-            session,
-            isLoading: false,
-            isAdmin,
-            isEditor,
-          });
-        } else {
-          setState({
-            user: null,
-            session: null,
-            isLoading: false,
-            isAdmin: false,
-            isEditor: false,
-          });
+          setTimeout(() => {
+            checkUserRoles(user.id).then(({ isAdmin, isEditor }) => {
+              setState(prev => ({
+                ...prev,
+                isLoading: false,
+                isAdmin,
+                isEditor,
+              }));
+            });
+          }, 0);
         }
       }
     );
 
     // THEN check for existing session
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
       const user = session?.user || null;
       
       if (user) {
-        const { isAdmin, isEditor } = await checkUserRoles(user.id);
-        setState({
-          user,
-          session,
-          isLoading: false,
-          isAdmin,
-          isEditor,
-        });
+        // Defer role check to prevent potential issues
+        setTimeout(() => {
+          checkUserRoles(user.id).then(({ isAdmin, isEditor }) => {
+            setState({
+              user,
+              session,
+              isLoading: false,
+              isAdmin,
+              isEditor,
+            });
+          });
+        }, 0);
       } else {
         setState({
           user: null,
