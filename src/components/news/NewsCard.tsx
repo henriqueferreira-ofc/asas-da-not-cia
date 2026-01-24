@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Clock, User, ArrowRight } from "lucide-react";
 
-export type NewsCategory = "aafab" | "politics" | "international" | "defense" | "opinion" | "fab";
+export type NewsCategory = "aafab" | "politica" | "internacional" | "comunicados";
 
 interface NewsCardProps {
   id: string;
@@ -17,11 +17,9 @@ interface NewsCardProps {
 
 const categoryStyles: Record<NewsCategory, string> = {
   aafab: "category-aafab",
-  politics: "category-politics",
-  international: "category-international",
-  defense: "category-defense",
-  opinion: "category-opinion",
-  fab: "category-fab",
+  politica: "category-politics",
+  internacional: "category-international",
+  comunicados: "category-aafab",
 };
 
 export function NewsCard({

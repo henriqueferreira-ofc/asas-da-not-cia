@@ -2,15 +2,71 @@ import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Clock, User, Share2, Facebook, Twitter } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { NewsCard } from "@/components/news/NewsCard";
-import { getNewsById, getRelatedNews } from "@/data/noticias";
+import { NewsCard, NewsCategory } from "@/components/news/NewsCard";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useNoticia, useRelatedNoticias } from "@/hooks/useNoticias";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+
+import heroImage from "@/assets/hero-fab.jpg";
+
+// Helper to format date
+const formatDate = (dateString: string) => {
+  try {
+    return format(new Date(dateString), "dd MMM yyyy", { locale: ptBR });
+  } catch {
+    return dateString;
+  }
+};
+
+// Helper to map category from DB to component type
+const mapCategory = (category: string): NewsCategory => {
+  const validCategories: NewsCategory[] = ["aafab", "politica", "internacional", "comunicados"];
+  return validCategories.includes(category as NewsCategory) 
+    ? (category as NewsCategory) 
+    : "aafab";
+};
+
+// Helper to get category label
+const getCategoryLabel = (category: string): string => {
+  const labels: Record<string, string> = {
+    aafab: "AAFAB",
+    politica: "Política Nacional",
+    internacional: "Internacional",
+    comunicados: "Comunicados",
+  };
+  return labels[category] || "AAFAB";
+};
 
 const NoticiaPage = () => {
   const { id } = useParams<{ id: string }>();
-  const news = getNewsById(id || "");
-  const relatedNews = news ? getRelatedNews(news.id, news.categorySlug, 3) : [];
+  const { data: noticia, isLoading, error } = useNoticia(id);
+  const { data: relatedNoticias } = useRelatedNoticias(id, noticia?.category, 3);
 
-  if (!news) {
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="container py-8">
+          <Skeleton className="h-6 w-32 mb-6" />
+          <article className="max-w-4xl mx-auto">
+            <Skeleton className="h-8 w-24 mb-4" />
+            <Skeleton className="h-12 w-full mb-4" />
+            <Skeleton className="h-6 w-3/4 mb-6" />
+            <Skeleton className="h-[400px] w-full rounded-xl mb-8" />
+            <div className="space-y-4">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-2/3" />
+            </div>
+          </article>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (error || !noticia) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
@@ -48,44 +104,44 @@ const NoticiaPage = () => {
         <article className="max-w-4xl mx-auto">
           {/* Category Badge */}
           <Link 
-            to={`/categoria/${news.categorySlug}`}
+            to={`/categoria/${noticia.category}`}
             className="inline-block mb-4"
           >
             <span className="category-badge category-aafab">
-              {news.categoryLabel}
+              {noticia.category_label || getCategoryLabel(noticia.category)}
             </span>
           </Link>
 
           {/* Title */}
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-headline leading-tight mb-4">
-            {news.title}
+            {noticia.title}
           </h1>
 
           {/* Excerpt */}
           <p className="text-xl text-muted-foreground leading-relaxed mb-6">
-            {news.excerpt}
+            {noticia.excerpt}
           </p>
 
           {/* Meta */}
           <div className="flex flex-wrap items-center gap-4 pb-6 mb-6 border-b border-border">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <User className="w-4 h-4" />
-              <span className="font-medium text-foreground">{news.author}</span>
-              {news.authorRole && (
-                <span className="text-muted-foreground">• {news.authorRole}</span>
+              <span className="font-medium text-foreground">{noticia.author}</span>
+              {noticia.author_role && (
+                <span className="text-muted-foreground">• {noticia.author_role}</span>
               )}
             </div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Clock className="w-4 h-4" />
-              <span>{news.date}</span>
+              <span>{formatDate(noticia.created_at)}</span>
             </div>
           </div>
 
           {/* Featured Image */}
           <div className="relative rounded-xl overflow-hidden mb-8">
             <img
-              src={news.image}
-              alt={news.title}
+              src={noticia.image_url || heroImage}
+              alt={noticia.title}
               className="w-full h-auto object-cover aspect-video"
             />
           </div>
@@ -93,7 +149,7 @@ const NoticiaPage = () => {
           {/* Content */}
           <div 
             className="prose prose-lg max-w-none mb-8"
-            dangerouslySetInnerHTML={{ __html: news.content }}
+            dangerouslySetInnerHTML={{ __html: noticia.content }}
           />
 
           {/* Share */}
@@ -113,21 +169,21 @@ const NoticiaPage = () => {
           </div>
 
           {/* Related News */}
-          {relatedNews.length > 0 && (
+          {(relatedNoticias?.length ?? 0) > 0 && (
             <section>
               <h2 className="section-title mb-6">Notícias Relacionadas</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {relatedNews.map((item) => (
+                {relatedNoticias?.map((item) => (
                   <NewsCard
                     key={item.id}
                     id={item.id}
                     title={item.title}
                     excerpt={item.excerpt}
-                    image={item.image}
-                    category={item.category}
-                    categoryLabel={item.categoryLabel}
+                    image={item.image_url || heroImage}
+                    category={mapCategory(item.category)}
+                    categoryLabel={item.category_label || getCategoryLabel(item.category)}
                     author={item.author}
-                    date={item.date}
+                    date={formatDate(item.created_at)}
                     size="small"
                   />
                 ))}

@@ -44,11 +44,14 @@ import { useAuth } from '@/hooks/useAuth';
 
 const categoryLabels: Record<string, string> = {
   aafab: 'AAFAB',
-  politica: 'Política',
+  politica: 'Política Nacional',
   internacional: 'Internacional',
-  defesa: 'Defesa',
-  fab: 'Força Aérea',
-  opiniao: 'Opinião',
+  comunicados: 'Comunicados',
+  // Compatibilidade com categorias antigas
+  defesa: 'Defesa (antiga)',
+  fab: 'Força Aérea (antiga)',
+  opiniao: 'Opinião (antiga)',
+  politics: 'Política (antiga)',
 };
 
 const AdminNoticias = () => {

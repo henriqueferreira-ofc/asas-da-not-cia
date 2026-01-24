@@ -23,6 +23,24 @@ export function usePublishedNoticias() {
   });
 }
 
+// Fetch recent news (limited) for homepage
+export function useRecentNoticias(limit = 6) {
+  return useQuery({
+    queryKey: ['noticias', 'recent', limit],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('noticias')
+        .select('*')
+        .eq('published', true)
+        .order('created_at', { ascending: false })
+        .limit(limit);
+
+      if (error) throw error;
+      return data;
+    },
+  });
+}
+
 // Fetch all news for admin (including unpublished)
 export function useAllNoticias() {
   return useQuery({
