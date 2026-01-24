@@ -2,13 +2,47 @@ import { useParams, Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { NewsCard } from "@/components/news/NewsCard";
+import { NewsCard, NewsCategory } from "@/components/news/NewsCard";
 import { Sidebar } from "@/components/sidebar/Sidebar";
-import { getNewsByCategory, categoryInfo } from "@/data/noticias";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useNoticiasByCategory } from "@/hooks/useNoticias";
+import { categoryInfo } from "@/data/noticias";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+
+import heroImage from "@/assets/hero-fab.jpg";
+
+// Helper to format date
+const formatDate = (dateString: string) => {
+  try {
+    return format(new Date(dateString), "dd MMM yyyy", { locale: ptBR });
+  } catch {
+    return dateString;
+  }
+};
+
+// Helper to map category from DB to component type
+const mapCategory = (category: string): NewsCategory => {
+  const validCategories: NewsCategory[] = ["aafab", "politica", "internacional", "comunicados"];
+  return validCategories.includes(category as NewsCategory) 
+    ? (category as NewsCategory) 
+    : "aafab";
+};
+
+// Helper to get category label
+const getCategoryLabel = (category: string): string => {
+  const labels: Record<string, string> = {
+    aafab: "AAFAB",
+    politica: "Política Nacional",
+    internacional: "Internacional",
+    comunicados: "Comunicados",
+  };
+  return labels[category] || "AAFAB";
+};
 
 const CategoriaPage = () => {
   const { slug } = useParams<{ slug: string }>();
-  const news = getNewsByCategory(slug || "");
+  const { data: noticias, isLoading, error } = useNoticiasByCategory(slug);
   const category = categoryInfo[slug || ""];
 
   if (!category) {
@@ -59,19 +93,31 @@ const CategoriaPage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* News Grid */}
           <div className="lg:col-span-2">
-            {news.length > 0 ? (
+            {isLoading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {news.map((item) => (
+                {[1, 2, 3, 4].map((i) => (
+                  <Skeleton key={i} className="h-[300px] rounded-xl" />
+                ))}
+              </div>
+            ) : error ? (
+              <div className="text-center py-12">
+                <p className="text-destructive text-lg">
+                  Erro ao carregar notícias. Tente novamente mais tarde.
+                </p>
+              </div>
+            ) : (noticias?.length ?? 0) > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {noticias?.map((noticia) => (
                   <NewsCard
-                    key={item.id}
-                    id={item.id}
-                    title={item.title}
-                    excerpt={item.excerpt}
-                    image={item.image}
-                    category={item.category}
-                    categoryLabel={item.categoryLabel}
-                    author={item.author}
-                    date={item.date}
+                    key={noticia.id}
+                    id={noticia.id}
+                    title={noticia.title}
+                    excerpt={noticia.excerpt}
+                    image={noticia.image_url || heroImage}
+                    category={mapCategory(noticia.category)}
+                    categoryLabel={noticia.category_label || getCategoryLabel(noticia.category)}
+                    author={noticia.author}
+                    date={formatDate(noticia.created_at)}
                   />
                 ))}
               </div>

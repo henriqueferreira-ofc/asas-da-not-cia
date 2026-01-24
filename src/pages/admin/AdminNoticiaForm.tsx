@@ -40,21 +40,15 @@ type NoticiaFormData = z.infer<typeof noticiaSchema>;
 
 const categories = [
   { value: 'aafab', label: 'AAFAB' },
-  { value: 'politica', label: 'Política' },
+  { value: 'politica', label: 'Política Nacional' },
   { value: 'internacional', label: 'Internacional' },
-  { value: 'defesa', label: 'Defesa' },
-  { value: 'fab', label: 'Força Aérea' },
-  { value: 'opiniao', label: 'Opinião' },
   { value: 'comunicados', label: 'Comunicados' },
 ];
 
 const categoryLabels: Record<string, string> = {
   aafab: 'AAFAB',
-  politica: 'Política',
+  politica: 'Política Nacional',
   internacional: 'Internacional',
-  defesa: 'Defesa',
-  fab: 'Força Aérea',
-  opiniao: 'Opinião',
   comunicados: 'Comunicados',
 };
 

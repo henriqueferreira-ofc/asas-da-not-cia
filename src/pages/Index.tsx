@@ -1,133 +1,67 @@
-import { Link } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { FeaturedNews } from "@/components/news/FeaturedNews";
 import { BreakingNews } from "@/components/news/BreakingNews";
 import { NewsSection } from "@/components/news/NewsSection";
-import { NewsCard } from "@/components/news/NewsCard";
 import { Sidebar } from "@/components/sidebar/Sidebar";
-import { ArrowRight, BookOpen } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useRecentNoticias, useNoticiasByCategory, useFeaturedNoticias } from "@/hooks/useNoticias";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 import heroImage from "@/assets/hero-fab.jpg";
-import ceremonyImage from "@/assets/news-ceremony.jpg";
-import congressImage from "@/assets/news-congress.jpg";
-import defenseImage from "@/assets/news-defense.jpg";
-import internationalImage from "@/assets/news-international.jpg";
-import aircraftImage from "@/assets/news-aircraft.jpg";
+import type { NewsCategory } from "@/components/news/NewsCard";
 
-const latestNews = [
-  {
-    id: "aafab-encontro-nacional",
-    title: "AAFAB promove encontro nacional de associados em Brasília",
-    excerpt: "Evento reunirá militares da ativa, reserva e pensionistas para discussão sobre políticas de valorização das Forças Armadas.",
-    image: ceremonyImage,
-    category: "aafab" as const,
-    categoryLabel: "AAFAB",
-    author: "Redação AAFAB",
-    date: "13 Jan 2026",
-  },
-  {
-    id: "congresso-marco-regulatorio",
-    title: "Congresso aprova novo marco regulatório para setor de defesa",
-    excerpt: "Legislação moderniza regras para contratações militares e incentiva participação da indústria nacional em projetos estratégicos.",
-    image: congressImage,
-    category: "politics" as const,
-    categoryLabel: "Política",
-    author: "Ana Beatriz Costa",
-    date: "12 Jan 2026",
-  },
-  {
-    id: "fab-sistema-radar",
-    title: "FAB recebe primeira unidade do novo sistema de radar nacional",
-    excerpt: "Equipamento desenvolvido com tecnologia 100% brasileira amplia capacidade de monitoramento do espaço aéreo em 40%.",
-    image: defenseImage,
-    category: "defense" as const,
-    categoryLabel: "Defesa",
-    author: "Ten. Ricardo Almeida",
-    date: "11 Jan 2026",
-  },
-];
+// Helper to format date
+const formatDate = (dateString: string) => {
+  try {
+    return format(new Date(dateString), "dd MMM yyyy", { locale: ptBR });
+  } catch {
+    return dateString;
+  }
+};
 
-const politicsNews = [
-  {
-    id: "ministerio-plano-estrategico",
-    title: "Ministério da Defesa apresenta plano estratégico para próxima década",
-    excerpt: "Documento define prioridades de investimento, modernização de equipamentos e políticas de pessoal para as três Forças.",
-    image: congressImage,
-    category: "politics" as const,
-    categoryLabel: "Política",
-    author: "Carlos Eduardo Silva",
-    date: "10 Jan 2026",
-  },
-  {
-    id: "senado-militares-inativos",
-    title: "Senado debate proposta de valorização dos militares inativos",
-    excerpt: "Projeto de lei busca equiparar benefícios e garantir melhores condições para reservistas e pensionistas das Forças Armadas.",
-    image: congressImage,
-    category: "politics" as const,
-    categoryLabel: "Política",
-    author: "Maria Helena Souza",
-    date: "09 Jan 2026",
-  },
-  {
-    id: "camara-credito-forcas-armadas",
-    title: "Câmara aprova crédito extraordinário para Forças Armadas",
-    excerpt: "Recursos serão destinados à manutenção de equipamentos e continuidade de projetos estratégicos de defesa nacional.",
-    image: congressImage,
-    category: "politics" as const,
-    categoryLabel: "Política",
-    author: "Paulo Roberto Lima",
-    date: "08 Jan 2026",
-  },
-];
+// Helper to map category from DB to component type
+const mapCategory = (category: string): NewsCategory => {
+  const validCategories: NewsCategory[] = ["aafab", "politica", "internacional", "comunicados"];
+  return validCategories.includes(category as NewsCategory) 
+    ? (category as NewsCategory) 
+    : "aafab";
+};
 
-const defenseNews = [
-  {
-    id: "brasil-comando-forca-paz",
-    title: "Brasil assume comando de força de paz multinacional",
-    excerpt: "Oficiais brasileiros lideram contingente internacional em missão de estabilização autorizada pelo Conselho de Segurança da ONU.",
-    image: internationalImage,
-    category: "international" as const,
-    categoryLabel: "Internacional",
-    author: "Cel. Fernando Gomes",
-    date: "12 Jan 2026",
-  },
-  {
-    id: "embraer-kc390-entrega",
-    title: "Embraer entrega novos cargueiros KC-390 à FAB",
-    excerpt: "Aeronaves de transporte tático aumentam capacidade logística e de projeção de poder da Força Aérea Brasileira.",
-    image: aircraftImage,
-    category: "fab" as const,
-    categoryLabel: "Força Aérea",
-    author: "Maj. Patrícia Ramos",
-    date: "11 Jan 2026",
-  },
-  {
-    id: "exercicio-conjunto-forcas",
-    title: "Exercício conjunto integra Marinha, Exército e Aeronáutica",
-    excerpt: "Operação Guardião testa interoperabilidade e prontidão das Forças Armadas em cenário de defesa do território nacional.",
-    image: defenseImage,
-    category: "defense" as const,
-    categoryLabel: "Defesa",
-    author: "Cap. André Moreira",
-    date: "10 Jan 2026",
-  },
-];
-
-const opinionNews = [
-  {
-    id: "analise-brasil-seguranca-hemisferica",
-    title: "Análise: O papel estratégico do Brasil na segurança hemisférica",
-    excerpt: "Especialistas avaliam posicionamento brasileiro em cenário geopolítico marcado por novas tensões globais e oportunidades de cooperação regional.",
-    image: internationalImage,
-    category: "opinion" as const,
-    categoryLabel: "Opinião",
-    author: "Dr. Roberto Pinheiro",
-    date: "13 Jan 2026",
-  },
-];
+// Helper to get category label
+const getCategoryLabel = (category: string): string => {
+  const labels: Record<string, string> = {
+    aafab: "AAFAB",
+    politica: "Política Nacional",
+    internacional: "Internacional",
+    comunicados: "Comunicados",
+  };
+  return labels[category] || "AAFAB";
+};
 
 const Index = () => {
+  const { data: featuredNoticias, isLoading: loadingFeatured } = useFeaturedNoticias(1);
+  const { data: recentNoticias, isLoading: loadingRecent } = useRecentNoticias(6);
+  const { data: politicaNoticias, isLoading: loadingPolitica } = useNoticiasByCategory("politica");
+  const { data: internacionalNoticias, isLoading: loadingInternacional } = useNoticiasByCategory("internacional");
+
+  const featured = featuredNoticias?.[0];
+
+  // Transform DB data to NewsSection format
+  const transformNews = (noticias: typeof recentNoticias, limit = 3) => {
+    return (noticias || []).slice(0, limit).map((noticia) => ({
+      id: noticia.id,
+      title: noticia.title,
+      excerpt: noticia.excerpt,
+      image: noticia.image_url || heroImage,
+      category: mapCategory(noticia.category),
+      categoryLabel: noticia.category_label || getCategoryLabel(noticia.category),
+      author: noticia.author,
+      date: formatDate(noticia.created_at),
+    }));
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -136,91 +70,89 @@ const Index = () => {
       <main className="container py-8 md:py-10">
         {/* Featured News */}
         <section className="mb-10 md:mb-12">
-          <FeaturedNews
-            id="fab-exercicio-defesa-aerea"
-            title="FAB realiza maior exercício de defesa aérea da história do Brasil"
-            excerpt="Operação Céu Guardião mobiliza mais de 5.000 militares e 120 aeronaves em simulação de defesa do espaço aéreo nacional, com participação de países aliados do continente americano."
-            image={heroImage}
-            category="Força Aérea Brasileira"
-            author="Redação AAFAB"
-            date="13 Janeiro 2026"
-          />
+          {loadingFeatured ? (
+            <div className="rounded-xl overflow-hidden">
+              <Skeleton className="w-full h-[400px]" />
+            </div>
+          ) : featured ? (
+            <FeaturedNews
+              id={featured.id}
+              title={featured.title}
+              excerpt={featured.excerpt}
+              image={featured.image_url || heroImage}
+              category={featured.category_label || getCategoryLabel(featured.category)}
+              author={featured.author}
+              date={formatDate(featured.created_at)}
+            />
+          ) : (
+            <FeaturedNews
+              id="placeholder"
+              title="Bem-vindo à AAFAB"
+              excerpt="Acompanhe as últimas notícias sobre política nacional, internacional e comunicados oficiais da Associação Amigos da Força Aérea Brasileira."
+              image={heroImage}
+              category="AAFAB"
+              author="Redação AAFAB"
+              date={formatDate(new Date().toISOString())}
+            />
+          )}
         </section>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
           {/* Main Content */}
           <div className="lg:col-span-2">
             {/* Latest News */}
-            <NewsSection
-              title="Últimas Notícias"
-              news={latestNews}
-              categorySlug="aafab"
-            />
-
-            {/* Politics */}
-            <NewsSection
-              title="Política Nacional"
-              news={politicsNews}
-              categorySlug="politica"
-            />
-
-            {/* Defense */}
-            <NewsSection
-              title="Defesa e Assuntos Militares"
-              news={defenseNews}
-              categorySlug="defesa"
-            />
-
-            {/* Opinion Section */}
-            <section className="mb-10">
-              <div className="flex items-center justify-between mb-6 gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="hidden sm:flex w-10 h-10 rounded-lg bg-orange-500/10 items-center justify-center">
-                    <BookOpen className="w-5 h-5 text-orange-500" />
-                  </div>
-                  <h2 className="section-title !mb-0">Artigos e Análises</h2>
+            {loadingRecent ? (
+              <section className="mb-12">
+                <Skeleton className="h-8 w-48 mb-6" />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {[1, 2, 3].map((i) => (
+                    <Skeleton key={i} className="h-[300px] rounded-xl" />
+                  ))}
                 </div>
-                <Link 
-                  to="/categoria/opiniao" 
-                  className="flex items-center gap-2 text-link hover:text-primary font-semibold text-sm transition-colors group shrink-0 bg-secondary/50 hover:bg-secondary px-4 py-2 rounded-full"
-                >
-                  Ver todas
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </div>
-              <div className="grid grid-cols-1 gap-6">
-                {opinionNews.map((news) => (
-                  <Link key={news.id} to={`/noticia/${news.id}`}>
-                    <article className="news-card flex flex-col md:flex-row overflow-hidden group cursor-pointer">
-                      <div className="md:w-2/5 h-52 md:h-auto relative overflow-hidden">
-                        <img
-                          src={news.image}
-                          alt={news.title}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent md:bg-gradient-to-r" />
-                        <span className="category-badge category-opinion absolute top-4 left-4 shadow-lg">
-                          {news.categoryLabel}
-                        </span>
-                      </div>
-                      <div className="flex-1 p-5 md:p-6 flex flex-col justify-center">
-                        <h3 className="font-serif text-lg md:text-xl font-bold text-headline mb-3 group-hover:text-link transition-colors leading-snug">
-                          {news.title}
-                        </h3>
-                        <p className="text-muted-foreground leading-relaxed mb-4 text-sm md:text-base line-clamp-2">
-                          {news.excerpt}
-                        </p>
-                        <div className="article-meta">
-                          <span className="font-medium text-foreground">{news.author}</span>
-                          <span className="text-muted-foreground/50">•</span>
-                          <span>{news.date}</span>
-                        </div>
-                      </div>
-                    </article>
-                  </Link>
-                ))}
-              </div>
-            </section>
+              </section>
+            ) : (recentNoticias?.length ?? 0) > 0 ? (
+              <NewsSection
+                title="Últimas Notícias"
+                news={transformNews(recentNoticias, 3)}
+                showViewAll={false}
+              />
+            ) : null}
+
+            {/* Política Nacional */}
+            {loadingPolitica ? (
+              <section className="mb-12">
+                <Skeleton className="h-8 w-48 mb-6" />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {[1, 2, 3].map((i) => (
+                    <Skeleton key={i} className="h-[300px] rounded-xl" />
+                  ))}
+                </div>
+              </section>
+            ) : (politicaNoticias?.length ?? 0) > 0 ? (
+              <NewsSection
+                title="Política Nacional"
+                news={transformNews(politicaNoticias, 3)}
+                categorySlug="politica"
+              />
+            ) : null}
+
+            {/* Internacional */}
+            {loadingInternacional ? (
+              <section className="mb-12">
+                <Skeleton className="h-8 w-48 mb-6" />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {[1, 2, 3].map((i) => (
+                    <Skeleton key={i} className="h-[300px] rounded-xl" />
+                  ))}
+                </div>
+              </section>
+            ) : (internacionalNoticias?.length ?? 0) > 0 ? (
+              <NewsSection
+                title="Internacional"
+                news={transformNews(internacionalNoticias, 3)}
+                categorySlug="internacional"
+              />
+            ) : null}
           </div>
 
           {/* Sidebar */}
