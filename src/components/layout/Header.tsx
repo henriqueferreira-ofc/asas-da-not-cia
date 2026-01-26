@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X, Search, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { InlineSearch } from "@/components/InlineSearch";
 import { SearchModal } from "@/components/SearchModal";
 import logoAafab from "@/assets/logo-aafab.png";
 
@@ -14,7 +15,6 @@ const categories = [
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
   const [searchModalOpen, setSearchModalOpen] = useState(false);
 
   const currentDate = new Date().toLocaleDateString("pt-BR", {
@@ -50,26 +50,20 @@ export function Header() {
               alt="AAFAB - Amigos da Força Aérea Brasileira" 
               className="w-14 h-14 md:w-16 md:h-16 object-contain bg-white rounded-full p-1"
             />
-            <div className="hidden sm:block">
-              <h1 className="text-xl md:text-2xl font-serif font-bold text-primary-foreground tracking-tight leading-tight">
+            <div>
+              <h1 className="text-lg md:text-2xl font-serif font-bold text-primary-foreground tracking-tight leading-tight">
                 AAFAB
               </h1>
-              <p className="text-xs md:text-sm text-primary-foreground/70 leading-tight">
-                Amigos da Força Aérea Brasileira
+              <p className="text-[10px] md:text-sm text-primary-foreground/70 leading-tight">
+                Associação Amigos da Força Aérea Brasileira
               </p>
             </div>
           </Link>
 
-          {/* Desktop Search */}
-          <button
-            onClick={() => setSearchModalOpen(true)}
-            className="hidden lg:flex items-center bg-primary-foreground/10 rounded-lg px-4 py-2.5 flex-1 max-w-md mx-8 cursor-pointer hover:bg-primary-foreground/15 transition-colors"
-          >
-            <Search className="w-5 h-5 text-primary-foreground/60 mr-3" />
-            <span className="text-primary-foreground/50 text-sm">
-              Buscar notícias, artigos, eventos...
-            </span>
-          </button>
+          {/* Desktop Inline Search */}
+          <div className="hidden lg:block flex-1 mx-8">
+            <InlineSearch />
+          </div>
 
           {/* Mobile buttons */}
           <div className="flex items-center gap-2 lg:hidden">
