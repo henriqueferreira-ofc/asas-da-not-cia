@@ -4,8 +4,8 @@ import { Facebook, Instagram, Twitter, Youtube, Mail, Phone, MapPin, Send } from
 import { AdminLoginModal } from "@/components/admin/AdminLoginModal";
 const links = [
   { name: "Sobre a AAFAB", href: "/sobre" },
-  { name: "Nossa Missão", href: "/sobre#missao" },
-  { name: "Diretoria", href: "/sobre#diretoria" },
+  { name: "Nossa Missão", href: "/sobre" },
+  { name: "Diretoria", href: "/diretoria" },
   { name: "Ajude-nos", href: "/ajude-nos" },
   { name: "Contato", href: "/contato" },
 ];
