@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X, Search, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SearchModal } from "@/components/SearchModal";
 import logoAafab from "@/assets/logo-aafab.png";
 
 const categories = [
@@ -14,6 +15,7 @@ const categories = [
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [searchModalOpen, setSearchModalOpen] = useState(false);
 
   const currentDate = new Date().toLocaleDateString("pt-BR", {
     weekday: "long",
@@ -59,14 +61,15 @@ export function Header() {
           </Link>
 
           {/* Desktop Search */}
-          <div className="hidden lg:flex items-center bg-primary-foreground/10 rounded-lg px-4 py-2.5 flex-1 max-w-md mx-8">
+          <button
+            onClick={() => setSearchModalOpen(true)}
+            className="hidden lg:flex items-center bg-primary-foreground/10 rounded-lg px-4 py-2.5 flex-1 max-w-md mx-8 cursor-pointer hover:bg-primary-foreground/15 transition-colors"
+          >
             <Search className="w-5 h-5 text-primary-foreground/60 mr-3" />
-            <input
-              type="text"
-              placeholder="Buscar notícias, artigos, eventos..."
-              className="bg-transparent text-primary-foreground placeholder:text-primary-foreground/50 outline-none w-full text-sm"
-            />
-          </div>
+            <span className="text-primary-foreground/50 text-sm">
+              Buscar notícias, artigos, eventos...
+            </span>
+          </button>
 
           {/* Mobile buttons */}
           <div className="flex items-center gap-2 lg:hidden">
@@ -74,7 +77,7 @@ export function Header() {
               variant="ghost"
               size="icon"
               className="text-primary-foreground hover:bg-primary-foreground/10"
-              onClick={() => setSearchOpen(!searchOpen)}
+              onClick={() => setSearchModalOpen(true)}
             >
               <Search className="w-5 h-5" />
             </Button>
@@ -89,18 +92,6 @@ export function Header() {
           </div>
         </div>
 
-        {/* Mobile Search */}
-        {searchOpen && (
-          <div className="lg:hidden mt-4 flex items-center bg-primary-foreground/10 rounded-lg px-4 py-2.5 animate-fade-in">
-            <Search className="w-5 h-5 text-primary-foreground/60 mr-3" />
-            <input
-              type="text"
-              placeholder="Buscar notícias..."
-              className="bg-transparent text-primary-foreground placeholder:text-primary-foreground/50 outline-none w-full text-sm"
-              autoFocus
-            />
-          </div>
-        )}
       </div>
 
       {/* Navigation */}
@@ -168,6 +159,9 @@ export function Header() {
           </div>
         </div>
       )}
+
+      {/* Search Modal */}
+      <SearchModal open={searchModalOpen} onOpenChange={setSearchModalOpen} />
     </header>
   );
 }
