@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X, Search, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InlineSearch } from "@/components/InlineSearch";
-import { SearchModal } from "@/components/SearchModal";
 import logoAafab from "@/assets/logo-aafab.png";
 
 const categories = [
@@ -15,7 +14,6 @@ const categories = [
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [searchModalOpen, setSearchModalOpen] = useState(false);
 
   const currentDate = new Date().toLocaleDateString("pt-BR", {
     weekday: "long",
@@ -42,39 +40,31 @@ export function Header() {
 
       {/* Main header */}
       <div className="container py-4">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3 md:gap-4">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 shrink-0">
+          <Link to="/" className="flex items-center gap-2 md:gap-3 shrink-0">
             <img 
               src={logoAafab} 
               alt="AAFAB - Amigos da Força Aérea Brasileira" 
-              className="w-14 h-14 md:w-16 md:h-16 object-contain bg-white rounded-full p-1"
+              className="w-10 h-10 md:w-14 md:h-14 lg:w-16 lg:h-16 object-contain bg-white rounded-full p-1"
             />
-            <div>
-              <h1 className="text-lg md:text-2xl font-serif font-bold text-primary-foreground tracking-tight leading-tight">
+            <div className="hidden sm:block">
+              <h1 className="text-base md:text-lg lg:text-2xl font-serif font-bold text-primary-foreground tracking-tight leading-tight">
                 AAFAB
               </h1>
-              <p className="text-[10px] md:text-sm text-primary-foreground/70 leading-tight">
+              <p className="text-[9px] md:text-[10px] lg:text-sm text-primary-foreground/70 leading-tight">
                 Associação Amigos da Força Aérea Brasileira
               </p>
             </div>
           </Link>
 
-          {/* Desktop Inline Search */}
-          <div className="hidden lg:block flex-1 mx-8">
+          {/* Inline Search - All screen sizes */}
+          <div className="flex-1">
             <InlineSearch />
           </div>
 
-          {/* Mobile buttons */}
-          <div className="flex items-center gap-2 lg:hidden">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-primary-foreground hover:bg-primary-foreground/10"
-              onClick={() => setSearchModalOpen(true)}
-            >
-              <Search className="w-5 h-5" />
-            </Button>
+          {/* Mobile menu button */}
+          <div className="lg:hidden">
             <Button
               variant="ghost"
               size="icon"
@@ -85,7 +75,6 @@ export function Header() {
             </Button>
           </div>
         </div>
-
       </div>
 
       {/* Navigation */}
@@ -153,9 +142,6 @@ export function Header() {
           </div>
         </div>
       )}
-
-      {/* Search Modal */}
-      <SearchModal open={searchModalOpen} onOpenChange={setSearchModalOpen} />
     </header>
   );
 }
