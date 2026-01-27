@@ -40,31 +40,33 @@ export function Header() {
 
       {/* Main header */}
       <div className="container py-4">
-        <div className="flex items-center gap-3 md:gap-4">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 md:gap-3 shrink-0">
-            <img 
-              src={logoAafab} 
-              alt="AAFAB - Amigos da Força Aérea Brasileira" 
-              className="w-10 h-10 md:w-14 md:h-14 lg:w-16 lg:h-16 object-contain bg-white rounded-full p-1"
-            />
-            <div className="hidden sm:block">
-              <h1 className="text-base md:text-lg lg:text-2xl font-serif font-bold text-primary-foreground tracking-tight leading-tight">
-                AAFAB
-              </h1>
-              <p className="text-[9px] md:text-[10px] lg:text-sm text-primary-foreground/70 leading-tight">
-                Associação Amigos da Força Aérea Brasileira
-              </p>
-            </div>
-          </Link>
+        <div className="flex items-center justify-between">
+          {/* Logo + Search grouped together on the left */}
+          <div className="flex items-center gap-3 md:gap-4 flex-1">
+            <Link to="/" className="flex items-center gap-2 md:gap-3 shrink-0">
+              <img 
+                src={logoAafab} 
+                alt="AAFAB - Amigos da Força Aérea Brasileira" 
+                className="w-10 h-10 md:w-14 md:h-14 lg:w-16 lg:h-16 object-contain bg-white rounded-full p-1"
+              />
+              <div className="hidden sm:block">
+                <h1 className="text-base md:text-lg lg:text-2xl font-serif font-bold text-primary-foreground tracking-tight leading-tight">
+                  AAFAB
+                </h1>
+                <p className="text-[9px] md:text-[10px] lg:text-sm text-primary-foreground/70 leading-tight">
+                  Associação Amigos da Força Aérea Brasileira
+                </p>
+              </div>
+            </Link>
 
-          {/* Inline Search - All screen sizes */}
-          <div className="flex-1">
-            <InlineSearch />
+            {/* Inline Search - right after logo */}
+            <div className="flex-1 max-w-md lg:max-w-lg">
+              <InlineSearch />
+            </div>
           </div>
 
           {/* Mobile menu button */}
-          <div className="lg:hidden">
+          <div className="lg:hidden shrink-0 ml-2">
             <Button
               variant="ghost"
               size="icon"
