@@ -142,7 +142,7 @@ export function InlineSearch() {
   };
 
   return (
-    <div ref={containerRef} className="relative flex-1 max-w-md">
+    <div ref={containerRef} className="relative w-full min-w-0">
       <div className="flex items-center bg-primary-foreground/10 rounded-lg px-4 py-2.5">
         <Search className="w-5 h-5 text-primary-foreground/60 mr-3 shrink-0" />
         <input

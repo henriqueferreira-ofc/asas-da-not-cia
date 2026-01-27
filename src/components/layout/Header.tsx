@@ -40,7 +40,7 @@ export function Header() {
 
       {/* Main header */}
       <div className="container py-4">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
           {/* Logo on the left */}
           <Link to="/" className="flex items-center gap-2 md:gap-3 shrink-0">
             <img 
@@ -58,9 +58,9 @@ export function Header() {
             </div>
           </Link>
 
-          {/* Search on the right + mobile menu */}
-          <div className="flex items-center gap-2 md:gap-4">
-            <div className="w-48 sm:w-64 md:w-80 lg:w-96">
+          {/* Search on the far right + mobile menu */}
+          <div className="flex-1 flex items-center justify-end gap-2 md:gap-4 min-w-0">
+            <div className="w-full max-w-[22rem] sm:max-w-md md:max-w-lg lg:max-w-xl">
               <InlineSearch />
             </div>
             
