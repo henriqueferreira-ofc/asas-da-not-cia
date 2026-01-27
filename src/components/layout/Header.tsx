@@ -40,41 +40,41 @@ export function Header() {
 
       {/* Main header */}
       <div className="container py-4">
-        <div className="flex items-center justify-between">
-          {/* Logo + Search grouped together on the left */}
-          <div className="flex items-center gap-3 md:gap-4 flex-1">
-            <Link to="/" className="flex items-center gap-2 md:gap-3 shrink-0">
-              <img 
-                src={logoAafab} 
-                alt="AAFAB - Amigos da Força Aérea Brasileira" 
-                className="w-10 h-10 md:w-14 md:h-14 lg:w-16 lg:h-16 object-contain bg-white rounded-full p-1"
-              />
-              <div className="hidden sm:block">
-                <h1 className="text-base md:text-lg lg:text-2xl font-serif font-bold text-primary-foreground tracking-tight leading-tight">
-                  AAFAB
-                </h1>
-                <p className="text-[9px] md:text-[10px] lg:text-sm text-primary-foreground/70 leading-tight">
-                  Associação Amigos da Força Aérea Brasileira
-                </p>
-              </div>
-            </Link>
+        <div className="flex items-center justify-between gap-4">
+          {/* Logo on the left */}
+          <Link to="/" className="flex items-center gap-2 md:gap-3 shrink-0">
+            <img 
+              src={logoAafab} 
+              alt="AAFAB - Amigos da Força Aérea Brasileira" 
+              className="w-10 h-10 md:w-14 md:h-14 lg:w-16 lg:h-16 object-contain bg-white rounded-full p-1"
+            />
+            <div className="hidden sm:block">
+              <h1 className="text-base md:text-lg lg:text-2xl font-serif font-bold text-primary-foreground tracking-tight leading-tight">
+                AAFAB
+              </h1>
+              <p className="text-[9px] md:text-[10px] lg:text-sm text-primary-foreground/70 leading-tight">
+                Associação Amigos da Força Aérea Brasileira
+              </p>
+            </div>
+          </Link>
 
-            {/* Inline Search - right after logo */}
-            <div className="flex-1 max-w-md lg:max-w-lg">
+          {/* Search on the right + mobile menu */}
+          <div className="flex items-center gap-2 md:gap-4">
+            <div className="w-48 sm:w-64 md:w-80 lg:w-96">
               <InlineSearch />
             </div>
-          </div>
-
-          {/* Mobile menu button */}
-          <div className="lg:hidden shrink-0 ml-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-primary-foreground hover:bg-primary-foreground/10"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </Button>
+            
+            {/* Mobile menu button */}
+            <div className="lg:hidden shrink-0">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-primary-foreground hover:bg-primary-foreground/10"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              >
+                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </Button>
+            </div>
           </div>
         </div>
       </div>
