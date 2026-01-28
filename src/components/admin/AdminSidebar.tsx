@@ -19,6 +19,15 @@ const navItems = [
   { icon: FileText, label: 'Comunicados', href: '/admin/comunicados' },
 ];
 
+const categoryLinks = [
+  { label: 'Início', href: '/' },
+  { label: 'Sobre a AAFAB', href: '/sobre' },
+  { label: 'Política Nacional', href: '/categoria/politica' },
+  { label: 'Internacional', href: '/categoria/internacional' },
+  { label: 'Ajude-nos', href: '/ajude-nos' },
+  { label: 'Contato', href: '/contato' },
+];
+
 export function AdminSidebar() {
   const location = useLocation();
   const { signOut, user } = useAuth();
@@ -69,6 +78,24 @@ export function AdminSidebar() {
             );
           })}
         </ul>
+
+        <div className="mt-6 pt-6 border-t border-border">
+          <p className="px-3 mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            Categorias
+          </p>
+          <ul className="space-y-1">
+            {categoryLinks.map((link) => (
+              <li key={link.href}>
+                <Link
+                  to={link.href}
+                  className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
 
         <div className="mt-6 pt-6 border-t border-border">
           <Link
