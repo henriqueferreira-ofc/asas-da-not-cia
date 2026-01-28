@@ -8,7 +8,7 @@ export function FloatingCommunityButton() {
       href={whatsappLink}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-6 right-6 z-50 flex items-center gap-3 bg-accent hover:bg-accent/90 text-accent-foreground px-5 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group animate-fade-in"
+      className="fixed bottom-24 right-6 z-50 flex items-center gap-3 bg-accent hover:bg-accent/90 text-accent-foreground px-5 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group animate-fade-in"
     >
       <MessageCircle className="w-6 h-6" />
       <span className="font-semibold text-sm hidden sm:inline">
