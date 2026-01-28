@@ -24,6 +24,8 @@ import AdminNoticiaForm from "./pages/admin/AdminNoticiaForm";
 import AdminEventos from "./pages/admin/AdminEventos";
 import AdminEventoForm from "./pages/admin/AdminEventoForm";
 import AdminComunicados from "./pages/admin/AdminComunicados";
+import AdminPaginas from "./pages/admin/AdminPaginas";
+import AdminPaginaForm from "./pages/admin/AdminPaginaForm";
 import AdminSetup from "./pages/admin/AdminSetup";
 import ResetPassword from "./pages/admin/ResetPassword";
 
@@ -60,6 +62,8 @@ const App = () => (
             <Route path="eventos/novo" element={<AdminEventoForm />} />
             <Route path="eventos/editar/:id" element={<AdminEventoForm />} />
             <Route path="comunicados" element={<AdminComunicados />} />
+            <Route path="paginas" element={<AdminPaginas />} />
+            <Route path="paginas/editar/:slug" element={<AdminPaginaForm />} />
           </Route>
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
