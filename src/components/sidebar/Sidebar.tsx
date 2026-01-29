@@ -3,19 +3,21 @@ import { Calendar, TrendingUp, FileText, ChevronRight, Flame, Loader2 } from "lu
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useUpcomingEventos } from "@/hooks/useEventos";
-import { useNoticiasByCategory } from "@/hooks/useNoticias";
+import { useNoticiasByCategory, useMostViewedNoticias } from "@/hooks/useNoticias";
 
-const trendingNews = [
-  { id: "fab-exercicio-defesa-aerea", title: "FAB adquire novos caças de quinta geração", views: "12.5k" },
-  { id: "brasil-comando-forca-paz", title: "Brasil assume liderança em operação multinacional", views: "8.2k" },
-  { id: "fab-sistema-radar", title: "Novo radar nacional entra em operação", views: "6.8k" },
-  { id: "cooperacao-brics-defesa", title: "Acordo de cooperação com países do BRICS", views: "5.4k" },
-];
+// Format view count for display
+const formatViewCount = (count: number): string => {
+  if (count >= 1000) {
+    return `${(count / 1000).toFixed(1).replace('.0', '')}k`;
+  }
+  return count.toString();
+};
 
 
 export function Sidebar() {
   const { data: eventos, isLoading: isLoadingEventos, error: errorEventos } = useUpcomingEventos(4);
   const { data: comunicados, isLoading: isLoadingComunicados, error: errorComunicados } = useNoticiasByCategory("comunicados");
+  const { data: mostViewed, isLoading: isLoadingMostViewed } = useMostViewedNoticias(4);
 
   return (
     <aside className="space-y-6">
@@ -84,34 +86,45 @@ export function Sidebar() {
       {/* Trending */}
       <div className="bg-card rounded-xl border border-border p-5 shadow-sm">
         <div className="flex items-center gap-2 mb-4 pb-3 border-b border-border">
-          <div className="w-8 h-8 rounded-lg bg-orange-500/10 flex items-center justify-center">
-            <Flame className="w-4 h-4 text-orange-500" />
+          <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center">
+            <Flame className="w-4 h-4 text-accent" />
           </div>
           <h3 className="font-serif font-bold text-lg text-headline">Mais Lidas</h3>
         </div>
-        <ul className="space-y-4">
-          {trendingNews.map((news, index) => (
-            <li key={news.id}>
-              <Link 
-                to={`/noticia/${news.id}`}
-                className="flex items-start gap-3 group p-2 rounded-lg hover:bg-secondary/50 transition-colors -mx-2"
-              >
-                <span className="text-2xl font-serif font-bold text-transparent bg-gradient-to-br from-accent to-accent/50 bg-clip-text leading-none">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-foreground group-hover:text-link transition-colors leading-snug line-clamp-2">
-                    {news.title}
-                  </p>
-                  <span className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-                    <TrendingUp className="w-3 h-3" />
-                    {news.views} visualizações
+        
+        {isLoadingMostViewed ? (
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+          </div>
+        ) : mostViewed && mostViewed.length > 0 ? (
+          <ul className="space-y-4">
+            {mostViewed.map((news, index) => (
+              <li key={news.id}>
+                <Link 
+                  to={`/noticia/${news.id}`}
+                  className="flex items-start gap-3 group p-2 rounded-lg hover:bg-secondary/50 transition-colors -mx-2"
+                >
+                  <span className="text-2xl font-serif font-bold text-transparent bg-gradient-to-br from-accent to-accent/50 bg-clip-text leading-none">
+                    {String(index + 1).padStart(2, "0")}
                   </span>
-                </div>
-              </Link>
-            </li>
-          ))}
-        </ul>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-foreground group-hover:text-link transition-colors leading-snug line-clamp-2">
+                      {news.title}
+                    </p>
+                    <span className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+                      <TrendingUp className="w-3 h-3" />
+                      {formatViewCount(news.view_count)} visualizações
+                    </span>
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-sm text-muted-foreground text-center py-4">
+            Nenhuma notícia visualizada ainda
+          </p>
+        )}
       </div>
 
       {/* Official Documents */}
