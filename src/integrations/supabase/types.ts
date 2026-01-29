@@ -71,6 +71,7 @@ export type Database = {
           published: boolean
           title: string
           updated_at: string
+          view_count: number
         }
         Insert: {
           author?: string
@@ -86,6 +87,7 @@ export type Database = {
           published?: boolean
           title: string
           updated_at?: string
+          view_count?: number
         }
         Update: {
           author?: string
@@ -101,6 +103,7 @@ export type Database = {
           published?: boolean
           title?: string
           updated_at?: string
+          view_count?: number
         }
         Relationships: []
       }
@@ -164,6 +167,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_view_count: { Args: { noticia_id: string }; Returns: undefined }
     }
     Enums: {
       app_role: "admin" | "editor" | "viewer"

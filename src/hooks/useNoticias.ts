@@ -115,6 +115,44 @@ export function useFeaturedNoticias(limit = 1) {
   });
 }
 
+// Fetch most viewed news (Mais Lidas)
+export function useMostViewedNoticias(limit = 4) {
+  return useQuery({
+    queryKey: ['noticias', 'most-viewed', limit],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('noticias')
+        .select('*')
+        .eq('published', true)
+        .gt('view_count', 0)
+        .order('view_count', { ascending: false })
+        .limit(limit);
+
+      if (error) throw error;
+      return data;
+    },
+  });
+}
+
+// Increment view count for a news article
+export function useIncrementViewCount() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (noticiaId: string) => {
+      const { error } = await supabase.rpc('increment_view_count', {
+        noticia_id: noticiaId
+      });
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      // Invalidate most viewed query to reflect new counts
+      queryClient.invalidateQueries({ queryKey: ['noticias', 'most-viewed'] });
+    },
+  });
+}
+
 // Fetch related news (same category, excluding current)
 export function useRelatedNoticias(currentId: string | undefined, category: string | undefined, limit = 3) {
   return useQuery({

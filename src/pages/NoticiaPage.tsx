@@ -1,10 +1,11 @@
 import { useParams, Link } from "react-router-dom";
+import { useEffect } from "react";
 import { ArrowLeft, Clock, User, Share2, Facebook, Twitter } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { NewsCard, NewsCategory } from "@/components/news/NewsCard";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useNoticia, useRelatedNoticias } from "@/hooks/useNoticias";
+import { useNoticia, useRelatedNoticias, useIncrementViewCount } from "@/hooks/useNoticias";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -42,6 +43,14 @@ const NoticiaPage = () => {
   const { id } = useParams<{ id: string }>();
   const { data: noticia, isLoading, error } = useNoticia(id);
   const { data: relatedNoticias } = useRelatedNoticias(id, noticia?.category, 3);
+  const incrementViewCount = useIncrementViewCount();
+
+  // Increment view count when the news article is loaded
+  useEffect(() => {
+    if (id && noticia && !isLoading) {
+      incrementViewCount.mutate(id);
+    }
+  }, [id, noticia?.id]); // Only run when article loads
 
   if (isLoading) {
     return (
