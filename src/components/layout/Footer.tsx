@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Facebook, Instagram, Twitter, Youtube, Mail, Phone, MapPin, Send } from "lucide-react";
+import { Facebook, Instagram, Twitter, Youtube, Linkedin, Mail, Phone, MapPin, Send } from "lucide-react";
 import { AdminLoginModal } from "@/components/admin/AdminLoginModal";
+import { useSiteSettingsMap } from "@/hooks/useSiteSettings";
+
 const links = [
   { name: "Sobre a AAFAB", href: "/sobre" },
   { name: "Nossa Missão", href: "/sobre" },
@@ -50,6 +52,20 @@ function NewsletterForm() {
 
 export function Footer() {
   const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const { data: settings } = useSiteSettingsMap();
+
+  const address = settings?.address || 'Brasília - DF, Brasil';
+  const email = settings?.email || 'contato@aafab.org.br';
+  const phone = settings?.phone || '(61) 99999-9999';
+  const footerText = settings?.footer_text || 'AAFAB - Associação Amigos da Força Aérea Brasileira. Todos os direitos reservados.';
+
+  const socialLinks = [
+    { icon: Facebook, href: settings?.facebook, label: 'Facebook' },
+    { icon: Instagram, href: settings?.instagram, label: 'Instagram' },
+    { icon: Twitter, href: settings?.twitter, label: 'Twitter' },
+    { icon: Youtube, href: settings?.youtube, label: 'Youtube' },
+    { icon: Linkedin, href: settings?.linkedin, label: 'LinkedIn' },
+  ].filter(s => s.href);
 
   return (
     <>
@@ -83,34 +99,29 @@ export function Footer() {
               política e assuntos relacionados à Força Aérea Brasileira.
             </p>
             <div className="flex items-center gap-2">
-              <a 
-                href="#" 
-                aria-label="Facebook"
-                className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors"
-              >
-                <Facebook className="w-5 h-5" />
-              </a>
-              <a 
-                href="#" 
-                aria-label="Instagram"
-                className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors"
-              >
-                <Instagram className="w-5 h-5" />
-              </a>
-              <a 
-                href="#" 
-                aria-label="Twitter"
-                className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors"
-              >
-                <Twitter className="w-5 h-5" />
-              </a>
-              <a 
-                href="#" 
-                aria-label="Youtube"
-                className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors"
-              >
-                <Youtube className="w-5 h-5" />
-              </a>
+              {socialLinks.length > 0 ? (
+                socialLinks.map(({ icon: Icon, href, label }) => (
+                  <a 
+                    key={label}
+                    href={href || '#'} 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors"
+                  >
+                    <Icon className="w-5 h-5" />
+                  </a>
+                ))
+              ) : (
+                <>
+                  <span className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center opacity-50">
+                    <Facebook className="w-5 h-5" />
+                  </span>
+                  <span className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center opacity-50">
+                    <Instagram className="w-5 h-5" />
+                  </span>
+                </>
+              )}
             </div>
           </div>
 
@@ -147,7 +158,7 @@ export function Footer() {
                 </div>
                 <div>
                   <p className="text-xs text-primary-foreground/60 uppercase tracking-wide mb-0.5">Endereço</p>
-                  <span className="text-sm text-primary-foreground/90">Brasília - DF, Brasil</span>
+                  <span className="text-sm text-primary-foreground/90">{address}</span>
                 </div>
               </li>
               <li className="flex items-start gap-3">
@@ -157,10 +168,10 @@ export function Footer() {
                 <div>
                   <p className="text-xs text-primary-foreground/60 uppercase tracking-wide mb-0.5">E-mail</p>
                   <a 
-                    href="mailto:contato@aafab.org.br" 
+                    href={`mailto:${email}`} 
                     className="text-sm text-primary-foreground/90 hover:text-accent transition-colors"
                   >
-                    contato@aafab.org.br
+                    {email}
                   </a>
                 </div>
               </li>
@@ -170,7 +181,7 @@ export function Footer() {
                 </div>
                 <div>
                   <p className="text-xs text-primary-foreground/60 uppercase tracking-wide mb-0.5">Telefone</p>
-                  <span className="text-sm text-primary-foreground/90">(61) 3333-0000</span>
+                  <span className="text-sm text-primary-foreground/90">{phone}</span>
                 </div>
               </li>
             </ul>
@@ -183,7 +194,7 @@ export function Footer() {
         <div className="container py-5">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
             <p className="text-primary-foreground/60 text-center md:text-left">
-              © {new Date().getFullYear()} AAFAB - Amigos da Força Aérea Brasileira. Todos os direitos reservados.
+              © {new Date().getFullYear()} {footerText}
             </p>
             <div className="flex items-center gap-6 text-primary-foreground/60">
               <Link to="/sobre" className="hover:text-primary-foreground transition-colors">
