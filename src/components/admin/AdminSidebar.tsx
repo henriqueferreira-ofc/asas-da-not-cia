@@ -7,7 +7,10 @@ import {
   ChevronLeft,
   Calendar,
   FileText,
-  Settings
+  Settings,
+  BookOpen,
+  FolderOpen,
+  Cog
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
@@ -18,7 +21,10 @@ const navItems = [
   { icon: Newspaper, label: 'Notícias', href: '/admin/noticias' },
   { icon: Calendar, label: 'Agenda / Eventos', href: '/admin/eventos' },
   { icon: FileText, label: 'Comunicados', href: '/admin/comunicados' },
+  { icon: BookOpen, label: 'E-books', href: '/admin/ebooks' },
+  { icon: FolderOpen, label: 'Categorias', href: '/admin/categorias' },
   { icon: Settings, label: 'Páginas', href: '/admin/paginas' },
+  { icon: Cog, label: 'Configurações', href: '/admin/configuracoes' },
 ];
 
 

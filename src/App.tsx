@@ -26,6 +26,11 @@ import AdminEventoForm from "./pages/admin/AdminEventoForm";
 import AdminComunicados from "./pages/admin/AdminComunicados";
 import AdminPaginas from "./pages/admin/AdminPaginas";
 import AdminPaginaForm from "./pages/admin/AdminPaginaForm";
+import AdminEbooks from "./pages/admin/AdminEbooks";
+import AdminEbookForm from "./pages/admin/AdminEbookForm";
+import AdminCategorias from "./pages/admin/AdminCategorias";
+import AdminCategoriaForm from "./pages/admin/AdminCategoriaForm";
+import AdminConfiguracoes from "./pages/admin/AdminConfiguracoes";
 import AdminSetup from "./pages/admin/AdminSetup";
 import ResetPassword from "./pages/admin/ResetPassword";
 
@@ -64,6 +69,13 @@ const App = () => (
             <Route path="comunicados" element={<AdminComunicados />} />
             <Route path="paginas" element={<AdminPaginas />} />
             <Route path="paginas/editar/:slug" element={<AdminPaginaForm />} />
+            <Route path="ebooks" element={<AdminEbooks />} />
+            <Route path="ebooks/novo" element={<AdminEbookForm />} />
+            <Route path="ebooks/editar/:id" element={<AdminEbookForm />} />
+            <Route path="categorias" element={<AdminCategorias />} />
+            <Route path="categorias/nova" element={<AdminCategoriaForm />} />
+            <Route path="categorias/editar/:id" element={<AdminCategoriaForm />} />
+            <Route path="configuracoes" element={<AdminConfiguracoes />} />
           </Route>
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

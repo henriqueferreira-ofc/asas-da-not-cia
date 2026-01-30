@@ -14,15 +14,107 @@ export type Database = {
   }
   public: {
     Tables: {
+      categories: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          published: boolean
+          show_in_home: boolean
+          show_in_menu: boolean
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          published?: boolean
+          show_in_home?: boolean
+          show_in_menu?: boolean
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          published?: boolean
+          show_in_home?: boolean
+          show_in_menu?: boolean
+          slug?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ebooks: {
+        Row: {
+          card_link: string | null
+          cover_url: string | null
+          created_at: string
+          description: string | null
+          featured: boolean
+          id: string
+          pages: number | null
+          pdf_url: string | null
+          pix_link: string | null
+          price: number
+          published: boolean
+          sort_order: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          card_link?: string | null
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          featured?: boolean
+          id?: string
+          pages?: number | null
+          pdf_url?: string | null
+          pix_link?: string | null
+          price?: number
+          published?: boolean
+          sort_order?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          card_link?: string | null
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          featured?: boolean
+          id?: string
+          pages?: number | null
+          pdf_url?: string | null
+          pix_link?: string | null
+          price?: number
+          published?: boolean
+          sort_order?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       eventos: {
         Row: {
           created_at: string
           description: string | null
           end_date: string | null
           event_date: string
+          expires_at: string | null
           featured: boolean
           id: string
           image_url: string | null
+          is_pinned: boolean
           location: string | null
           published: boolean
           title: string
@@ -33,9 +125,11 @@ export type Database = {
           description?: string | null
           end_date?: string | null
           event_date: string
+          expires_at?: string | null
           featured?: boolean
           id?: string
           image_url?: string | null
+          is_pinned?: boolean
           location?: string | null
           published?: boolean
           title: string
@@ -46,9 +140,11 @@ export type Database = {
           description?: string | null
           end_date?: string | null
           event_date?: string
+          expires_at?: string | null
           featured?: boolean
           id?: string
           image_url?: string | null
+          is_pinned?: boolean
           location?: string | null
           published?: boolean
           title?: string
@@ -65,10 +161,15 @@ export type Database = {
           content: string
           created_at: string
           excerpt: string
+          expires_at: string | null
           featured: boolean
           id: string
           image_url: string | null
+          is_pinned: boolean
+          meta_description: string | null
+          meta_title: string | null
           published: boolean
+          status: string
           title: string
           updated_at: string
           view_count: number
@@ -81,10 +182,15 @@ export type Database = {
           content: string
           created_at?: string
           excerpt: string
+          expires_at?: string | null
           featured?: boolean
           id?: string
           image_url?: string | null
+          is_pinned?: boolean
+          meta_description?: string | null
+          meta_title?: string | null
           published?: boolean
+          status?: string
           title: string
           updated_at?: string
           view_count?: number
@@ -97,10 +203,15 @@ export type Database = {
           content?: string
           created_at?: string
           excerpt?: string
+          expires_at?: string | null
           featured?: boolean
           id?: string
           image_url?: string | null
+          is_pinned?: boolean
+          meta_description?: string | null
+          meta_title?: string | null
           published?: boolean
+          status?: string
           title?: string
           updated_at?: string
           view_count?: number
@@ -131,6 +242,36 @@ export type Database = {
           page_slug?: string
           page_title?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      site_settings: {
+        Row: {
+          category: string
+          created_at: string
+          id: string
+          key: string
+          label: string
+          updated_at: string
+          value: string | null
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          id?: string
+          key: string
+          label: string
+          updated_at?: string
+          value?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: string
+          key?: string
+          label?: string
+          updated_at?: string
+          value?: string | null
         }
         Relationships: []
       }
