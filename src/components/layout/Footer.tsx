@@ -6,7 +6,6 @@ import { useSiteSettingsMap } from "@/hooks/useSiteSettings";
 
 const links = [
   { name: "Sobre a AAFAB", href: "/sobre" },
-  { name: "Nossa Missão", href: "/sobre" },
   { name: "Diretoria", href: "/diretoria" },
   { name: "Ajude-nos", href: "/ajude-nos" },
   { name: "Contato", href: "/contato" },
