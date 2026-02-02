@@ -1,13 +1,35 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, Mail, Phone, MapPin, Send } from "lucide-react";
+import { ArrowLeft, Mail, Phone, MapPin, Send, Loader2 } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { usePageContent } from "@/hooks/usePageContent";
 
 const ContatoPage = () => {
+  const { data: pageContent, isLoading } = usePageContent("contato");
+
+  // Extract content from database
+  const content = (pageContent?.content as Record<string, unknown>) || {};
+  const title = (content.title as string) || "Entre em Contato";
+  const email = (content.email as string) || "contato@aafab.org.br";
+  const phone = (content.phone as string) || "(61) 3333-0000";
+  const address = (content.address as string) || "Esplanada dos Ministérios\nBloco A, Sala 100\nBrasília - DF, 70000-000";
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="container py-8 flex items-center justify-center min-h-[60vh]">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -28,7 +50,7 @@ const ContatoPage = () => {
           {/* Header */}
           <div className="text-center mb-12">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-headline mb-4">
-              Entre em Contato
+              {title}
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Estamos à disposição para atender associados, imprensa e interessados 
@@ -46,10 +68,8 @@ const ContatoPage = () => {
                   </div>
                   <h3 className="font-semibold text-headline">Endereço</h3>
                 </div>
-                <p className="text-muted-foreground">
-                  Esplanada dos Ministérios<br />
-                  Bloco A, Sala 100<br />
-                  Brasília - DF, 70000-000
+                <p className="text-muted-foreground whitespace-pre-line">
+                  {address}
                 </p>
               </div>
 
@@ -63,14 +83,8 @@ const ContatoPage = () => {
                 <div className="space-y-2 text-muted-foreground">
                   <p>
                     <strong>Geral:</strong><br />
-                    <a href="mailto:contato@aafab.org.br" className="text-link hover:text-primary">
-                      contato@aafab.org.br
-                    </a>
-                  </p>
-                  <p>
-                    <strong>Imprensa:</strong><br />
-                    <a href="mailto:imprensa@aafab.org.br" className="text-link hover:text-primary">
-                      imprensa@aafab.org.br
+                    <a href={`mailto:${email}`} className="text-link hover:text-primary">
+                      {email}
                     </a>
                   </p>
                 </div>
@@ -84,7 +98,7 @@ const ContatoPage = () => {
                   <h3 className="font-semibold text-headline">Telefone</h3>
                 </div>
                 <div className="space-y-2 text-muted-foreground">
-                  <p>(61) 3333-0000</p>
+                  <p>{phone}</p>
                   <p className="text-sm">
                     Segunda a Sexta<br />
                     08h às 18h

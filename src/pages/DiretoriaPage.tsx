@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, User, Users, BookOpen, Wallet, Shield } from "lucide-react";
+import { ArrowLeft, User, Users, BookOpen, Wallet, Shield, Loader2 } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { usePageContent } from "@/hooks/usePageContent";
 
 interface DiretorMember {
   cargo: string;
@@ -10,55 +11,76 @@ interface DiretorMember {
   icon: React.ReactNode;
 }
 
-const diretoria: DiretorMember[] = [
-  {
-    cargo: "Presidente",
-    nome: "A definir",
-    descricao: "Responsável pela gestão geral da associação e representação institucional.",
-    icon: <Shield className="w-6 h-6" />,
-  },
-  {
-    cargo: "Vice-Presidente",
-    nome: "A definir",
-    descricao: "Auxilia o presidente em suas funções e o substitui em suas ausências.",
-    icon: <Shield className="w-6 h-6" />,
-  },
-  {
-    cargo: "Secretário",
-    nome: "A definir",
-    descricao: "Responsável pela documentação, atas e comunicações oficiais da associação.",
-    icon: <BookOpen className="w-6 h-6" />,
-  },
-  {
-    cargo: "Tesoureiro",
-    nome: "A definir",
-    descricao: "Gerencia as finanças, prestação de contas e patrimônio da associação.",
-    icon: <Wallet className="w-6 h-6" />,
-  },
-];
-
-const conselhoDeliberativo: DiretorMember[] = [
-  {
-    cargo: "Conselheiro",
-    nome: "A definir",
-    descricao: "Membro do Conselho Deliberativo da AAFAB.",
-    icon: <User className="w-6 h-6" />,
-  },
-  {
-    cargo: "Conselheiro",
-    nome: "A definir",
-    descricao: "Membro do Conselho Deliberativo da AAFAB.",
-    icon: <User className="w-6 h-6" />,
-  },
-  {
-    cargo: "Conselheiro",
-    nome: "A definir",
-    descricao: "Membro do Conselho Deliberativo da AAFAB.",
-    icon: <User className="w-6 h-6" />,
-  },
-];
-
 const DiretoriaPage = () => {
+  const { data: pageContent, isLoading } = usePageContent("diretoria");
+
+  // Extract content from database
+  const content = (pageContent?.content as Record<string, unknown>) || {};
+  const presidente = (content.presidente as { nome?: string; foto?: string }) || {};
+  const vicePresidente = (content.vicePresidente as { nome?: string; foto?: string }) || {};
+  const secretario = (content.secretario as { nome?: string; foto?: string }) || {};
+  const tesoureiro = (content.tesoureiro as { nome?: string; foto?: string }) || {};
+
+  const diretoria: DiretorMember[] = [
+    {
+      cargo: "Presidente",
+      nome: presidente.nome || "A definir",
+      descricao: "Responsável pela gestão geral da associação e representação institucional.",
+      icon: <Shield className="w-6 h-6" />,
+    },
+    {
+      cargo: "Vice-Presidente",
+      nome: vicePresidente.nome || "A definir",
+      descricao: "Auxilia o presidente em suas funções e o substitui em suas ausências.",
+      icon: <Shield className="w-6 h-6" />,
+    },
+    {
+      cargo: "Secretário",
+      nome: secretario.nome || "A definir",
+      descricao: "Responsável pela documentação, atas e comunicações oficiais da associação.",
+      icon: <BookOpen className="w-6 h-6" />,
+    },
+    {
+      cargo: "Tesoureiro",
+      nome: tesoureiro.nome || "A definir",
+      descricao: "Gerencia as finanças, prestação de contas e patrimônio da associação.",
+      icon: <Wallet className="w-6 h-6" />,
+    },
+  ];
+
+  const conselhoDeliberativo: DiretorMember[] = [
+    {
+      cargo: "Conselheiro",
+      nome: "A definir",
+      descricao: "Membro do Conselho Deliberativo da AAFAB.",
+      icon: <User className="w-6 h-6" />,
+    },
+    {
+      cargo: "Conselheiro",
+      nome: "A definir",
+      descricao: "Membro do Conselho Deliberativo da AAFAB.",
+      icon: <User className="w-6 h-6" />,
+    },
+    {
+      cargo: "Conselheiro",
+      nome: "A definir",
+      descricao: "Membro do Conselho Deliberativo da AAFAB.",
+      icon: <User className="w-6 h-6" />,
+    },
+  ];
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="container py-8 flex items-center justify-center min-h-[60vh]">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -79,7 +101,7 @@ const DiretoriaPage = () => {
           {/* Header */}
           <div className="text-center mb-12">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-headline mb-4">
-              Diretoria da AAFAB
+              {(content.title as string) || "Diretoria da AAFAB"}
             </h1>
             <p className="text-xl text-muted-foreground">
               Conheça a equipe que lidera a Associação Amigos da Força Aérea Brasileira
