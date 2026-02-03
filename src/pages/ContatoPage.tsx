@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { usePageContent } from "@/hooks/usePageContent";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const ContatoPage = () => {
   const { toast } = useToast();
@@ -24,7 +25,7 @@ const ContatoPage = () => {
   // Extract content from database
   const content = (pageContent?.content as Record<string, unknown>) || {};
   const title = (content.title as string) || "Entre em Contato";
-  const contactEmail = "aafabdm@gmail.com"; // Email de destino para mensagens
+  const contactEmail = "aafabdm@gmail.com";
   const phone = (content.phone as string) || "(61) 3333-0000";
   const address = (content.address as string) || "Esplanada dos Ministérios\nBloco A, Sala 100\nBrasília - DF, 70000-000";
 
@@ -33,7 +34,7 @@ const ContatoPage = () => {
     setFormData(prev => ({ ...prev, [id]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Validate form
@@ -59,27 +60,35 @@ const ContatoPage = () => {
 
     setIsSubmitting(true);
 
-    // Compose email body with proper encoding
-    const subject = encodeURIComponent(`[Contato AAFAB] ${formData.subject}`);
-    const body = encodeURIComponent(
-      `Nome: ${formData.name}\n` +
-      `E-mail: ${formData.email}\n` +
-      `Assunto: ${formData.subject}\n\n` +
-      `Mensagem:\n${formData.message}`
-    );
+    try {
+      const { data, error } = await supabase.functions.invoke("send-contact-email", {
+        body: {
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+        },
+      });
 
-    // Open mailto link
-    window.location.href = `mailto:${contactEmail}?subject=${subject}&body=${body}`;
+      if (error) throw error;
+      if (data && !data.success) throw new Error(data.error || "Erro ao enviar mensagem");
 
-    // Show success message and reset form
-    setTimeout(() => {
       toast({
-        title: "Mensagem preparada!",
-        description: "Seu cliente de e-mail foi aberto. Clique em enviar para concluir.",
+        title: "Mensagem enviada!",
+        description: "Sua mensagem foi enviada com sucesso. Em breve entraremos em contato.",
       });
       setFormData({ name: "", email: "", subject: "", message: "" });
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "Erro ao enviar mensagem";
+      console.error("Error sending contact email:", error);
+      toast({
+        title: "Erro ao enviar",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    } finally {
       setIsSubmitting(false);
-    }, 500);
+    }
   };
 
   if (isLoading) {

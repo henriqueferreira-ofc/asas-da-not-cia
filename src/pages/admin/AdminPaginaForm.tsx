@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { DiretoriaFormFields } from '@/components/admin/forms/DiretoriaFormFields';
 
 // Formulários específicos para cada página
 const SobreForm = ({ content, onChange }: { content: Record<string, unknown>; onChange: (content: Record<string, unknown>) => void }) => (
@@ -161,122 +162,7 @@ const AjudeNosForm = ({ content, onChange }: { content: Record<string, unknown>;
   </div>
 );
 
-const DiretoriaForm = ({ content, onChange }: { content: Record<string, unknown>; onChange: (content: Record<string, unknown>) => void }) => {
-  const presidente = (content.presidente as { nome?: string; foto?: string }) || { nome: '', foto: '' };
-  const vicePresidente = (content.vicePresidente as { nome?: string; foto?: string }) || { nome: '', foto: '' };
-  const secretario = (content.secretario as { nome?: string; foto?: string }) || { nome: '', foto: '' };
-  const tesoureiro = (content.tesoureiro as { nome?: string; foto?: string }) || { nome: '', foto: '' };
-
-  const updateMember = (key: string, field: string, value: string) => {
-    const current = (content[key] as { nome?: string; foto?: string }) || { nome: '', foto: '' };
-    onChange({ ...content, [key]: { ...current, [field]: value } });
-  };
-
-  return (
-    <div className="space-y-6">
-      <div className="space-y-2">
-        <Label htmlFor="title">Título da Página</Label>
-        <Input
-          id="title"
-          value={(content.title as string) || ''}
-          onChange={(e) => onChange({ ...content, title: e.target.value })}
-        />
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Presidente</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label>Nome</Label>
-            <Input
-              value={presidente.nome || ''}
-              onChange={(e) => updateMember('presidente', 'nome', e.target.value)}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>URL da Foto</Label>
-            <Input
-              value={presidente.foto || ''}
-              onChange={(e) => updateMember('presidente', 'foto', e.target.value)}
-              placeholder="https://..."
-            />
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Vice-Presidente</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label>Nome</Label>
-            <Input
-              value={vicePresidente.nome || ''}
-              onChange={(e) => updateMember('vicePresidente', 'nome', e.target.value)}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>URL da Foto</Label>
-            <Input
-              value={vicePresidente.foto || ''}
-              onChange={(e) => updateMember('vicePresidente', 'foto', e.target.value)}
-              placeholder="https://..."
-            />
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Secretário</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label>Nome</Label>
-            <Input
-              value={secretario.nome || ''}
-              onChange={(e) => updateMember('secretario', 'nome', e.target.value)}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>URL da Foto</Label>
-            <Input
-              value={secretario.foto || ''}
-              onChange={(e) => updateMember('secretario', 'foto', e.target.value)}
-              placeholder="https://..."
-            />
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Tesoureiro</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label>Nome</Label>
-            <Input
-              value={tesoureiro.nome || ''}
-              onChange={(e) => updateMember('tesoureiro', 'nome', e.target.value)}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>URL da Foto</Label>
-            <Input
-              value={tesoureiro.foto || ''}
-              onChange={(e) => updateMember('tesoureiro', 'foto', e.target.value)}
-              placeholder="https://..."
-            />
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
-};
+// DiretoriaForm now uses the extracted component
 
 const InicioForm = ({ content, onChange }: { content: Record<string, unknown>; onChange: (content: Record<string, unknown>) => void }) => (
   <div className="space-y-6">
@@ -327,7 +213,7 @@ const AdminPaginaForm = () => {
       case 'ajude-nos':
         return <AjudeNosForm content={content} onChange={setContent} />;
       case 'diretoria':
-        return <DiretoriaForm content={content} onChange={setContent} />;
+        return <DiretoriaFormFields content={content} onChange={setContent} />;
       case 'inicio':
         return <InicioForm content={content} onChange={setContent} />;
       default:

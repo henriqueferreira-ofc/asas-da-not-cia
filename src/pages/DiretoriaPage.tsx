@@ -1,14 +1,30 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, User, Users, BookOpen, Wallet, Shield, Loader2 } from "lucide-react";
+import { ArrowLeft, User, Users, Shield, Scale, Loader2, MapPin } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { usePageContent } from "@/hooks/usePageContent";
 
+// Brazilian states for the 15 state counselors
+const ESTADOS_BRASILEIROS = [
+  "AC", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA",
+  "MG", "MS", "MT", "PA", "PB"
+];
+
 interface DiretorMember {
   cargo: string;
   nome: string;
-  descricao: string;
   icon: React.ReactNode;
+  estado?: string;
+}
+
+interface ConselheiroEstadual {
+  estado: string;
+  nome: string;
+}
+
+interface ConselhoFiscalMember {
+  cargo: string;
+  nome: string;
 }
 
 const DiretoriaPage = () => {
@@ -16,55 +32,50 @@ const DiretoriaPage = () => {
 
   // Extract content from database
   const content = (pageContent?.content as Record<string, unknown>) || {};
-  const presidente = (content.presidente as { nome?: string; foto?: string }) || {};
-  const vicePresidente = (content.vicePresidente as { nome?: string; foto?: string }) || {};
-  const secretario = (content.secretario as { nome?: string; foto?: string }) || {};
-  const tesoureiro = (content.tesoureiro as { nome?: string; foto?: string }) || {};
+  
+  // Diretoria Executiva
+  const presidente = (content.presidente as { nome?: string }) || {};
+  const vicePresidente = (content.vicePresidente as { nome?: string }) || {};
+  const secretarioGeral = (content.secretarioGeral as { nome?: string }) || {};
+  const diretorFinanceiro = (content.diretorFinanceiro as { nome?: string }) || {};
+  const viceDiretorFinanceiro = (content.viceDiretorFinanceiro as { nome?: string }) || {};
 
-  const diretoria: DiretorMember[] = [
+  // Conselheiros Estaduais (15)
+  const conselheirosEstaduais = (content.conselheirosEstaduais as ConselheiroEstadual[]) || 
+    ESTADOS_BRASILEIROS.map(estado => ({ estado, nome: "" }));
+
+  // Conselho Fiscal (4 membros)
+  const conselhoFiscal = (content.conselhoFiscal as ConselhoFiscalMember[]) || [
+    { cargo: "Presidente", nome: "" },
+    { cargo: "Segundo Conselheiro", nome: "" },
+    { cargo: "Terceiro Conselheiro", nome: "" },
+    { cargo: "Advogada", nome: "" },
+  ];
+
+  const diretoriaExecutiva: DiretorMember[] = [
     {
       cargo: "Presidente",
       nome: presidente.nome || "A definir",
-      descricao: "Responsável pela gestão geral da associação e representação institucional.",
       icon: <Shield className="w-6 h-6" />,
     },
     {
       cargo: "Vice-Presidente",
       nome: vicePresidente.nome || "A definir",
-      descricao: "Auxilia o presidente em suas funções e o substitui em suas ausências.",
       icon: <Shield className="w-6 h-6" />,
     },
     {
-      cargo: "Secretário",
-      nome: secretario.nome || "A definir",
-      descricao: "Responsável pela documentação, atas e comunicações oficiais da associação.",
-      icon: <BookOpen className="w-6 h-6" />,
-    },
-    {
-      cargo: "Tesoureiro",
-      nome: tesoureiro.nome || "A definir",
-      descricao: "Gerencia as finanças, prestação de contas e patrimônio da associação.",
-      icon: <Wallet className="w-6 h-6" />,
-    },
-  ];
-
-  const conselhoDeliberativo: DiretorMember[] = [
-    {
-      cargo: "Conselheiro",
-      nome: "A definir",
-      descricao: "Membro do Conselho Deliberativo da AAFAB.",
+      cargo: "Secretário Geral",
+      nome: secretarioGeral.nome || "A definir",
       icon: <User className="w-6 h-6" />,
     },
     {
-      cargo: "Conselheiro",
-      nome: "A definir",
-      descricao: "Membro do Conselho Deliberativo da AAFAB.",
+      cargo: "Diretor Financeiro",
+      nome: diretorFinanceiro.nome || "A definir",
       icon: <User className="w-6 h-6" />,
     },
     {
-      cargo: "Conselheiro",
-      nome: "A definir",
-      descricao: "Membro do Conselho Deliberativo da AAFAB.",
+      cargo: "Vice Diretor Financeiro",
+      nome: viceDiretorFinanceiro.nome || "A definir",
       icon: <User className="w-6 h-6" />,
     },
   ];
@@ -97,7 +108,7 @@ const DiretoriaPage = () => {
           </Link>
         </div>
 
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           {/* Header */}
           <div className="text-center mb-12">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-headline mb-4">
@@ -117,8 +128,8 @@ const DiretoriaPage = () => {
               <h2 className="text-2xl font-serif font-bold text-headline">Diretoria Executiva</h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {diretoria.map((membro, index) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {diretoriaExecutiva.map((membro, index) => (
                 <div 
                   key={index}
                   className="bg-card rounded-xl border border-border p-6 hover:shadow-lg transition-shadow"
@@ -133,12 +144,9 @@ const DiretoriaPage = () => {
                       <span className="text-xs font-semibold uppercase tracking-wide text-accent mb-1 block">
                         {membro.cargo}
                       </span>
-                      <h3 className="text-lg font-bold text-headline mb-2">
+                      <h3 className="text-lg font-bold text-headline">
                         {membro.nome}
                       </h3>
-                      <p className="text-sm text-muted-foreground">
-                        {membro.descricao}
-                      </p>
                     </div>
                   </div>
                 </div>
@@ -146,36 +154,62 @@ const DiretoriaPage = () => {
             </div>
           </section>
 
-          {/* Conselho Deliberativo */}
+          {/* Conselheiros Estaduais - 15 estados */}
           <section className="mb-12">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
-                <Users className="w-6 h-6 text-accent" />
+                <MapPin className="w-6 h-6 text-accent" />
               </div>
-              <h2 className="text-2xl font-serif font-bold text-headline">Conselho Deliberativo</h2>
+              <div>
+                <h2 className="text-2xl font-serif font-bold text-headline">Conselheiros Estaduais</h2>
+                <p className="text-muted-foreground text-sm">Representantes dos 15 estados</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+              {conselheirosEstaduais.map((conselheiro, index) => (
+                <div 
+                  key={index}
+                  className="bg-card rounded-xl border border-border p-4 hover:shadow-lg transition-shadow text-center"
+                >
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
+                    <span className="text-sm font-bold text-primary">{conselheiro.estado}</span>
+                  </div>
+                  <h3 className="text-sm font-semibold text-headline">
+                    {conselheiro.nome || "A definir"}
+                  </h3>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Conselho Fiscal */}
+          <section className="mb-12">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
+                <Scale className="w-6 h-6 text-accent" />
+              </div>
+              <h2 className="text-2xl font-serif font-bold text-headline">Conselho Fiscal</h2>
             </div>
 
             <p className="text-muted-foreground mb-6">
-              O Conselho Deliberativo é responsável por deliberar sobre as diretrizes gerais da associação, 
-              aprovar contas e tomar decisões estratégicas para o futuro da AAFAB.
+              O Conselho Fiscal é responsável pela fiscalização das contas e atividades financeiras da associação.
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {conselhoDeliberativo.map((membro, index) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+              {conselhoFiscal.map((membro, index) => (
                 <div 
                   key={index}
                   className="bg-card rounded-xl border border-border p-6 hover:shadow-lg transition-shadow text-center"
                 >
                   <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                    <div className="text-primary">
-                      {membro.icon}
-                    </div>
+                    <User className="w-6 h-6 text-primary" />
                   </div>
                   <span className="text-xs font-semibold uppercase tracking-wide text-accent mb-1 block">
                     {membro.cargo}
                   </span>
                   <h3 className="text-lg font-bold text-headline">
-                    {membro.nome}
+                    {membro.nome || "A definir"}
                   </h3>
                 </div>
               ))}
