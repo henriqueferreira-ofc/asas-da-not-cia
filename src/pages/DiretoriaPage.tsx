@@ -6,8 +6,8 @@ import { usePageContent } from "@/hooks/usePageContent";
 
 // Brazilian states for the 15 state counselors
 const ESTADOS_BRASILEIROS = [
-  "AC", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA",
-  "MG", "MS", "MT", "PA", "PB"
+  "SP", "RJ", "AM", "PR", "BA", "CE", "DF", "ES", "GO", "MA",
+  "MG", "MS", "RS", "PA", "PE"
 ];
 
 interface DiretorMember {
