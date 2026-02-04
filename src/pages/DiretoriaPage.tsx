@@ -7,7 +7,7 @@ import { usePageContent } from "@/hooks/usePageContent";
 // Brazilian states for the 15 state counselors (exact order requested)
 const ESTADOS_BRASILEIROS = [
   "SP", "RJ", "AM", "PR", "BA", "CE", "DF", "ES", "GO", "MA",
-  "MG", "RN", "RS", "PA", "PE"
+  "MG", "MS", "RS", "PA", "PE"
 ] as const;
 
 interface DiretorMember {
@@ -226,7 +226,7 @@ const DiretoriaPage = () => {
             </h2>
             <p className="text-primary-foreground/80 mb-6 max-w-2xl mx-auto">
               Entre em contato conosco para saber como você pode contribuir com a AAFAB 
-              e ajudar a valorizar a Força Aérea Brasileira.
+              e ajudar a valorizar nosso trabalho.
             </p>
             <Link
               to="/contato"
