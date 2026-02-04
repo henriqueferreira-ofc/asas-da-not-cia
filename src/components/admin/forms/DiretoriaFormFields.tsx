@@ -4,10 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 // Brazilian states for the 15 state counselors
 const ESTADOS_BRASILEIROS = [
-  { sigla: "AC", nome: "Acre" },
-  { sigla: "AL", nome: "Alagoas" },
+  { sigla: "SP", nome: "São Paulo" },
+  { sigla: "RJ", nome: "Rio de Janeiro" },
   { sigla: "AM", nome: "Amazonas" },
-  { sigla: "AP", nome: "Amapá" },
+  { sigla: "PR", nome: "Paraná" },
   { sigla: "BA", nome: "Bahia" },
   { sigla: "CE", nome: "Ceará" },
   { sigla: "DF", nome: "Distrito Federal" },
@@ -16,9 +16,9 @@ const ESTADOS_BRASILEIROS = [
   { sigla: "MA", nome: "Maranhão" },
   { sigla: "MG", nome: "Minas Gerais" },
   { sigla: "MS", nome: "Mato Grosso do Sul" },
-  { sigla: "MT", nome: "Mato Grosso" },
+  { sigla: "RS", nome: "Rio Grande do Sul" },
   { sigla: "PA", nome: "Pará" },
-  { sigla: "PB", nome: "Paraíba" },
+  { sigla: "PE", nome: "Pernambuco" },
 ];
 
 const CARGOS_CONSELHO_FISCAL = [

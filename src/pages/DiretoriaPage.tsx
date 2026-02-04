@@ -122,8 +122,8 @@ const DiretoriaPage = () => {
           {/* Diretoria Executiva */}
           <section className="mb-12">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
-                <Users className="w-6 h-6 text-accent" />
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-accent/10 transition-colors">
+                <Users className="w-6 h-6 text-primary hover:text-accent transition-colors" />
               </div>
               <h2 className="text-2xl font-serif font-bold text-headline">Diretoria Executiva</h2>
             </div>
@@ -132,11 +132,11 @@ const DiretoriaPage = () => {
               {diretoriaExecutiva.map((membro, index) => (
                 <div 
                   key={index}
-                  className="bg-card rounded-xl border border-border p-6 hover:shadow-lg transition-shadow"
+                  className="bg-card rounded-xl border border-border p-6 hover:shadow-lg transition-shadow group"
                 >
                   <div className="flex items-start gap-4">
-                    <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                      <div className="text-primary">
+                    <div className="w-14 h-14 rounded-full bg-primary/10 group-hover:bg-accent/10 flex items-center justify-center shrink-0 transition-colors">
+                      <div className="text-primary group-hover:text-accent transition-colors">
                         {membro.icon}
                       </div>
                     </div>
@@ -157,8 +157,8 @@ const DiretoriaPage = () => {
           {/* Conselheiros Estaduais - 15 estados */}
           <section className="mb-12">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
-                <MapPin className="w-6 h-6 text-accent" />
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                <MapPin className="w-6 h-6 text-primary hover:text-accent transition-colors" />
               </div>
               <div>
                 <h2 className="text-2xl font-serif font-bold text-headline">Conselheiros Estaduais</h2>
@@ -170,10 +170,10 @@ const DiretoriaPage = () => {
               {conselheirosEstaduais.map((conselheiro, index) => (
                 <div 
                   key={index}
-                  className="bg-card rounded-xl border border-border p-4 hover:shadow-lg transition-shadow text-center"
+                  className="bg-card rounded-xl border border-border p-4 hover:shadow-lg transition-shadow text-center group"
                 >
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
-                    <span className="text-sm font-bold text-primary">{conselheiro.estado}</span>
+                  <div className="w-10 h-10 rounded-full bg-primary/10 group-hover:bg-accent/10 flex items-center justify-center mx-auto mb-3 transition-colors">
+                    <span className="text-sm font-bold text-primary group-hover:text-accent transition-colors">{conselheiro.estado}</span>
                   </div>
                   <h3 className="text-sm font-semibold text-headline">
                     {conselheiro.nome || "A definir"}
@@ -186,8 +186,8 @@ const DiretoriaPage = () => {
           {/* Conselho Fiscal */}
           <section className="mb-12">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
-                <Scale className="w-6 h-6 text-accent" />
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                <Scale className="w-6 h-6 text-primary hover:text-accent transition-colors" />
               </div>
               <h2 className="text-2xl font-serif font-bold text-headline">Conselho Fiscal</h2>
             </div>
@@ -200,10 +200,10 @@ const DiretoriaPage = () => {
               {conselhoFiscal.map((membro, index) => (
                 <div 
                   key={index}
-                  className="bg-card rounded-xl border border-border p-6 hover:shadow-lg transition-shadow text-center"
+                  className="bg-card rounded-xl border border-border p-6 hover:shadow-lg transition-shadow text-center group"
                 >
-                  <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                    <User className="w-6 h-6 text-primary" />
+                  <div className="w-16 h-16 rounded-full bg-primary/10 group-hover:bg-accent/10 flex items-center justify-center mx-auto mb-4 transition-colors">
+                    <User className="w-6 h-6 text-primary group-hover:text-accent transition-colors" />
                   </div>
                   <span className="text-xs font-semibold uppercase tracking-wide text-accent mb-1 block">
                     {membro.cargo}
