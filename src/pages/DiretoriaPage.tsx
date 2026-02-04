@@ -4,11 +4,11 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { usePageContent } from "@/hooks/usePageContent";
 
-// Brazilian states for the 15 state counselors
+// Brazilian states for the 15 state counselors (exact order requested)
 const ESTADOS_BRASILEIROS = [
   "SP", "RJ", "AM", "PR", "BA", "CE", "DF", "ES", "GO", "MA",
   "MG", "MS", "RS", "PA", "PE"
-];
+] as const;
 
 interface DiretorMember {
   cargo: string;
@@ -40,9 +40,12 @@ const DiretoriaPage = () => {
   const diretorFinanceiro = (content.diretorFinanceiro as { nome?: string }) || {};
   const viceDiretorFinanceiro = (content.viceDiretorFinanceiro as { nome?: string }) || {};
 
-  // Conselheiros Estaduais (15)
-  const conselheirosEstaduais = (content.conselheirosEstaduais as ConselheiroEstadual[]) || 
-    ESTADOS_BRASILEIROS.map(estado => ({ estado, nome: "" }));
+  // Conselheiros Estaduais (15) - always use the fixed states list
+  const dbConselheiros = (content.conselheirosEstaduais as ConselheiroEstadual[]) || [];
+  const conselheirosEstaduais = ESTADOS_BRASILEIROS.map(estado => {
+    const existing = dbConselheiros.find(c => c.estado === estado);
+    return { estado, nome: existing?.nome || "" };
+  });
 
   // Conselho Fiscal (4 membros)
   const conselhoFiscal = (content.conselhoFiscal as ConselhoFiscalMember[]) || [
@@ -122,8 +125,8 @@ const DiretoriaPage = () => {
           {/* Diretoria Executiva */}
           <section className="mb-12">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
-                <Users className="w-6 h-6 text-accent" />
+              <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center">
+                <Users className="w-6 h-6 text-primary-foreground" />
               </div>
               <h2 className="text-2xl font-serif font-bold text-headline">Diretoria Executiva</h2>
             </div>
@@ -132,11 +135,11 @@ const DiretoriaPage = () => {
               {diretoriaExecutiva.map((membro, index) => (
                 <div 
                   key={index}
-                  className="bg-card rounded-xl border border-border p-6 hover:shadow-lg transition-shadow"
+                  className="bg-card rounded-xl border border-border p-6 hover:shadow-lg transition-shadow group"
                 >
-                  <div className="flex items-start gap-4">
-                    <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                      <div className="text-primary">
+            <div className="flex items-start gap-4">
+                    <div className="w-14 h-14 rounded-full bg-primary group-hover:bg-accent flex items-center justify-center shrink-0 transition-colors">
+                      <div className="text-primary-foreground group-hover:text-accent-foreground transition-colors">
                         {membro.icon}
                       </div>
                     </div>
@@ -157,8 +160,8 @@ const DiretoriaPage = () => {
           {/* Conselheiros Estaduais - 15 estados */}
           <section className="mb-12">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
-                <MapPin className="w-6 h-6 text-accent" />
+              <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center">
+                <MapPin className="w-6 h-6 text-primary-foreground" />
               </div>
               <div>
                 <h2 className="text-2xl font-serif font-bold text-headline">Conselheiros Estaduais</h2>
@@ -170,10 +173,10 @@ const DiretoriaPage = () => {
               {conselheirosEstaduais.map((conselheiro, index) => (
                 <div 
                   key={index}
-                  className="bg-card rounded-xl border border-border p-4 hover:shadow-lg transition-shadow text-center"
+                  className="bg-card rounded-xl border border-border p-4 hover:shadow-lg transition-shadow text-center group"
                 >
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
-                    <span className="text-sm font-bold text-primary">{conselheiro.estado}</span>
+                  <div className="w-10 h-10 rounded-full bg-primary group-hover:bg-accent flex items-center justify-center mx-auto mb-3 transition-colors">
+                    <span className="text-sm font-bold text-primary-foreground group-hover:text-accent-foreground transition-colors">{conselheiro.estado}</span>
                   </div>
                   <h3 className="text-sm font-semibold text-headline">
                     {conselheiro.nome || "A definir"}
@@ -186,8 +189,8 @@ const DiretoriaPage = () => {
           {/* Conselho Fiscal */}
           <section className="mb-12">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
-                <Scale className="w-6 h-6 text-accent" />
+              <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center">
+                <Scale className="w-6 h-6 text-primary-foreground" />
               </div>
               <h2 className="text-2xl font-serif font-bold text-headline">Conselho Fiscal</h2>
             </div>
@@ -200,10 +203,10 @@ const DiretoriaPage = () => {
               {conselhoFiscal.map((membro, index) => (
                 <div 
                   key={index}
-                  className="bg-card rounded-xl border border-border p-6 hover:shadow-lg transition-shadow text-center"
+                  className="bg-card rounded-xl border border-border p-6 hover:shadow-lg transition-shadow text-center group"
                 >
-                  <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                    <User className="w-6 h-6 text-primary" />
+                  <div className="w-16 h-16 rounded-full bg-primary group-hover:bg-accent flex items-center justify-center mx-auto mb-4 transition-colors">
+                    <User className="w-6 h-6 text-primary-foreground group-hover:text-accent-foreground transition-colors" />
                   </div>
                   <span className="text-xs font-semibold uppercase tracking-wide text-accent mb-1 block">
                     {membro.cargo}
