@@ -7,12 +7,13 @@ import { usePageContent } from "@/hooks/usePageContent";
 // Brazilian states for the 15 state counselors (exact order requested)
 const ESTADOS_BRASILEIROS = [
   "SP", "RJ", "AM", "PR", "BA", "CE", "DF", "ES", "GO", "MA",
-  "MG", "MS", "RS", "PA", "PE"
+  "RN", "MG", "RS", "PA", "PE"
 ] as const;
 
 interface DiretorMember {
   cargo: string;
   nome: string;
+  foto?: string;
   icon: React.ReactNode;
   estado?: string;
 }
@@ -20,11 +21,13 @@ interface DiretorMember {
 interface ConselheiroEstadual {
   estado: string;
   nome: string;
+  foto?: string;
 }
 
 interface ConselhoFiscalMember {
   cargo: string;
   nome: string;
+  foto?: string;
 }
 
 const DiretoriaPage = () => {
@@ -34,17 +37,17 @@ const DiretoriaPage = () => {
   const content = (pageContent?.content as Record<string, unknown>) || {};
   
   // Diretoria Executiva
-  const presidente = (content.presidente as { nome?: string }) || {};
-  const vicePresidente = (content.vicePresidente as { nome?: string }) || {};
-  const secretarioGeral = (content.secretarioGeral as { nome?: string }) || {};
-  const diretorFinanceiro = (content.diretorFinanceiro as { nome?: string }) || {};
-  const viceDiretorFinanceiro = (content.viceDiretorFinanceiro as { nome?: string }) || {};
+  const presidente = (content.presidente as { nome?: string; foto?: string }) || {};
+  const vicePresidente = (content.vicePresidente as { nome?: string; foto?: string }) || {};
+  const secretarioGeral = (content.secretarioGeral as { nome?: string; foto?: string }) || {};
+  const diretorFinanceiro = (content.diretorFinanceiro as { nome?: string; foto?: string }) || {};
+  const viceDiretorFinanceiro = (content.viceDiretorFinanceiro as { nome?: string; foto?: string }) || {};
 
   // Conselheiros Estaduais (15) - always use the fixed states list
   const dbConselheiros = (content.conselheirosEstaduais as ConselheiroEstadual[]) || [];
   const conselheirosEstaduais = ESTADOS_BRASILEIROS.map(estado => {
     const existing = dbConselheiros.find(c => c.estado === estado);
-    return { estado, nome: existing?.nome || "" };
+    return { estado, nome: existing?.nome || "", foto: existing?.foto || "" };
   });
 
   // Conselho Fiscal (4 membros)
@@ -59,26 +62,31 @@ const DiretoriaPage = () => {
     {
       cargo: "Presidente",
       nome: presidente.nome || "A definir",
+      foto: presidente.foto,
       icon: <Shield className="w-6 h-6" />,
     },
     {
       cargo: "Vice-Presidente",
       nome: vicePresidente.nome || "A definir",
+      foto: vicePresidente.foto,
       icon: <Shield className="w-6 h-6" />,
     },
     {
       cargo: "Secretário Geral",
       nome: secretarioGeral.nome || "A definir",
+      foto: secretarioGeral.foto,
       icon: <User className="w-6 h-6" />,
     },
     {
       cargo: "Diretor Financeiro",
       nome: diretorFinanceiro.nome || "A definir",
+      foto: diretorFinanceiro.foto,
       icon: <User className="w-6 h-6" />,
     },
     {
       cargo: "Vice Diretor Financeiro",
       nome: viceDiretorFinanceiro.nome || "A definir",
+      foto: viceDiretorFinanceiro.foto,
       icon: <User className="w-6 h-6" />,
     },
   ];
@@ -131,18 +139,61 @@ const DiretoriaPage = () => {
               <h2 className="text-2xl font-serif font-bold text-headline">Diretoria Executiva</h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {diretoriaExecutiva.map((membro, index) => (
+            {/* First row - 3 items */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+              {diretoriaExecutiva.slice(0, 3).map((membro, index) => (
                 <div 
                   key={index}
                   className="bg-card rounded-xl border border-border p-6 hover:shadow-lg transition-shadow group"
                 >
-            <div className="flex items-start gap-4">
-                    <div className="w-14 h-14 rounded-full bg-primary group-hover:bg-accent flex items-center justify-center shrink-0 transition-colors">
-                      <div className="text-primary-foreground group-hover:text-accent-foreground transition-colors">
-                        {membro.icon}
+                  <div className="flex items-start gap-4">
+                    {membro.foto ? (
+                      <img 
+                        src={membro.foto} 
+                        alt={membro.nome}
+                        className="w-14 h-14 rounded-full object-cover shrink-0"
+                      />
+                    ) : (
+                      <div className="w-14 h-14 rounded-full bg-primary group-hover:bg-accent flex items-center justify-center shrink-0 transition-colors">
+                        <div className="text-primary-foreground group-hover:text-accent-foreground transition-colors">
+                          {membro.icon}
+                        </div>
                       </div>
+                    )}
+                    <div className="flex-1">
+                      <span className="text-xs font-semibold uppercase tracking-wide text-accent mb-1 block">
+                        {membro.cargo}
+                      </span>
+                      <h3 className="text-lg font-bold text-headline">
+                        {membro.nome}
+                      </h3>
                     </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {/* Second row - 2 items centered */}
+            <div className="flex justify-center gap-6">
+              {diretoriaExecutiva.slice(3, 5).map((membro, index) => (
+                <div 
+                  key={index + 3}
+                  className="bg-card rounded-xl border border-border p-6 hover:shadow-lg transition-shadow group w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]"
+                >
+                  <div className="flex items-start gap-4">
+                    {membro.foto ? (
+                      <img 
+                        src={membro.foto} 
+                        alt={membro.nome}
+                        className="w-14 h-14 rounded-full object-cover shrink-0"
+                      />
+                    ) : (
+                      <div className="w-14 h-14 rounded-full bg-primary group-hover:bg-accent flex items-center justify-center shrink-0 transition-colors">
+                        <div className="text-primary-foreground group-hover:text-accent-foreground transition-colors">
+                          {membro.icon}
+                        </div>
+                      </div>
+                    )}
                     <div className="flex-1">
                       <span className="text-xs font-semibold uppercase tracking-wide text-accent mb-1 block">
                         {membro.cargo}
@@ -175,9 +226,17 @@ const DiretoriaPage = () => {
                   key={index}
                   className="bg-card rounded-xl border border-border p-4 hover:shadow-lg transition-shadow text-center group"
                 >
-                  <div className="w-10 h-10 rounded-full bg-primary group-hover:bg-accent flex items-center justify-center mx-auto mb-3 transition-colors">
-                    <span className="text-sm font-bold text-primary-foreground group-hover:text-accent-foreground transition-colors">{conselheiro.estado}</span>
-                  </div>
+                  {conselheiro.foto ? (
+                    <img 
+                      src={conselheiro.foto} 
+                      alt={conselheiro.nome}
+                      className="w-10 h-10 rounded-full object-cover mx-auto mb-3"
+                    />
+                  ) : (
+                    <div className="w-10 h-10 rounded-full bg-primary group-hover:bg-accent flex items-center justify-center mx-auto mb-3 transition-colors">
+                      <span className="text-sm font-bold text-primary-foreground group-hover:text-accent-foreground transition-colors">{conselheiro.estado}</span>
+                    </div>
+                  )}
                   <h3 className="text-sm font-semibold text-headline">
                     {conselheiro.nome || "A definir"}
                   </h3>
@@ -205,9 +264,17 @@ const DiretoriaPage = () => {
                   key={index}
                   className="bg-card rounded-xl border border-border p-6 hover:shadow-lg transition-shadow text-center group"
                 >
-                  <div className="w-16 h-16 rounded-full bg-primary group-hover:bg-accent flex items-center justify-center mx-auto mb-4 transition-colors">
-                    <User className="w-6 h-6 text-primary-foreground group-hover:text-accent-foreground transition-colors" />
-                  </div>
+                  {membro.foto ? (
+                    <img 
+                      src={membro.foto} 
+                      alt={membro.nome}
+                      className="w-16 h-16 rounded-full object-cover mx-auto mb-4"
+                    />
+                  ) : (
+                    <div className="w-16 h-16 rounded-full bg-primary group-hover:bg-accent flex items-center justify-center mx-auto mb-4 transition-colors">
+                      <User className="w-6 h-6 text-primary-foreground group-hover:text-accent-foreground transition-colors" />
+                    </div>
+                  )}
                   <span className="text-xs font-semibold uppercase tracking-wide text-accent mb-1 block">
                     {membro.cargo}
                   </span>
