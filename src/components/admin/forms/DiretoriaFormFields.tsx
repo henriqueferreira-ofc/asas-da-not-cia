@@ -17,7 +17,7 @@ const ESTADOS_BRASILEIROS = [
   { sigla: "MA", nome: "Maranhão" },
   { sigla: "MG", nome: "Minas Gerais" },
   { sigla: "RN", nome: "Rio Grande do Norte" },
-  { sigla: "RS", nome: "Rio Grande do Sul" },
+  { sigla: "MG", nome: "Minas Gerais" },
   { sigla: "PA", nome: "Pará" },
   { sigla: "PE", nome: "Pernambuco" },
 ];

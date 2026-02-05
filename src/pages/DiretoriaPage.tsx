@@ -7,7 +7,7 @@ import { usePageContent } from "@/hooks/usePageContent";
 // Brazilian states for the 15 state counselors (exact order requested)
 const ESTADOS_BRASILEIROS = [
   "SP", "RJ", "AM", "PR", "BA", "CE", "DF", "ES", "GO", "MA",
-  "MG", "RN", "RS", "PA", "PE"
+  "MG", "RN", "MG", "PA", "PE"
 ] as const;
 
 interface DiretorMember {
@@ -43,10 +43,10 @@ const DiretoriaPage = () => {
   const diretorFinanceiro = (content.diretorFinanceiro as { nome?: string; foto?: string }) || {};
   const viceDiretorFinanceiro = (content.viceDiretorFinanceiro as { nome?: string; foto?: string }) || {};
 
-  // Conselheiros Estaduais (15) - always use the fixed states list
+  // Conselheiros Estaduais (15) - use index-based mapping since we have duplicate states (MG)
   const dbConselheiros = (content.conselheirosEstaduais as ConselheiroEstadual[]) || [];
-  const conselheirosEstaduais = ESTADOS_BRASILEIROS.map(estado => {
-    const existing = dbConselheiros.find(c => c.estado === estado);
+  const conselheirosEstaduais = ESTADOS_BRASILEIROS.map((estado, index) => {
+    const existing = dbConselheiros[index];
     return { estado, nome: existing?.nome || "", foto: existing?.foto || "" };
   });
 
