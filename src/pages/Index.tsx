@@ -47,7 +47,8 @@ const Index = () => {
   const { data: politicaNoticias, isLoading: loadingPolitica } = useNoticiasByCategory("politica");
   const { data: internacionalNoticias, isLoading: loadingInternacional } = useNoticiasByCategory("internacional");
 
-  const featured = featuredNoticias?.[0];
+  // Use featured news if available, otherwise use the most recent published news
+  const featured = featuredNoticias?.[0] || recentNoticias?.[0];
 
   // Transform DB data to NewsSection format
   const transformNews = (noticias: typeof recentNoticias, limit = 3) => {
@@ -85,17 +86,7 @@ const Index = () => {
               author={featured.author}
               date={formatDate(featured.created_at)}
             />
-          ) : (
-            <FeaturedNews
-              id="placeholder"
-              title="Bem-vindo à AAFAB"
-              excerpt="Acompanhe as últimas notícias sobre política nacional, internacional e comunicados oficiais da Associação Amigos da Força Aérea Brasileira."
-              image={heroImage}
-              category="AAFAB"
-              author="Redação AAFAB"
-              date={formatDate(new Date().toISOString())}
-            />
-          )}
+          ) : null}
         </section>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
