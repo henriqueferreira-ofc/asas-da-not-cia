@@ -1,8 +1,10 @@
 import { useParams, Link } from "react-router-dom";
-import { useEffect } from "react";
-import { ArrowLeft, Clock, User, Share2, Facebook, Twitter } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ArrowLeft, Clock, User, Share2, Facebook, Twitter, Linkedin, Copy, Check } from "lucide-react";
 import { Header } from "@/components/layout/Header";
+import { toast } from "sonner";
 import { Footer } from "@/components/layout/Footer";
+import { ShareButtons } from "@/components/ShareButtons";
 import { NewsCard, NewsCategory } from "@/components/news/NewsCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useNoticia, useRelatedNoticias, useIncrementViewCount } from "@/hooks/useNoticias";
@@ -162,20 +164,7 @@ const NoticiaPage = () => {
           />
 
           {/* Share */}
-          <div className="flex items-center gap-4 py-6 border-t border-b border-border mb-8">
-            <span className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-              <Share2 className="w-4 h-4" />
-              Compartilhar:
-            </span>
-            <div className="flex items-center gap-2">
-              <button className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors">
-                <Facebook className="w-4 h-4" />
-              </button>
-              <button className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors">
-                <Twitter className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
+          <ShareButtons title={noticia.title} />
 
           {/* Related News */}
           {(relatedNoticias?.length ?? 0) > 0 && (
