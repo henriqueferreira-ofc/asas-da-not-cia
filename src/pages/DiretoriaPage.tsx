@@ -7,8 +7,19 @@ import { usePageContent } from "@/hooks/usePageContent";
 // Brazilian states for the 15 state counselors (exact order requested)
 const ESTADOS_BRASILEIROS = [
   "SP", "RJ", "AM", "PR", "BA", "CE", "DF", "ES", "GO", "MA",
-  "MG", "RN", "MG", "PA", "PE"
+  "MG", "RN", "RO", "PA", "PE"
 ] as const;
+
+// Helper function to convert Google Drive links to direct image URLs
+const convertGoogleDriveUrl = (url: string | undefined): string | undefined => {
+  if (!url) return undefined;
+  // Check if it's a Google Drive link
+  const driveMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (driveMatch) {
+    return `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w400`;
+  }
+  return url;
+};
 
 interface DiretorMember {
   cargo: string;
@@ -43,11 +54,11 @@ const DiretoriaPage = () => {
   const diretorFinanceiro = (content.diretorFinanceiro as { nome?: string; foto?: string }) || {};
   const viceDiretorFinanceiro = (content.viceDiretorFinanceiro as { nome?: string; foto?: string }) || {};
 
-  // Conselheiros Estaduais (15) - use index-based mapping since we have duplicate states (MG)
+  // Conselheiros Estaduais (15) - search by state since DB stores by state
   const dbConselheiros = (content.conselheirosEstaduais as ConselheiroEstadual[]) || [];
-  const conselheirosEstaduais = ESTADOS_BRASILEIROS.map((estado, index) => {
-    const existing = dbConselheiros[index];
-    return { estado, nome: existing?.nome || "", foto: existing?.foto || "" };
+  const conselheirosEstaduais = ESTADOS_BRASILEIROS.map((estado) => {
+    const existing = dbConselheiros.find(c => c.estado === estado);
+    return { estado, nome: existing?.nome || "", foto: convertGoogleDriveUrl(existing?.foto) || "" };
   });
 
   // Conselho Fiscal (4 membros)
@@ -62,31 +73,31 @@ const DiretoriaPage = () => {
     {
       cargo: "Presidente",
       nome: presidente.nome || "A definir",
-      foto: presidente.foto,
+      foto: convertGoogleDriveUrl(presidente.foto),
       icon: <Shield className="w-6 h-6" />,
     },
     {
       cargo: "Vice-Presidente",
       nome: vicePresidente.nome || "A definir",
-      foto: vicePresidente.foto,
+      foto: convertGoogleDriveUrl(vicePresidente.foto),
       icon: <Shield className="w-6 h-6" />,
     },
     {
       cargo: "Secretário Geral",
       nome: secretarioGeral.nome || "A definir",
-      foto: secretarioGeral.foto,
+      foto: convertGoogleDriveUrl(secretarioGeral.foto),
       icon: <User className="w-6 h-6" />,
     },
     {
       cargo: "Diretor Financeiro",
       nome: diretorFinanceiro.nome || "A definir",
-      foto: diretorFinanceiro.foto,
+      foto: convertGoogleDriveUrl(diretorFinanceiro.foto),
       icon: <User className="w-6 h-6" />,
     },
     {
       cargo: "Vice Diretor Financeiro",
       nome: viceDiretorFinanceiro.nome || "A definir",
-      foto: viceDiretorFinanceiro.foto,
+      foto: convertGoogleDriveUrl(viceDiretorFinanceiro.foto),
       icon: <User className="w-6 h-6" />,
     },
   ];

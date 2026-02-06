@@ -3,7 +3,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link2 } from "lucide-react";
 
-// Brazilian states for the 15 state counselors
+// Brazilian states for the 15 state counselors - exact order requested
 const ESTADOS_BRASILEIROS = [
   { sigla: "SP", nome: "São Paulo" },
   { sigla: "RJ", nome: "Rio de Janeiro" },
@@ -17,7 +17,7 @@ const ESTADOS_BRASILEIROS = [
   { sigla: "MA", nome: "Maranhão" },
   { sigla: "MG", nome: "Minas Gerais" },
   { sigla: "RN", nome: "Rio Grande do Norte" },
-  { sigla: "MG", nome: "Minas Gerais" },
+  { sigla: "RO", nome: "Rondônia" },
   { sigla: "PA", nome: "Pará" },
   { sigla: "PE", nome: "Pernambuco" },
 ];
