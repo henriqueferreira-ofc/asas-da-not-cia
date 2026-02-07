@@ -1,6 +1,6 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { FeaturedNews } from "@/components/news/FeaturedNews";
+import { FeaturedNewsGrid } from "@/components/news/FeaturedNewsGrid";
 import { BreakingNews } from "@/components/news/BreakingNews";
 import { NewsSection } from "@/components/news/NewsSection";
 import { Sidebar } from "@/components/sidebar/Sidebar";
@@ -42,13 +42,27 @@ const getCategoryLabel = (category: string): string => {
 };
 
 const Index = () => {
-  const { data: featuredNoticias, isLoading: loadingFeatured } = useFeaturedNoticias(1);
+  // Fetch up to 4 featured news for the grid layout (1 main + 3 secondary)
+  const { data: featuredNoticias, isLoading: loadingFeatured } = useFeaturedNoticias(4);
   const { data: recentNoticias, isLoading: loadingRecent } = useRecentNoticias(6);
   const { data: politicaNoticias, isLoading: loadingPolitica } = useNoticiasByCategory("politica");
   const { data: internacionalNoticias, isLoading: loadingInternacional } = useNoticiasByCategory("internacional");
 
-  // Use featured news if available, otherwise use the most recent published news
-  const featured = featuredNoticias?.[0] || recentNoticias?.[0];
+  // Use featured news if available, otherwise use the most recent published news as fallback
+  const featuredNews = (featuredNoticias && featuredNoticias.length > 0) 
+    ? featuredNoticias 
+    : (recentNoticias?.slice(0, 1) || []);
+  
+  // Transform featured news for the grid
+  const transformedFeatured = featuredNews.map((noticia) => ({
+    id: noticia.id,
+    title: noticia.title,
+    excerpt: noticia.excerpt,
+    image: noticia.image_url || heroImage,
+    category: noticia.category_label || getCategoryLabel(noticia.category),
+    author: noticia.author,
+    date: formatDate(noticia.created_at),
+  }));
 
   // Transform DB data to NewsSection format
   const transformNews = (noticias: typeof recentNoticias, limit = 3) => {
@@ -70,22 +84,19 @@ const Index = () => {
       <BreakingNews />
       
       <main className="container py-8 md:py-10">
-        {/* Featured News */}
+        {/* Featured News Grid - 1 main + up to 3 secondary */}
         <section className="mb-10 md:mb-12">
           {loadingFeatured ? (
-            <div className="rounded-xl overflow-hidden">
-              <Skeleton className="w-full h-[400px]" />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+              <Skeleton className="lg:col-span-2 h-[300px] md:h-[400px] rounded-xl" />
+              <div className="flex flex-col gap-4">
+                <Skeleton className="h-[120px] rounded-xl" />
+                <Skeleton className="h-[120px] rounded-xl" />
+                <Skeleton className="h-[120px] rounded-xl" />
+              </div>
             </div>
-          ) : featured ? (
-            <FeaturedNews
-              id={featured.id}
-              title={featured.title}
-              excerpt={featured.excerpt}
-              image={featured.image_url || heroImage}
-              category={featured.category_label || getCategoryLabel(featured.category)}
-              author={featured.author}
-              date={formatDate(featured.created_at)}
-            />
+          ) : transformedFeatured.length > 0 ? (
+            <FeaturedNewsGrid news={transformedFeatured} />
           ) : null}
         </section>
 

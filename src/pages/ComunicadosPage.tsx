@@ -1,13 +1,18 @@
 import { Link } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { ArrowLeft, FileText, Loader2 } from "lucide-react";
+import { ArrowLeft, FileText, Loader2, ExternalLink, UserCheck } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useNoticiasByCategory } from "@/hooks/useNoticias";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 
 export default function ComunicadosPage() {
   const { data: comunicados, isLoading, error } = useNoticiasByCategory("comunicados");
+  const { data: settings } = useSiteSettings();
+  
+  // Get recadastramento link from site settings
+  const recadastramentoLink = settings?.find(s => s.key === 'recadastramento_link')?.value;
 
   if (error) {
     return (
@@ -50,6 +55,31 @@ export default function ComunicadosPage() {
         </section>
 
         <div className="container py-12">
+          {/* Recadastramento Banner */}
+          {recadastramentoLink && (
+            <a 
+              href={recadastramentoLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-between gap-4 p-5 mb-8 bg-gradient-to-r from-accent/10 via-accent/5 to-transparent border border-accent/20 rounded-xl hover:border-accent/40 hover:shadow-md transition-all group"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-accent/20 rounded-lg flex items-center justify-center shrink-0 group-hover:bg-accent/30 transition-colors">
+                  <UserCheck className="w-6 h-6 text-accent" />
+                </div>
+                <div>
+                  <h3 className="font-serif font-bold text-lg text-headline group-hover:text-link transition-colors">
+                    Recadastramento de Associados
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    Clique aqui para atualizar seus dados cadastrais
+                  </p>
+                </div>
+              </div>
+              <ExternalLink className="w-5 h-5 text-muted-foreground group-hover:text-accent transition-colors shrink-0" />
+            </a>
+          )}
+          
           {isLoading ? (
             <div className="flex items-center justify-center py-16">
               <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />

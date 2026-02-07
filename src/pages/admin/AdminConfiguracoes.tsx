@@ -81,10 +81,11 @@ const AdminConfiguracoes = () => {
       </div>
 
       <Tabs defaultValue="contato" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3 lg:w-[400px]">
+        <TabsList className="grid w-full grid-cols-4 lg:w-[500px]">
           <TabsTrigger value="contato">Contato</TabsTrigger>
           <TabsTrigger value="redes">Redes Sociais</TabsTrigger>
           <TabsTrigger value="botao">Botão Flutuante</TabsTrigger>
+          <TabsTrigger value="links">Links Especiais</TabsTrigger>
         </TabsList>
 
         <TabsContent value="contato">
@@ -261,6 +262,31 @@ const AdminConfiguracoes = () => {
                     <SelectItem value="top-left">Superior Esquerdo</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="links">
+          <Card>
+            <CardHeader>
+              <CardTitle>Links Especiais</CardTitle>
+              <CardDescription>
+                Configure links importantes que aparecem em áreas específicas do site
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label htmlFor="recadastramento_link">Link de Recadastramento</Label>
+                <p className="text-sm text-muted-foreground mb-2">
+                  Este link aparecerá na página de Comunicados para direcionar usuários ao recadastramento
+                </p>
+                <Input
+                  id="recadastramento_link"
+                  value={formData.recadastramento_link || ''}
+                  onChange={(e) => handleChange('recadastramento_link', e.target.value)}
+                  placeholder="https://forms.gle/... ou https://seusite.com/recadastramento"
+                />
               </div>
             </CardContent>
           </Card>

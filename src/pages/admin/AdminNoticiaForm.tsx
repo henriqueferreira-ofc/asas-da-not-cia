@@ -177,6 +177,15 @@ const AdminNoticiaForm = () => {
             value={imageUrl}
             onChange={(url) => setValue('image_url', url)}
           />
+          <div className="bg-secondary/50 rounded-lg p-4 mt-3">
+            <p className="text-sm font-medium text-foreground mb-2">📐 Tamanhos recomendados de imagem:</p>
+            <ul className="text-xs text-muted-foreground space-y-1">
+              <li><strong>Destaque principal:</strong> 1200 x 675 px (proporção 16:9)</li>
+              <li><strong>Cards de notícia:</strong> 800 x 450 px (proporção 16:9)</li>
+              <li><strong>Imagem no artigo:</strong> 1200 x 675 px ou maior</li>
+              <li><strong>Formato:</strong> JPG ou PNG (máx. 2MB recomendado)</li>
+            </ul>
+          </div>
         </div>
 
         {/* Title */}
