@@ -1,8 +1,7 @@
 import { useParams, Link } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { ArrowLeft, Clock, User, Share2, Facebook, Twitter, Linkedin, Copy, Check } from "lucide-react";
+import { useEffect } from "react";
+import { ArrowLeft, Clock, User } from "lucide-react";
 import { Header } from "@/components/layout/Header";
-import { toast } from "sonner";
 import { Footer } from "@/components/layout/Footer";
 import { ShareButtons } from "@/components/ShareButtons";
 import { NewsCard, NewsCategory } from "@/components/news/NewsCard";
