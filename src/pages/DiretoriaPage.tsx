@@ -61,13 +61,19 @@ const DiretoriaPage = () => {
     return { estado, nome: existing?.nome || "", foto: convertGoogleDriveUrl(existing?.foto) || "" };
   });
 
-  // Conselho Fiscal (4 membros)
-  const conselhoFiscal = (content.conselhoFiscal as ConselhoFiscalMember[]) || [
-    { cargo: "Presidente", nome: "" },
-    { cargo: "Segundo Conselheiro", nome: "" },
-    { cargo: "Terceiro Conselheiro", nome: "" },
-    { cargo: "Advogada", nome: "" },
-  ];
+  // Conselho Fiscal (4 membros) - Apply Google Drive URL conversion
+  const dbConselhoFiscal = (content.conselhoFiscal as ConselhoFiscalMember[]) || [];
+  const conselhoFiscal = dbConselhoFiscal.length > 0 
+    ? dbConselhoFiscal.map(membro => ({
+        ...membro,
+        foto: convertGoogleDriveUrl(membro.foto)
+      }))
+    : [
+        { cargo: "Presidente", nome: "" },
+        { cargo: "Segundo Conselheiro", nome: "" },
+        { cargo: "Terceiro Conselheiro", nome: "" },
+        { cargo: "Advogada", nome: "" },
+      ];
 
   const diretoriaExecutiva: DiretorMember[] = [
     {
@@ -150,66 +156,34 @@ const DiretoriaPage = () => {
               <h2 className="text-2xl font-serif font-bold text-headline">Diretoria Executiva</h2>
             </div>
 
-            {/* First row - 3 items */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-              {diretoriaExecutiva.slice(0, 3).map((membro, index) => (
+            {/* All 5 members in responsive grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+              {diretoriaExecutiva.map((membro, index) => (
                 <div 
                   key={index}
-                  className="bg-card rounded-xl border border-border p-6 hover:shadow-lg transition-shadow group"
+                  className={`bg-card rounded-xl border border-border p-4 md:p-6 hover:shadow-lg transition-shadow group ${
+                    index >= 3 ? 'sm:col-span-1' : ''
+                  }`}
                 >
-                  <div className="flex items-start gap-4">
+                  <div className="flex items-start gap-3 md:gap-4">
                     {membro.foto ? (
                       <img 
                         src={membro.foto} 
                         alt={membro.nome}
-                        className="w-14 h-14 rounded-full object-cover shrink-0"
+                        className="w-12 h-12 md:w-14 md:h-14 rounded-full object-cover shrink-0"
                       />
                     ) : (
-                      <div className="w-14 h-14 rounded-full bg-primary group-hover:bg-accent flex items-center justify-center shrink-0 transition-colors">
+                      <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-primary group-hover:bg-accent flex items-center justify-center shrink-0 transition-colors">
                         <div className="text-primary-foreground group-hover:text-accent-foreground transition-colors">
                           {membro.icon}
                         </div>
                       </div>
                     )}
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                       <span className="text-xs font-semibold uppercase tracking-wide text-accent mb-1 block">
                         {membro.cargo}
                       </span>
-                      <h3 className="text-lg font-bold text-headline">
-                        {membro.nome}
-                      </h3>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            
-            {/* Second row - 2 items centered */}
-            <div className="flex justify-center gap-6">
-              {diretoriaExecutiva.slice(3, 5).map((membro, index) => (
-                <div 
-                  key={index + 3}
-                  className="bg-card rounded-xl border border-border p-6 hover:shadow-lg transition-shadow group w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]"
-                >
-                  <div className="flex items-start gap-4">
-                    {membro.foto ? (
-                      <img 
-                        src={membro.foto} 
-                        alt={membro.nome}
-                        className="w-14 h-14 rounded-full object-cover shrink-0"
-                      />
-                    ) : (
-                      <div className="w-14 h-14 rounded-full bg-primary group-hover:bg-accent flex items-center justify-center shrink-0 transition-colors">
-                        <div className="text-primary-foreground group-hover:text-accent-foreground transition-colors">
-                          {membro.icon}
-                        </div>
-                      </div>
-                    )}
-                    <div className="flex-1">
-                      <span className="text-xs font-semibold uppercase tracking-wide text-accent mb-1 block">
-                        {membro.cargo}
-                      </span>
-                      <h3 className="text-lg font-bold text-headline">
+                      <h3 className="text-base md:text-lg font-bold text-headline break-words">
                         {membro.nome}
                       </h3>
                     </div>
@@ -269,27 +243,27 @@ const DiretoriaPage = () => {
               O Conselho Fiscal é responsável pela fiscalização das contas e atividades financeiras da associação.
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
               {conselhoFiscal.map((membro, index) => (
                 <div 
                   key={index}
-                  className="bg-card rounded-xl border border-border p-6 hover:shadow-lg transition-shadow text-center group"
+                  className="bg-card rounded-xl border border-border p-4 md:p-6 hover:shadow-lg transition-shadow text-center group"
                 >
                   {membro.foto ? (
                     <img 
                       src={membro.foto} 
                       alt={membro.nome}
-                      className="w-16 h-16 rounded-full object-cover mx-auto mb-4"
+                      className="w-14 h-14 md:w-16 md:h-16 rounded-full object-cover mx-auto mb-3 md:mb-4"
                     />
                   ) : (
-                    <div className="w-16 h-16 rounded-full bg-primary group-hover:bg-accent flex items-center justify-center mx-auto mb-4 transition-colors">
-                      <User className="w-6 h-6 text-primary-foreground group-hover:text-accent-foreground transition-colors" />
+                    <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary group-hover:bg-accent flex items-center justify-center mx-auto mb-3 md:mb-4 transition-colors">
+                      <User className="w-5 h-5 md:w-6 md:h-6 text-primary-foreground group-hover:text-accent-foreground transition-colors" />
                     </div>
                   )}
                   <span className="text-xs font-semibold uppercase tracking-wide text-accent mb-1 block">
                     {membro.cargo}
                   </span>
-                  <h3 className="text-lg font-bold text-headline">
+                  <h3 className="text-base md:text-lg font-bold text-headline break-words">
                     {membro.nome || "A definir"}
                   </h3>
                 </div>

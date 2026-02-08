@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Share2, Facebook, Twitter, Linkedin, Copy, Check } from "lucide-react";
+import { Facebook, Instagram, Share2 } from "lucide-react";
 import { toast } from "sonner";
 
 // WhatsApp icon component
@@ -15,87 +15,129 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
 
 interface ShareButtonsProps {
   title: string;
+  imageUrl?: string;
 }
 
-export function ShareButtons({ title }: ShareButtonsProps) {
-  const [copied, setCopied] = useState(false);
+export function ShareButtons({ title, imageUrl }: ShareButtonsProps) {
+  const [showShareMenu, setShowShareMenu] = useState(false);
   const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
   const encodedUrl = encodeURIComponent(currentUrl);
   const encodedTitle = encodeURIComponent(title);
 
   const shareLinks = {
     whatsapp: `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`,
-    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
-    twitter: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
-    linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedTitle}`,
+    instagram: `https://www.instagram.com/`, // Instagram doesn't support direct URL sharing - opens app
   };
 
   const handleShare = (platform: keyof typeof shareLinks) => {
     window.open(shareLinks[platform], '_blank', 'width=600,height=400');
   };
 
-  const handleCopyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(currentUrl);
-      setCopied(true);
-      toast.success("Link copiado!");
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      toast.error("Não foi possível copiar o link");
+  const handleNativeShare = async () => {
+    if (navigator.share) {
+      try {
+        const shareData: ShareData = {
+          title: title,
+          text: title,
+          url: currentUrl,
+        };
+        await navigator.share(shareData);
+      } catch (error) {
+        // User cancelled or error
+        console.log('Share cancelled');
+      }
+    } else {
+      // Fallback: copy link
+      try {
+        await navigator.clipboard.writeText(currentUrl);
+        toast.success("Link copiado!");
+      } catch {
+        toast.error("Não foi possível copiar o link");
+      }
     }
   };
 
+  const handleShareMenuOption = (platform: 'facebook' | 'instagram' | 'whatsapp') => {
+    setShowShareMenu(false);
+    handleShare(platform);
+  };
+
   return (
-    <div className="flex items-center gap-4 py-6 border-t border-b border-border mb-8">
-      <span className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-        <Share2 className="w-4 h-4" />
-        Compartilhar:
-      </span>
-      <div className="flex items-center gap-2">
-        {/* WhatsApp */}
-        <button 
-          onClick={() => handleShare('whatsapp')}
-          className="w-9 h-9 rounded-full bg-[#25D366]/10 text-[#25D366] flex items-center justify-center hover:bg-[#25D366] hover:text-white transition-colors"
-          title="Compartilhar no WhatsApp"
-        >
-          <WhatsAppIcon className="w-4 h-4" />
-        </button>
-        
+    <div className="py-6 border-t border-b border-border mb-8">
+      {/* Main share buttons - horizontal layout like G1 */}
+      <div className="grid grid-cols-3 gap-3">
         {/* Facebook */}
         <button 
           onClick={() => handleShare('facebook')}
-          className="w-9 h-9 rounded-full bg-[#1877F2]/10 text-[#1877F2] flex items-center justify-center hover:bg-[#1877F2] hover:text-white transition-colors"
+          className="flex items-center justify-center gap-2 py-4 px-4 bg-muted hover:bg-muted/80 rounded-lg transition-colors"
           title="Compartilhar no Facebook"
         >
-          <Facebook className="w-4 h-4" />
+          <Facebook className="w-6 h-6 text-[#1877F2]" />
         </button>
         
-        {/* Twitter/X */}
+        {/* WhatsApp */}
         <button 
-          onClick={() => handleShare('twitter')}
-          className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center hover:bg-foreground hover:text-background transition-colors"
-          title="Compartilhar no X (Twitter)"
+          onClick={() => handleShare('whatsapp')}
+          className="flex items-center justify-center gap-2 py-4 px-4 bg-muted hover:bg-muted/80 rounded-lg transition-colors"
+          title="Compartilhar no WhatsApp"
         >
-          <Twitter className="w-4 h-4" />
+          <WhatsAppIcon className="w-6 h-6 text-[#25D366]" />
         </button>
         
-        {/* LinkedIn */}
-        <button 
-          onClick={() => handleShare('linkedin')}
-          className="w-9 h-9 rounded-full bg-[#0A66C2]/10 text-[#0A66C2] flex items-center justify-center hover:bg-[#0A66C2] hover:text-white transition-colors"
-          title="Compartilhar no LinkedIn"
-        >
-          <Linkedin className="w-4 h-4" />
-        </button>
-        
-        {/* Copy Link */}
-        <button 
-          onClick={handleCopyLink}
-          className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"
-          title="Copiar link"
-        >
-          {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-        </button>
+        {/* Share button with menu */}
+        <div className="relative">
+          <button 
+            onClick={() => setShowShareMenu(!showShareMenu)}
+            className="w-full flex items-center justify-center gap-2 py-4 px-4 bg-muted hover:bg-muted/80 rounded-lg transition-colors"
+            title="Mais opções de compartilhamento"
+          >
+            <Share2 className="w-6 h-6 text-muted-foreground" />
+          </button>
+          
+          {/* Share menu dropdown */}
+          {showShareMenu && (
+            <>
+              <div 
+                className="fixed inset-0 z-40" 
+                onClick={() => setShowShareMenu(false)}
+              />
+              <div className="absolute bottom-full right-0 mb-2 bg-card border border-border rounded-lg shadow-lg z-50 min-w-[180px]">
+                <button
+                  onClick={() => handleShareMenuOption('facebook')}
+                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted transition-colors text-left"
+                >
+                  <Facebook className="w-5 h-5 text-[#1877F2]" />
+                  <span className="text-sm">Facebook</span>
+                </button>
+                <button
+                  onClick={() => handleShareMenuOption('instagram')}
+                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted transition-colors text-left"
+                >
+                  <Instagram className="w-5 h-5 text-[#E4405F]" />
+                  <span className="text-sm">Instagram</span>
+                </button>
+                <button
+                  onClick={() => handleShareMenuOption('whatsapp')}
+                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted transition-colors text-left"
+                >
+                  <WhatsAppIcon className="w-5 h-5 text-[#25D366]" />
+                  <span className="text-sm">WhatsApp</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setShowShareMenu(false);
+                    handleNativeShare();
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted transition-colors text-left border-t border-border"
+                >
+                  <Share2 className="w-5 h-5 text-muted-foreground" />
+                  <span className="text-sm">Copiar link</span>
+                </button>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
