@@ -64,35 +64,44 @@ export function ShareButtons({ title, imageUrl }: ShareButtonsProps) {
   };
 
   return (
-    <div className="py-6 border-t border-b border-border mb-8">
-      {/* Main share buttons - horizontal layout like G1 */}
-      <div className="grid grid-cols-3 gap-3">
+    <div className="py-4 mb-6">
+      {/* Main share buttons - compact horizontal layout */}
+      <div className="flex items-center gap-2">
         {/* Facebook */}
         <button 
           onClick={() => handleShare('facebook')}
-          className="flex items-center justify-center gap-2 py-4 px-4 bg-muted hover:bg-muted/80 rounded-lg transition-colors"
+          className="flex items-center justify-center p-2 bg-muted hover:bg-muted/80 rounded-lg transition-colors"
           title="Compartilhar no Facebook"
         >
-          <Facebook className="w-6 h-6 text-[#1877F2]" />
+          <Facebook className="w-4 h-4 text-[#1877F2]" />
+        </button>
+        
+        {/* Instagram */}
+        <button 
+          onClick={() => handleShare('instagram')}
+          className="flex items-center justify-center p-2 bg-muted hover:bg-muted/80 rounded-lg transition-colors"
+          title="Compartilhar no Instagram"
+        >
+          <Instagram className="w-4 h-4 text-[#E4405F]" />
         </button>
         
         {/* WhatsApp */}
         <button 
           onClick={() => handleShare('whatsapp')}
-          className="flex items-center justify-center gap-2 py-4 px-4 bg-muted hover:bg-muted/80 rounded-lg transition-colors"
+          className="flex items-center justify-center p-2 bg-muted hover:bg-muted/80 rounded-lg transition-colors"
           title="Compartilhar no WhatsApp"
         >
-          <WhatsAppIcon className="w-6 h-6 text-[#25D366]" />
+          <WhatsAppIcon className="w-4 h-4 text-[#25D366]" />
         </button>
         
         {/* Share button with menu */}
         <div className="relative">
           <button 
             onClick={() => setShowShareMenu(!showShareMenu)}
-            className="w-full flex items-center justify-center gap-2 py-4 px-4 bg-muted hover:bg-muted/80 rounded-lg transition-colors"
+            className="flex items-center justify-center p-2 bg-muted hover:bg-muted/80 rounded-lg transition-colors"
             title="Mais opções de compartilhamento"
           >
-            <Share2 className="w-6 h-6 text-muted-foreground" />
+            <Share2 className="w-4 h-4 text-muted-foreground" />
           </button>
           
           {/* Share menu dropdown */}
@@ -102,26 +111,26 @@ export function ShareButtons({ title, imageUrl }: ShareButtonsProps) {
                 className="fixed inset-0 z-40" 
                 onClick={() => setShowShareMenu(false)}
               />
-              <div className="absolute bottom-full right-0 mb-2 bg-card border border-border rounded-lg shadow-lg z-50 min-w-[180px]">
+              <div className="absolute bottom-full right-0 mb-2 bg-card border border-border rounded-lg shadow-lg z-50 min-w-[160px]">
                 <button
                   onClick={() => handleShareMenuOption('facebook')}
-                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted transition-colors text-left"
+                  className="w-full flex items-center gap-3 px-3 py-2 hover:bg-muted transition-colors text-left"
                 >
-                  <Facebook className="w-5 h-5 text-[#1877F2]" />
+                  <Facebook className="w-4 h-4 text-[#1877F2]" />
                   <span className="text-sm">Facebook</span>
                 </button>
                 <button
                   onClick={() => handleShareMenuOption('instagram')}
-                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted transition-colors text-left"
+                  className="w-full flex items-center gap-3 px-3 py-2 hover:bg-muted transition-colors text-left"
                 >
-                  <Instagram className="w-5 h-5 text-[#E4405F]" />
+                  <Instagram className="w-4 h-4 text-[#E4405F]" />
                   <span className="text-sm">Instagram</span>
                 </button>
                 <button
                   onClick={() => handleShareMenuOption('whatsapp')}
-                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted transition-colors text-left"
+                  className="w-full flex items-center gap-3 px-3 py-2 hover:bg-muted transition-colors text-left"
                 >
-                  <WhatsAppIcon className="w-5 h-5 text-[#25D366]" />
+                  <WhatsAppIcon className="w-4 h-4 text-[#25D366]" />
                   <span className="text-sm">WhatsApp</span>
                 </button>
                 <button
@@ -129,9 +138,9 @@ export function ShareButtons({ title, imageUrl }: ShareButtonsProps) {
                     setShowShareMenu(false);
                     handleNativeShare();
                   }}
-                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted transition-colors text-left border-t border-border"
+                  className="w-full flex items-center gap-3 px-3 py-2 hover:bg-muted transition-colors text-left border-t border-border"
                 >
-                  <Share2 className="w-5 h-5 text-muted-foreground" />
+                  <Share2 className="w-4 h-4 text-muted-foreground" />
                   <span className="text-sm">Copiar link</span>
                 </button>
               </div>
