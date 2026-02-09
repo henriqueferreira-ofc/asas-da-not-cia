@@ -75,35 +75,35 @@ export function ShareButtons({ title, imageUrl }: ShareButtonsProps) {
   };
 
   return (
-    <div className="py-6 mb-8">
-      {/* Main share buttons - large horizontal layout like G1 */}
-      <div className="grid grid-cols-3 gap-3">
+    <div className="py-4 mb-6">
+      {/* Main share buttons - G1 style */}
+      <div className="grid grid-cols-3 gap-2 max-w-lg">
         {/* Facebook */}
         <button 
           onClick={() => handleShare('facebook')}
-          className="flex items-center justify-center py-5 px-6 bg-muted hover:bg-muted/80 rounded-xl transition-colors"
+          className="flex items-center justify-center py-3 px-4 bg-muted/60 hover:bg-muted border border-border rounded-lg transition-colors"
           title="Compartilhar no Facebook"
         >
-          <FacebookIcon className="w-7 h-7 text-[#1877F2]" />
+          <FacebookIcon className="w-5 h-5 text-[#1877F2]" />
         </button>
         
         {/* WhatsApp */}
         <button 
           onClick={() => handleShare('whatsapp')}
-          className="flex items-center justify-center py-5 px-6 bg-muted hover:bg-muted/80 rounded-xl transition-colors"
+          className="flex items-center justify-center py-3 px-4 bg-muted/60 hover:bg-muted border border-border rounded-lg transition-colors"
           title="Compartilhar no WhatsApp"
         >
-          <WhatsAppIcon className="w-7 h-7 text-[#25D366]" />
+          <WhatsAppIcon className="w-5 h-5 text-[#25D366]" />
         </button>
         
         {/* Share button with menu */}
         <div className="relative">
           <button 
             onClick={() => setShowShareMenu(!showShareMenu)}
-            className="w-full flex items-center justify-center py-5 px-6 bg-muted hover:bg-muted/80 rounded-xl transition-colors"
+            className="w-full flex items-center justify-center py-3 px-4 bg-muted/60 hover:bg-muted border border-border rounded-lg transition-colors"
             title="Mais opções de compartilhamento"
           >
-            <Share2 className="w-7 h-7 text-muted-foreground" />
+            <Share2 className="w-5 h-5 text-muted-foreground" />
           </button>
           
           {/* Share menu dropdown */}
