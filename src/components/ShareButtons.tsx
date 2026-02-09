@@ -42,7 +42,12 @@ export function ShareButtons({ title, imageUrl }: ShareButtonsProps) {
   };
 
   const handleShare = (platform: keyof typeof shareLinks) => {
-    window.open(shareLinks[platform], '_blank', 'width=600,height=400');
+    const url = shareLinks[platform];
+    const newWindow = window.open(url, '_blank', 'noopener,noreferrer,width=600,height=400');
+    if (!newWindow) {
+      // Fallback if popup is blocked
+      window.open(url, '_blank');
+    }
   };
 
   const handleNativeShare = async () => {
