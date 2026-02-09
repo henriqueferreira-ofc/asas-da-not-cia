@@ -81,7 +81,7 @@ export function ShareButtons({ title, imageUrl }: ShareButtonsProps) {
         {/* Facebook */}
         <button 
           onClick={() => handleShare('facebook')}
-          className="flex items-center justify-center py-3 bg-muted/50 hover:bg-muted transition-colors"
+          className="flex items-center justify-center py-3 bg-muted hover:bg-muted/70 transition-colors"
           title="Compartilhar no Facebook"
         >
           <FacebookIcon className="w-5 h-5 text-[#1877F2]" />
@@ -90,7 +90,7 @@ export function ShareButtons({ title, imageUrl }: ShareButtonsProps) {
         {/* WhatsApp */}
         <button 
           onClick={() => handleShare('whatsapp')}
-          className="flex items-center justify-center py-3 bg-muted/50 hover:bg-muted transition-colors"
+          className="flex items-center justify-center py-3 bg-muted hover:bg-muted/70 transition-colors"
           title="Compartilhar no WhatsApp"
         >
           <WhatsAppIcon className="w-5 h-5 text-[#25D366]" />
@@ -100,7 +100,7 @@ export function ShareButtons({ title, imageUrl }: ShareButtonsProps) {
         <div className="relative">
           <button 
             onClick={() => setShowShareMenu(!showShareMenu)}
-            className="w-full flex items-center justify-center py-3 bg-muted/50 hover:bg-muted transition-colors"
+            className="w-full flex items-center justify-center py-3 bg-muted hover:bg-muted/70 transition-colors"
             title="Mais opções de compartilhamento"
           >
             <Share2 className="w-5 h-5 text-muted-foreground" />
