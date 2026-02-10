@@ -2,8 +2,12 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, Target, Eye, Users, Award } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { useSiteSettingsMap } from "@/hooks/useSiteSettings";
 
 const SobrePage = () => {
+  const { data: settings } = useSiteSettingsMap();
+  const communityLink = settings?.floating_button_link || '#';
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -116,7 +120,7 @@ const SobrePage = () => {
               Como patrocinador, você terá acesso a e-books, informações privilegiadas e muito mais.
             </p>
             <a
-              href="https://chat.whatsapp.com/SEU_LINK_AQUI"
+              href={communityLink}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-8 py-3 bg-[#25D366] text-white rounded-lg font-semibold hover:bg-[#20BD5A] transition-colors"
