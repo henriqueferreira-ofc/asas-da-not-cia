@@ -86,29 +86,29 @@ export function ShareButtons({ title, imageUrl }: ShareButtonsProps) {
         {/* Facebook */}
         <button 
           onClick={() => handleShare('facebook')}
-          className="flex items-center justify-center py-3 bg-secondary hover:bg-secondary/70 rounded-full transition-colors"
+          className="group flex items-center justify-center py-3 bg-secondary hover:bg-[#1877F2] rounded-full transition-colors"
           title="Compartilhar no Facebook"
         >
-          <FacebookIcon className="w-5 h-5 text-[#1877F2]" />
+          <FacebookIcon className="w-5 h-5 text-[#1877F2] group-hover:text-white" />
         </button>
         
         {/* WhatsApp */}
         <button 
           onClick={() => handleShare('whatsapp')}
-          className="flex items-center justify-center py-3 bg-secondary hover:bg-secondary/70 rounded-full transition-colors"
+          className="group flex items-center justify-center py-3 bg-secondary hover:bg-[#25D366] rounded-full transition-colors"
           title="Compartilhar no WhatsApp"
         >
-          <WhatsAppIcon className="w-5 h-5 text-[#25D366]" />
+          <WhatsAppIcon className="w-5 h-5 text-[#25D366] group-hover:text-white" />
         </button>
         
         {/* Share button with menu */}
         <div className="relative">
           <button 
             onClick={() => setShowShareMenu(!showShareMenu)}
-            className="w-full flex items-center justify-center py-3 bg-secondary hover:bg-secondary/70 rounded-full transition-colors"
+            className="group w-full flex items-center justify-center py-3 bg-secondary hover:bg-muted-foreground rounded-full transition-colors"
             title="Mais opções de compartilhamento"
           >
-            <Share2 className="w-5 h-5 text-muted-foreground" />
+            <Share2 className="w-5 h-5 text-muted-foreground group-hover:text-white" />
           </button>
           
           {/* Share menu dropdown */}
