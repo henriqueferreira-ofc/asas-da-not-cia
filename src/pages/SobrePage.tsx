@@ -6,6 +6,23 @@ import { useSiteSettingsMap } from "@/hooks/useSiteSettings";
 import { usePageContent } from "@/hooks/usePageContent";
 import { Skeleton } from "@/components/ui/skeleton";
 
+// Permite usar **negrito** nos textos vindos do admin
+const formatRichText = (text: string) => {
+  if (!text) return "";
+
+  // Escapa caracteres básicos para evitar HTML indesejado
+  const escaped = text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+
+  // Converte **texto** em <strong>texto</strong>
+  const withBold = escaped.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+
+  // Quebras de linha
+  return withBold.replace(/\n/g, "<br />");
+};
+
 const SobrePage = () => {
   const { data: settings } = useSiteSettingsMap();
   const { data: pageData, isLoading } = usePageContent('sobre');
@@ -16,7 +33,7 @@ const SobrePage = () => {
     : {};
 
   const title = (content.title as string) || 'Sobre a AAFAB';
-  const subtitle = (content.subtitle as string) || 'Amigos da Força Aérea Brasileira';
+  const subtitle = (content.subtitle as string) || '';
   const intro1 = (content.intro1 as string) || '';
   const intro2 = (content.intro2 as string) || '';
   const mission = (content.mission as string) || '';
@@ -71,8 +88,18 @@ const SobrePage = () => {
 
           {(intro1 || intro2) && (
             <section className="prose prose-lg max-w-none mb-12">
-              {intro1 && <p className="text-lg leading-relaxed text-foreground">{intro1}</p>}
-              {intro2 && <p className="text-lg leading-relaxed text-foreground">{intro2}</p>}
+              {intro1 && (
+                <p
+                  className="text-lg leading-relaxed text-foreground"
+                  dangerouslySetInnerHTML={{ __html: formatRichText(intro1) }}
+                />
+              )}
+              {intro2 && (
+                <p
+                  className="text-lg leading-relaxed text-foreground"
+                  dangerouslySetInnerHTML={{ __html: formatRichText(intro2) }}
+                />
+              )}
             </section>
           )}
 
@@ -85,7 +112,10 @@ const SobrePage = () => {
                   </div>
                   <h2 className="text-xl font-serif font-bold text-headline">Missão</h2>
                 </div>
-                <p className="text-muted-foreground leading-relaxed">{mission}</p>
+                <p
+                  className="text-muted-foreground leading-relaxed"
+                  dangerouslySetInnerHTML={{ __html: formatRichText(mission) }}
+                />
               </div>
             )}
 
@@ -97,7 +127,10 @@ const SobrePage = () => {
                   </div>
                   <h2 className="text-xl font-serif font-bold text-headline">Visão</h2>
                 </div>
-                <p className="text-muted-foreground leading-relaxed">{vision}</p>
+                <p
+                  className="text-muted-foreground leading-relaxed"
+                  dangerouslySetInnerHTML={{ __html: formatRichText(vision) }}
+                />
               </div>
             )}
 
@@ -119,11 +152,26 @@ const SobrePage = () => {
                         <li key={i}>
                           <span className="font-bold text-foreground">{title}</span>
                           <br />
-                          <span>{desc}</span>
+                          <span
+                            dangerouslySetInnerHTML={{ __html: formatRichText(desc) }}
+                          />
                         </li>
                       );
                     }
-                    return <li key={i}>• {v}</li>;
+                    // Se tiver apenas 2 partes, assume que é "número - título" e permite descrição na próxima linha
+                    if (parts.length === 2) {
+                      const title = `${parts[0]} - ${parts[1]}`;
+                      return (
+                        <li key={i}>
+                          <span className="font-bold text-foreground">{title}</span>
+                        </li>
+                      );
+                    }
+                    return (
+                      <li key={i}>
+                        <span dangerouslySetInnerHTML={{ __html: formatRichText(v) }} />
+                      </li>
+                    );
                   })}
                 </ul>
               </div>
@@ -149,9 +197,10 @@ const SobrePage = () => {
               {ctaTitle}
             </h2>
             {ctaText && (
-              <p className="text-primary-foreground/80 mb-6 max-w-2xl mx-auto">
-                {ctaText}
-              </p>
+              <p
+                className="text-primary-foreground/80 mb-6 max-w-2xl mx-auto"
+                dangerouslySetInnerHTML={{ __html: formatRichText(ctaText) }}
+              />
             )}
             <a
               href={communityLink}

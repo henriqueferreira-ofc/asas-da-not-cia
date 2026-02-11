@@ -22,12 +22,20 @@ const ContatoPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { data: pageContent, isLoading } = usePageContent("contato");
 
-  // Extract content from database
+  // Conteúdo editável no admin (Páginas > Contato)
   const content = (pageContent?.content as Record<string, unknown>) || {};
   const title = (content.title as string) || "Entre em Contato";
-  const contactEmail = "aafabdm@gmail.com";
-  const phone = (content.phone as string) || "(61) 3333-0000";
-  const address = (content.address as string) || "Esplanada dos Ministérios\nBloco A, Sala 100\nBrasília - DF, 70000-000";
+  const subtitle = (content.subtitle as string) || "";
+  const contactEmail = (content.email as string) || "";
+  const phone = (content.phone as string) || "";
+  const address = (content.address as string) || "";
+  const formTitle = (content.formTitle as string) || "Envie sua Mensagem";
+  const openingHours = (content.openingHours as string) || "";
+
+  // Permite múltiplos e-mails separados por "/" no admin
+  const emailList = contactEmail
+    ? contactEmail.split("/").map((e) => e.trim()).filter(Boolean)
+    : [];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { id, value } = e.target;
@@ -125,66 +133,78 @@ const ContatoPage = () => {
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-headline mb-4">
               {title}
             </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Estamos à disposição para atender associados, imprensa e interessados 
-              em conhecer mais sobre a AAFAB.
-            </p>
+            {subtitle ? (
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                {subtitle}
+              </p>
+            ) : null}
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Contact Info */}
             <div className="space-y-6">
-              <div className="bg-card rounded-xl border border-border p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">
-                    <MapPin className="w-5 h-5 text-accent" />
+              {address ? (
+                <div className="bg-card rounded-xl border border-border p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">
+                      <MapPin className="w-5 h-5 text-accent" />
+                    </div>
+                    <h3 className="font-semibold text-headline">Endereço</h3>
                   </div>
-                  <h3 className="font-semibold text-headline">Endereço</h3>
-                </div>
-                <p className="text-muted-foreground whitespace-pre-line">
-                  {address}
-                </p>
-              </div>
-
-              <div className="bg-card rounded-xl border border-border p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">
-                    <Mail className="w-5 h-5 text-accent" />
-                  </div>
-                  <h3 className="font-semibold text-headline">E-mail</h3>
-                </div>
-                <div className="space-y-2 text-muted-foreground">
-                  <p>
-                    <strong>Geral:</strong><br />
-                    <a href={`mailto:${contactEmail}`} className="text-link hover:text-primary">
-                      {contactEmail}
-                    </a>
+                  <p className="text-muted-foreground whitespace-pre-line">
+                    {address}
                   </p>
                 </div>
-              </div>
+              ) : null}
 
-              <div className="bg-card rounded-xl border border-border p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">
-                    <Phone className="w-5 h-5 text-accent" />
+              {emailList.length > 0 ? (
+                <div className="bg-card rounded-xl border border-border p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">
+                      <Mail className="w-5 h-5 text-accent" />
+                    </div>
+                    <h3 className="font-semibold text-headline">E-mail</h3>
                   </div>
-                  <h3 className="font-semibold text-headline">Telefone</h3>
+                  <div className="space-y-2 text-muted-foreground">
+                    <p>
+                      <strong>Geral:</strong>{" "}
+                      {emailList.map((email, idx) => (
+                        <span key={email}>
+                          {idx > 0 && <br />}
+                          <a
+                            href={`mailto:${email}`}
+                            className="text-link hover:text-primary"
+                          >
+                            {email}
+                          </a>
+                        </span>
+                      ))}
+                    </p>
+                  </div>
                 </div>
-                <div className="space-y-2 text-muted-foreground">
-                  <p>{phone}</p>
-                  <p className="text-sm">
-                    Segunda a Sexta<br />
-                    08h às 18h
-                  </p>
+              ) : null}
+
+              {(phone || openingHours) ? (
+                <div className="bg-card rounded-xl border border-border p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">
+                      <Phone className="w-5 h-5 text-accent" />
+                    </div>
+                    <h3 className="font-semibold text-headline">Telefone</h3>
+                  </div>
+                  <div className="space-y-2 text-muted-foreground">
+                    {phone ? <p>{phone}</p> : null}
+                    {openingHours ? <p className="text-sm">{openingHours}</p> : null}
+                  </div>
                 </div>
-              </div>
+              ) : null}
             </div>
 
             {/* Contact Form */}
             <div className="lg:col-span-2">
               <div className="bg-card rounded-xl border border-border p-8">
                 <h2 className="text-xl font-serif font-bold text-headline mb-6">
-                  Envie sua Mensagem
+                  {formTitle}
                 </h2>
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
