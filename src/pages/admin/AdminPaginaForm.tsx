@@ -22,6 +22,34 @@ const SobreForm = ({ content, onChange }: { content: Record<string, unknown>; on
       />
     </div>
     <div className="space-y-2">
+      <Label htmlFor="subtitle">Subtítulo</Label>
+      <Input
+        id="subtitle"
+        value={(content.subtitle as string) || ''}
+        onChange={(e) => onChange({ ...content, subtitle: e.target.value })}
+      />
+    </div>
+    <div className="space-y-2">
+      <Label htmlFor="intro1">Introdução – Parágrafo 1</Label>
+      <Textarea
+        id="intro1"
+        rows={4}
+        value={(content.intro1 as string) || ''}
+        onChange={(e) => onChange({ ...content, intro1: e.target.value })}
+        placeholder="A AAFAB – Associação Amigos da Força Aérea Brasileira..."
+      />
+    </div>
+    <div className="space-y-2">
+      <Label htmlFor="intro2">Introdução – Parágrafo 2</Label>
+      <Textarea
+        id="intro2"
+        rows={4}
+        value={(content.intro2 as string) || ''}
+        onChange={(e) => onChange({ ...content, intro2: e.target.value })}
+        placeholder="Fundada com o propósito de fortalecer..."
+      />
+    </div>
+    <div className="space-y-2">
       <Label htmlFor="mission">Missão</Label>
       <Textarea
         id="mission"
@@ -45,9 +73,42 @@ const SobreForm = ({ content, onChange }: { content: Record<string, unknown>; on
         rows={6}
         value={Array.isArray(content.values) ? (content.values as string[]).join('\n') : ''}
         onChange={(e) => onChange({ ...content, values: e.target.value.split('\n').filter(v => v.trim()) })}
-        placeholder="Patriotismo e amor à Pátria&#10;Respeito às tradições militares&#10;..."
+        placeholder="Compromisso com a verdade&#10;Ética e responsabilidade&#10;..."
       />
     </div>
+    <div className="space-y-2">
+      <Label>Público (um por linha)</Label>
+      <Textarea
+        rows={6}
+        value={Array.isArray(content.publico) ? (content.publico as string[]).join('\n') : ''}
+        onChange={(e) => onChange({ ...content, publico: e.target.value.split('\n').filter(v => v.trim()) })}
+        placeholder="Militares da ativa e reserva&#10;Pensionistas e familiares&#10;..."
+      />
+    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-lg">Seção CTA (Chamada para Ação)</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="ctaTitle">Título do CTA</Label>
+          <Input
+            id="ctaTitle"
+            value={(content.ctaTitle as string) || ''}
+            onChange={(e) => onChange({ ...content, ctaTitle: e.target.value })}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="ctaText">Texto do CTA</Label>
+          <Textarea
+            id="ctaText"
+            rows={3}
+            value={(content.ctaText as string) || ''}
+            onChange={(e) => onChange({ ...content, ctaText: e.target.value })}
+          />
+        </div>
+      </CardContent>
+    </Card>
   </div>
 );
 
