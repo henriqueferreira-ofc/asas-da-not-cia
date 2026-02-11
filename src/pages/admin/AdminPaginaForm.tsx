@@ -68,12 +68,12 @@ const SobreForm = ({ content, onChange }: { content: Record<string, unknown>; on
       />
     </div>
     <div className="space-y-2">
-      <Label>Valores (um por linha)</Label>
+      <Label>Valores (um por linha, formato: Título - Descrição)</Label>
       <Textarea
-        rows={6}
+        rows={8}
         value={Array.isArray(content.values) ? (content.values as string[]).join('\n') : ''}
         onChange={(e) => onChange({ ...content, values: e.target.value.split('\n').filter(v => v.trim()) })}
-        placeholder="Compromisso com a verdade&#10;Ética e responsabilidade&#10;..."
+        placeholder="Legalidade - Atuamos com base na Constituição...&#10;Ética - Compromisso com a verdade e transparência...&#10;..."
       />
     </div>
     <div className="space-y-2">
