@@ -73,7 +73,7 @@ const SobreForm = ({ content, onChange }: { content: Record<string, unknown>; on
         rows={8}
         value={Array.isArray(content.values) ? (content.values as string[]).join('\n') : ''}
         onChange={(e) => onChange({ ...content, values: e.target.value.split('\n').filter(v => v.trim()) })}
-        placeholder="Legalidade - Atuamos com base na Constituição...&#10;Ética - Compromisso com a verdade e transparência...&#10;..."
+        placeholder="1 - Legalidade - Atuamos com base na Constituição...&#10;2 - Ética - Compromisso com a verdade e transparência...&#10;..."
       />
     </div>
     <div className="space-y-2">

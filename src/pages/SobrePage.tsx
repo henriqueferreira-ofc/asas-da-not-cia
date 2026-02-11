@@ -111,10 +111,10 @@ const SobrePage = () => {
                 </div>
                 <ul className="text-muted-foreground space-y-3">
                   {values.map((v, i) => {
-                    const separatorIndex = v.indexOf(' - ');
-                    if (separatorIndex > -1) {
-                      const title = v.substring(0, separatorIndex);
-                      const desc = v.substring(separatorIndex + 3);
+                    const parts = v.split(' - ');
+                    if (parts.length >= 3) {
+                      const title = `${parts[0]} - ${parts[1]}`;
+                      const desc = parts.slice(2).join(' - ');
                       return (
                         <li key={i}>
                           <span className="font-bold text-foreground">{title}</span>
