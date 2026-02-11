@@ -109,8 +109,22 @@ const SobrePage = () => {
                   </div>
                   <h2 className="text-xl font-serif font-bold text-headline">Valores</h2>
                 </div>
-                <ul className="text-muted-foreground space-y-2">
-                  {values.map((v, i) => <li key={i}>• {v}</li>)}
+                <ul className="text-muted-foreground space-y-3">
+                  {values.map((v, i) => {
+                    const separatorIndex = v.indexOf(' - ');
+                    if (separatorIndex > -1) {
+                      const title = v.substring(0, separatorIndex);
+                      const desc = v.substring(separatorIndex + 3);
+                      return (
+                        <li key={i}>
+                          <span className="font-bold text-foreground">{title}</span>
+                          <br />
+                          <span>{desc}</span>
+                        </li>
+                      );
+                    }
+                    return <li key={i}>• {v}</li>;
+                  })}
                 </ul>
               </div>
             )}
