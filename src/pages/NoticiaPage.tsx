@@ -40,6 +40,26 @@ const getCategoryLabel = (category: string): string => {
   return labels[category] || "AAFAB";
 };
 
+// Helper to render text with clickable URLs
+const renderTextWithLinks = (text: string) => {
+  const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+)/g;
+  const parts = text.split(urlRegex);
+  
+  return parts.map((part, i) => {
+    if (urlRegex.test(part)) {
+      const href = part.startsWith('http') ? part : `https://${part}`;
+      return (
+        <a key={i} href={href} target="_blank" rel="noopener noreferrer" className="text-link hover:underline">
+          {part}
+        </a>
+      );
+    }
+    // Reset regex lastIndex since we reuse it
+    urlRegex.lastIndex = 0;
+    return part;
+  });
+};
+
 const NoticiaPage = () => {
   const { id } = useParams<{ id: string }>();
   const { data: noticia, isLoading, error } = useNoticia(id);
@@ -129,7 +149,7 @@ const NoticiaPage = () => {
 
           {/* Excerpt */}
           <p className="text-xl text-muted-foreground leading-relaxed mb-6">
-            {noticia.excerpt}
+            {renderTextWithLinks(noticia.excerpt)}
           </p>
 
           {/* Meta */}
