@@ -138,6 +138,27 @@ const AdminConfiguracoes = () => {
                   rows={3}
                 />
               </div>
+
+              <div>
+                <Label htmlFor="newsletter_title">Título da Newsletter</Label>
+                <Input
+                  id="newsletter_title"
+                  value={formData.newsletter_title || ''}
+                  onChange={(e) => handleChange('newsletter_title', e.target.value)}
+                  placeholder="Fique por dentro das notícias"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="newsletter_subtitle">Subtítulo da Newsletter</Label>
+                <Textarea
+                  id="newsletter_subtitle"
+                  value={formData.newsletter_subtitle || ''}
+                  onChange={(e) => handleChange('newsletter_subtitle', e.target.value)}
+                  placeholder="Receba as principais informações da AAFAB..."
+                  rows={2}
+                />
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

@@ -73,9 +73,9 @@ export function Footer() {
       <div className="border-b border-primary-foreground/10">
         <div className="container py-8">
           <div className="max-w-2xl mx-auto text-center">
-            <h3 className="font-serif font-bold text-2xl mb-2 text-white">Fique por dentro das notícias</h3>
+            <h3 className="font-serif font-bold text-2xl mb-2 text-white">{settings?.newsletter_title || 'Fique por dentro das notícias'}</h3>
             <p className="text-primary-foreground/70 mb-6">
-              Receba as principais informações da AAFAB sobre o processo Internacional, diretamente em seu e-mail
+              {settings?.newsletter_subtitle || 'Receba as principais informações da AAFAB sobre o processo Internacional, diretamente em seu e-mail'}
             </p>
             <NewsletterForm />
           </div>
