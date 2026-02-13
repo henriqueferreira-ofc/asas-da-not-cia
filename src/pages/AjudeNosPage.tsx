@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, BookOpen, Heart, Copy, Check, QrCode, Download, Gift } from "lucide-react";
+import { ArrowLeft, BookOpen, Heart, Copy, Check, QrCode, Download, Gift, Loader2 } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
@@ -10,41 +10,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-
-const ebooks = [
-  {
-    id: "historia-fab",
-    title: "História da Força Aérea Brasileira",
-    description: "Uma jornada completa pelos 83 anos de história da FAB, desde sua fundação até os dias atuais.",
-    price: "29,90",
-    pages: "180 páginas",
-    format: "PDF",
-  },
-  {
-    id: "geopolitica-brasil",
-    title: "Geopolítica: O Brasil no Cenário Mundial",
-    description: "Análise profunda da posição estratégica do Brasil e os desafios geopolíticos contemporâneos.",
-    price: "39,90",
-    pages: "220 páginas",
-    format: "PDF",
-  },
-  {
-    id: "defesa-nacional",
-    title: "Defesa Nacional: Conceitos e Estratégias",
-    description: "Fundamentos da defesa nacional brasileira e as estratégias de segurança do país.",
-    price: "34,90",
-    pages: "150 páginas",
-    format: "PDF",
-  },
-  {
-    id: "aviacao-militar",
-    title: "Aviação Militar Brasileira",
-    description: "Conheça as aeronaves, tecnologias e operações que fazem da FAB uma das mais respeitadas do mundo.",
-    price: "24,90",
-    pages: "120 páginas",
-    format: "PDF",
-  },
-];
+import { usePublishedEbooks } from "@/hooks/useEbooks";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const donationValues = [
   { 
@@ -70,6 +37,8 @@ const AjudeNosPage = () => {
   const [selectedItem, setSelectedItem] = useState("");
   const [selectedPixCode, setSelectedPixCode] = useState("");
   const [copied, setCopied] = useState(false);
+
+  const { data: ebooks, isLoading: isLoadingEbooks } = usePublishedEbooks();
 
   const pixBeneficiary = "Henrique Cesar Araujo Fer";
 
@@ -143,44 +112,69 @@ const AjudeNosPage = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {ebooks.map((ebook) => (
-                <div 
-                  key={ebook.id}
-                  className="bg-card rounded-xl border border-border p-6 hover:shadow-lg transition-all hover:-translate-y-1"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="w-16 h-20 bg-gradient-to-br from-primary to-primary/70 rounded-lg flex items-center justify-center shrink-0 shadow-md">
-                      <BookOpen className="w-8 h-8 text-primary-foreground" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-bold text-lg text-headline mb-2 leading-tight">
-                        {ebook.title}
-                      </h3>
-                      <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-                        {ebook.description}
-                      </p>
-                      <div className="flex items-center gap-3 text-xs text-muted-foreground mb-4">
-                        <span className="bg-secondary px-2 py-1 rounded">{ebook.format}</span>
-                        <span>{ebook.pages}</span>
+            {isLoadingEbooks ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {[1, 2, 3, 4].map((i) => (
+                  <Skeleton key={i} className="h-48 rounded-xl" />
+                ))}
+              </div>
+            ) : ebooks && ebooks.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {ebooks.map((ebook) => (
+                  <div 
+                    key={ebook.id}
+                    className="bg-card rounded-xl border border-border p-6 hover:shadow-lg transition-all hover:-translate-y-1"
+                  >
+                    <div className="flex items-start gap-4">
+                      {ebook.cover_url ? (
+                        <img src={ebook.cover_url} alt={ebook.title} className="w-16 h-20 rounded-lg object-cover shrink-0 shadow-md" />
+                      ) : (
+                        <div className="w-16 h-20 bg-gradient-to-br from-primary to-primary/70 rounded-lg flex items-center justify-center shrink-0 shadow-md">
+                          <BookOpen className="w-8 h-8 text-primary-foreground" />
+                        </div>
+                      )}
+                      <div className="flex-1">
+                        <h3 className="font-bold text-lg text-headline mb-2 leading-tight">
+                          {ebook.title}
+                        </h3>
+                        <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                          {ebook.description || 'Sem descrição'}
+                        </p>
+                        <div className="flex items-center gap-3 text-xs text-muted-foreground mb-4">
+                          <span className="bg-secondary px-2 py-1 rounded">PDF</span>
+                          {ebook.pages && <span>{ebook.pages} páginas</span>}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="flex items-center justify-between pt-4 border-t border-border mt-4">
-                    <div>
-                      <span className="text-2xl font-bold text-headline">R$ {ebook.price}</span>
+                    <div className="flex items-center justify-between pt-4 border-t border-border mt-4">
+                      <div>
+                        <span className="text-2xl font-bold text-headline">
+                          {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(ebook.price)}
+                        </span>
+                      </div>
+                      {ebook.pix_link || ebook.card_link ? (
+                        <a href={ebook.pix_link || ebook.card_link || '#'} target="_blank" rel="noopener noreferrer">
+                          <Button className="gap-2">
+                            <Download className="w-4 h-4" />
+                            Adquirir
+                          </Button>
+                        </a>
+                      ) : (
+                        <Button 
+                          onClick={() => handleEbookPurchase(ebook.title, ebook.price.toString())}
+                          className="gap-2"
+                        >
+                          <Download className="w-4 h-4" />
+                          Adquirir
+                        </Button>
+                      )}
                     </div>
-                    <Button 
-                      onClick={() => handleEbookPurchase(ebook.title, ebook.price)}
-                      className="gap-2"
-                    >
-                      <Download className="w-4 h-4" />
-                      Adquirir
-                    </Button>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-center text-muted-foreground py-8">Nenhum e-book disponível no momento.</p>
+            )}
           </section>
 
           {/* Donation Section */}
