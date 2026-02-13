@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Facebook, Instagram, Twitter, Youtube, Linkedin, Mail, Phone, MapPin, Send } from "lucide-react";
+import { Facebook, Instagram, Twitter, Youtube, Linkedin, Mail, Phone, MapPin, Send, Loader2 } from "lucide-react";
 import { AdminLoginModal } from "@/components/admin/AdminLoginModal";
 import { useSiteSettingsMap } from "@/hooks/useSiteSettings";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const links = [
   { name: "Sobre a AAFAB", href: "/sobre" },
@@ -14,15 +16,34 @@ const links = [
 // Newsletter form component
 function NewsletterForm() {
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (!email || loading) return;
     
-    const subject = encodeURIComponent("Inscrição Newsletter AAFAB");
-    const body = encodeURIComponent(`Olá, gostaria de me inscrever na newsletter da AAFAB.\n\nMeu e-mail: ${email}`);
-    window.location.href = `mailto:contato@aafab.org.br?subject=${subject}&body=${body}`;
-    setEmail("");
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('send-contact-email', {
+        body: {
+          name: "Newsletter",
+          email: email,
+          subject: "Inscrição Newsletter AAFAB",
+          message: `Novo inscrito na newsletter.\n\nE-mail: ${email}`,
+        },
+      });
+
+      if (error) throw error;
+      if (data && !data.success) throw new Error(data.error);
+
+      toast({ title: "Inscrição enviada!", description: "Seu e-mail foi enviado com sucesso." });
+      setEmail("");
+    } catch (err) {
+      toast({ title: "Erro ao enviar", description: "Tente novamente mais tarde.", variant: "destructive" });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -36,14 +57,16 @@ function NewsletterForm() {
           placeholder="Digite seu melhor e-mail" 
           className="w-full pl-10 pr-4 py-3 rounded-lg text-sm bg-primary-foreground/10 text-primary-foreground placeholder:text-primary-foreground/50 outline-none focus:ring-2 focus:ring-accent transition-all"
           required
+          disabled={loading}
         />
       </div>
       <button 
         type="submit"
-        className="flex items-center justify-center gap-2 px-6 py-3 bg-accent text-accent-foreground rounded-lg text-sm font-semibold hover:bg-accent/90 transition-colors shrink-0"
+        disabled={loading}
+        className="flex items-center justify-center gap-2 px-6 py-3 bg-accent text-accent-foreground rounded-lg text-sm font-semibold hover:bg-accent/90 transition-colors shrink-0 disabled:opacity-60"
       >
-        <Send className="w-4 h-4" />
-        Enviar
+        {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+        {loading ? "Enviando..." : "Enviar"}
       </button>
     </form>
   );
