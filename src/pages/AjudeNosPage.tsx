@@ -11,25 +11,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { usePublishedEbooks } from "@/hooks/useEbooks";
+import { usePageContent } from "@/hooks/usePageContent";
 import { Skeleton } from "@/components/ui/skeleton";
-
-const donationValues = [
-  { 
-    value: "19,90", 
-    label: "R$ 19,90",
-    pixCode: "00020126360014BR.GOV.BCB.PIX0114+5561983021315520400005303986540519.905802BR5925Henrique Cesar Araujo Fer6009SAO PAULO62140510KVtdFiyJbU63042255"
-  },
-  { 
-    value: "29,90", 
-    label: "R$ 29,90",
-    pixCode: "00020126360014BR.GOV.BCB.PIX0114+5561983021315520400005303986540529.905802BR5925Henrique Cesar Araujo Fer6009SAO PAULO62140510KtJcU9ctRT63048B2D"
-  },
-  { 
-    value: "49,90", 
-    label: "R$ 49,90",
-    pixCode: "00020126360014BR.GOV.BCB.PIX0114+5561983021315520400005303986540549.905802BR5925Henrique Cesar Araujo Fer6009SAO PAULO62140510KUuE78YEUt6304707A"
-  },
-];
 
 const AjudeNosPage = () => {
   const [pixModalOpen, setPixModalOpen] = useState(false);
@@ -39,8 +22,38 @@ const AjudeNosPage = () => {
   const [copied, setCopied] = useState(false);
 
   const { data: ebooks, isLoading: isLoadingEbooks } = usePublishedEbooks();
+  const { data: pageData, isLoading: isLoadingPage } = usePageContent("ajude-nos");
 
-  const pixBeneficiary = "Henrique Cesar Araujo Fer";
+  const c = (pageData?.content as Record<string, unknown>) || {};
+
+  const pageTitle = (c.title as string) || "Ajude a AAFAB";
+  const pageDescription = (c.description as string) || "Sua contribuição fortalece nossa missão de informar, educar e apoiar a AAFAB e seus admiradores.";
+  const ebooksTitle = (c.ebooksTitle as string) || "Nossos E-Books";
+  const ebooksSubtitle = (c.ebooksSubtitle as string) || "Materiais informativos exclusivos sobre defesa e política";
+  const donationTitle = (c.donationTitle as string) || "Faça uma Doação";
+  const donationDescription = (c.donationDescription as string) || "Sua contribuição ajuda a manter nosso portal ativo, produzir conteúdo de qualidade e apoiar iniciativas em prol da Força Aérea Brasileira.";
+  const donationFooter = (c.donationFooter as string) || "Ao clicar em um valor, você será direcionado para o pagamento via PIX";
+  const pixBeneficiary = (c.pixBeneficiary as string) || "Henrique Cesar Araujo Fer";
+  const impactTitle = (c.impactTitle as string) || "Como sua ajuda é utilizada";
+
+  const donationValues = [
+    { value: (c.donationValue1 as string) || "19,90", pixCode: (c.donationPixCode1 as string) || "" },
+    { value: (c.donationValue2 as string) || "29,90", pixCode: (c.donationPixCode2 as string) || "" },
+    { value: (c.donationValue3 as string) || "49,90", pixCode: (c.donationPixCode3 as string) || "" },
+  ].filter(d => d.value);
+
+  const impactItems = [
+    { title: (c.impact1Title as string) || "Conteúdo de Qualidade", description: (c.impact1Description as string) || "Produção de artigos, análises e materiais educativos sobre defesa nacional" },
+    { title: (c.impact2Title as string) || "Apoio à AAFAB", description: (c.impact2Description as string) || "Iniciativas de valorização e apoio à Associação Amigos da Força Aérea Brasileira" },
+    { title: (c.impact3Title as string) || "Eventos e Projetos", description: (c.impact3Description as string) || "Organização de eventos, seminários e projetos educacionais" },
+  ];
+
+  const impactIcons = [
+    <BookOpen className="w-6 h-6 text-primary" />,
+    <Heart className="w-6 h-6 text-accent" />,
+    <Gift className="w-6 h-6 text-green-600" />,
+  ];
+  const impactBgs = ["bg-primary/10", "bg-accent/10", "bg-green-500/10"];
 
   const handleDonation = (value: string, pixCode: string) => {
     setSelectedValue(value);
@@ -52,7 +65,6 @@ const AjudeNosPage = () => {
   const handleEbookPurchase = (title: string, price: string) => {
     setSelectedValue(price);
     setSelectedItem(title);
-    // Para e-books, usar o código PIX de R$ 29,90 como padrão (pode ajustar depois)
     setSelectedPixCode("");
     setPixModalOpen(true);
   };
@@ -64,6 +76,18 @@ const AjudeNosPage = () => {
       setTimeout(() => setCopied(false), 2000);
     }
   };
+
+  if (isLoadingPage) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="container py-8">
+          <Skeleton className="h-96 w-full rounded-xl" />
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -88,11 +112,10 @@ const AjudeNosPage = () => {
               <Heart className="w-8 h-8 text-accent" />
             </div>
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-headline mb-4">
-              Ajude a AAFAB
+              {pageTitle}
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Sua contribuição fortalece nossa missão de informar, educar e apoiar 
-              a AAFAB e seus admiradores.
+              {pageDescription}
             </p>
           </div>
 
@@ -104,10 +127,10 @@ const AjudeNosPage = () => {
               </div>
               <div>
                 <h2 className="text-2xl font-serif font-bold text-headline">
-                  Nossos E-Books
+                  {ebooksTitle}
                 </h2>
                 <p className="text-muted-foreground text-sm">
-                  Materiais informativos exclusivos sobre defesa e política
+                  {ebooksSubtitle}
                 </p>
               </div>
             </div>
@@ -185,11 +208,10 @@ const AjudeNosPage = () => {
                   <Gift className="w-7 h-7 text-accent" />
                 </div>
                 <h2 className="text-2xl md:text-3xl font-serif font-bold text-headline mb-3">
-                  Faça uma Doação
+                  {donationTitle}
                 </h2>
                 <p className="text-muted-foreground max-w-xl mx-auto">
-                  Sua contribuição ajuda a manter nosso portal ativo, produzir conteúdo de qualidade 
-                  e apoiar iniciativas em prol da Força Aérea Brasileira.
+                  {donationDescription}
                 </p>
               </div>
 
@@ -201,14 +223,14 @@ const AjudeNosPage = () => {
                     className="group relative px-8 py-4 bg-card border-2 border-accent/30 rounded-xl hover:border-accent hover:bg-accent/5 transition-all hover:shadow-lg hover:-translate-y-1"
                   >
                     <span className="text-2xl font-bold text-headline group-hover:text-accent transition-colors">
-                      {donation.label}
+                      R$ {donation.value}
                     </span>
                   </button>
                 ))}
               </div>
 
               <p className="text-center text-sm text-muted-foreground">
-                Ao clicar em um valor, você será direcionado para o pagamento via PIX
+                {donationFooter}
               </p>
             </div>
           </section>
@@ -216,36 +238,18 @@ const AjudeNosPage = () => {
           {/* Impact Section */}
           <section className="text-center">
             <h2 className="text-2xl font-serif font-bold text-headline mb-6">
-              Como sua ajuda é utilizada
+              {impactTitle}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-card rounded-xl border border-border p-6">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                  <BookOpen className="w-6 h-6 text-primary" />
+              {impactItems.map((item, i) => (
+                <div key={i} className="bg-card rounded-xl border border-border p-6">
+                  <div className={`w-12 h-12 rounded-full ${impactBgs[i]} flex items-center justify-center mx-auto mb-4`}>
+                    {impactIcons[i]}
+                  </div>
+                  <h3 className="font-bold text-headline mb-2">{item.title}</h3>
+                  <p className="text-sm text-muted-foreground">{item.description}</p>
                 </div>
-                <h3 className="font-bold text-headline mb-2">Conteúdo de Qualidade</h3>
-                <p className="text-sm text-muted-foreground">
-                  Produção de artigos, análises e materiais educativos sobre defesa nacional
-                </p>
-              </div>
-              <div className="bg-card rounded-xl border border-border p-6">
-                <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-4">
-                  <Heart className="w-6 h-6 text-accent" />
-                </div>
-                <h3 className="font-bold text-headline mb-2">Apoio à AAFAB</h3>
-                <p className="text-sm text-muted-foreground">
-                  Iniciativas de valorização e apoio à Associação Amigos da Força Aérea Brasileira
-                </p>
-              </div>
-              <div className="bg-card rounded-xl border border-border p-6">
-                <div className="w-12 h-12 rounded-full bg-green-500/10 flex items-center justify-center mx-auto mb-4">
-                  <Gift className="w-6 h-6 text-green-600" />
-                </div>
-                <h3 className="font-bold text-headline mb-2">Eventos e Projetos</h3>
-                <p className="text-sm text-muted-foreground">
-                  Organização de eventos, seminários e projetos educacionais
-                </p>
-              </div>
+              ))}
             </div>
           </section>
         </div>
@@ -261,13 +265,11 @@ const AjudeNosPage = () => {
           </DialogHeader>
           
           <div className="text-center space-y-6 py-4">
-            {/* Selected Item */}
             <div className="bg-secondary rounded-lg p-4">
               <p className="text-sm text-muted-foreground mb-1">{selectedItem}</p>
               <p className="text-3xl font-bold text-headline">R$ {selectedValue}</p>
             </div>
 
-            {/* PIX Copia e Cola */}
             {selectedPixCode ? (
               <div className="space-y-4">
                 <div className="flex items-center justify-center gap-2 text-green-600">
@@ -316,12 +318,10 @@ const AjudeNosPage = () => {
               </div>
             )}
 
-            {/* Beneficiary */}
             <div className="text-sm text-muted-foreground">
               <p className="font-medium text-foreground">{pixBeneficiary}</p>
             </div>
 
-            {/* Instructions */}
             <div className="text-left bg-accent/5 rounded-lg p-4 text-sm">
               <p className="font-medium text-headline mb-2">Como pagar:</p>
               <ol className="list-decimal list-inside space-y-1 text-muted-foreground">
