@@ -92,12 +92,12 @@ const AjudeNosPage = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       <main className="container py-8">
         {/* Breadcrumb */}
         <div className="mb-6">
-          <Link 
-            to="/" 
+          <Link
+            to="/"
             className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -122,8 +122,8 @@ const AjudeNosPage = () => {
           {/* E-Books Section */}
           <section className="mb-16">
             <div className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                <BookOpen className="w-5 h-5 text-primary" />
+              <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">
+                <BookOpen className="w-5 h-5 text-accent" />
               </div>
               <div>
                 <h2 className="text-2xl font-serif font-bold text-headline">
@@ -144,16 +144,16 @@ const AjudeNosPage = () => {
             ) : ebooks && ebooks.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {ebooks.map((ebook) => (
-                  <div 
+                  <div
                     key={ebook.id}
-                    className="bg-card rounded-xl border border-border p-6 hover:shadow-lg transition-all hover:-translate-y-1"
+                    className="bg-card rounded-xl border-2 border-border p-6 hover:border-accent hover:bg-accent/5 transition-all hover:shadow-lg hover:-translate-y-1"
                   >
                     <div className="flex items-start gap-4">
                       {ebook.cover_url ? (
                         <img src={ebook.cover_url} alt={ebook.title} className="w-16 h-20 rounded-lg object-cover shrink-0 shadow-md" />
                       ) : (
-                        <div className="w-16 h-20 bg-gradient-to-br from-primary to-primary/70 rounded-lg flex items-center justify-center shrink-0 shadow-md">
-                          <BookOpen className="w-8 h-8 text-primary-foreground" />
+                        <div className="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center shrink-0">
+                          <BookOpen className="w-8 h-8 text-accent" />
                         </div>
                       )}
                       <div className="flex-1">
@@ -183,7 +183,7 @@ const AjudeNosPage = () => {
                           </Button>
                         </a>
                       ) : (
-                        <Button 
+                        <Button
                           onClick={() => handleEbookPurchase(ebook.title, ebook.price.toString())}
                           className="gap-2"
                         >
@@ -263,7 +263,7 @@ const AjudeNosPage = () => {
               Pagamento via PIX
             </DialogTitle>
           </DialogHeader>
-          
+
           <div className="text-center space-y-6 py-4">
             <div className="bg-secondary rounded-lg p-4">
               <p className="text-sm text-muted-foreground mb-1">{selectedItem}</p>
@@ -276,7 +276,7 @@ const AjudeNosPage = () => {
                   <Check className="w-5 h-5" />
                   <p className="text-sm font-medium">PIX Copia e Cola pronto!</p>
                 </div>
-                
+
                 <div className="space-y-2">
                   <p className="text-xs text-muted-foreground uppercase tracking-wide">Código PIX</p>
                   <div className="bg-secondary rounded-lg p-3">
