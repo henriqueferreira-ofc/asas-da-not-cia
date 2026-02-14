@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Upload, Loader2, CreditCard, QrCode } from 'lucide-react';
-import { useEbook, useCreateEbook, useUpdateEbook, uploadEbookCover, EbookInsert } from '@/hooks/useEbooks';
+import { ArrowLeft, Upload, Loader2, CreditCard, QrCode, X, Trash2 } from 'lucide-react';
+import { useEbook, useCreateEbook, useUpdateEbook, uploadEbookCover, uploadEbookPdf, EbookInsert } from '@/hooks/useEbooks';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -71,9 +71,30 @@ const AdminEbookForm = () => {
     }
   };
 
+  const handlePdfUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.type !== 'application/pdf') {
+      toast({ title: 'Por favor, envie um arquivo PDF', variant: 'destructive' });
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const url = await uploadEbookPdf(file);
+      setFormData(prev => ({ ...prev, pdf_url: url }));
+      toast({ title: 'PDF enviado com sucesso' });
+    } catch (error) {
+      toast({ title: 'Erro ao enviar PDF', variant: 'destructive' });
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.title.trim()) {
       toast({ title: 'Título é obrigatório', variant: 'destructive' });
       return;
@@ -198,13 +219,23 @@ const AdminEbookForm = () => {
           </CardHeader>
           <CardContent>
             <div className="flex gap-6">
-              <div className="w-32 h-44 bg-muted rounded-lg overflow-hidden flex items-center justify-center">
+              <div className="w-32 h-44 bg-muted rounded-lg overflow-hidden flex items-center justify-center relative group/cover">
                 {formData.cover_url ? (
-                  <img
-                    src={formData.cover_url}
-                    alt="Capa"
-                    className="w-full h-full object-cover"
-                  />
+                  <>
+                    <img
+                      src={formData.cover_url}
+                      alt="Capa"
+                      className="w-full h-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setFormData(prev => ({ ...prev, cover_url: null }))}
+                      className="absolute top-2 right-2 p-1.5 bg-destructive text-destructive-foreground rounded-full opacity-0 group-hover/cover:opacity-100 transition-opacity hover:bg-destructive/90"
+                      title="Remover capa"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </>
                 ) : (
                   <span className="text-muted-foreground text-sm">Sem capa</span>
                 )}
@@ -235,6 +266,74 @@ const AdminEbookForm = () => {
                   onChange={handleCoverUpload}
                   disabled={isUploading}
                 />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* PDF Upload */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Arquivo do E-book (PDF)</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex gap-6">
+              <div className="flex-1">
+                <Label htmlFor="pdf" className="cursor-pointer">
+                  <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-primary transition-colors">
+                    {isUploading ? (
+                      <Loader2 className="w-8 h-8 animate-spin mx-auto text-primary" />
+                    ) : (
+                      <>
+                        <Upload className="w-8 h-8 mx-auto text-muted-foreground mb-2" />
+                        <p className="text-sm text-muted-foreground">
+                          Clique para enviar o arquivo PDF
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Apenas arquivos .pdf
+                        </p>
+                      </>
+                    )}
+                  </div>
+                </Label>
+                <Input
+                  id="pdf"
+                  type="file"
+                  accept="application/pdf"
+                  className="hidden"
+                  onChange={handlePdfUpload}
+                  disabled={isUploading}
+                />
+
+                {formData.pdf_url && (
+                  <div className="mt-4 p-4 bg-muted rounded-lg flex items-center justify-between group/pdf">
+                    <span className="text-sm font-medium truncate max-w-[200px] lg:max-w-md">
+                      {formData.pdf_url.split('/').pop()}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        asChild
+                      >
+                        <a href={formData.pdf_url} target="_blank" rel="noopener noreferrer">
+                          Visualizar
+                        </a>
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                        onClick={() => setFormData(prev => ({ ...prev, pdf_url: null }))}
+                        title="Remover PDF"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </CardContent>

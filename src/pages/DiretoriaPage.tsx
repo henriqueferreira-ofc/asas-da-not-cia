@@ -11,13 +11,31 @@ const ESTADOS_BRASILEIROS = [
 ] as const;
 
 // Helper function to convert Google Drive links to direct image URLs
+// Helper function to convert Google Drive links to direct image URLs
 const convertGoogleDriveUrl = (url: string | undefined): string | undefined => {
   if (!url) return undefined;
-  // Check if it's a Google Drive link
-  const driveMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  if (driveMatch) {
-    return `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w400`;
+
+  // Extract ID from various Google Drive URL formats
+  let id = null;
+
+  // Try /d/ID format
+  const parts = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (parts) {
+    id = parts[1];
+  } else {
+    // Try id=ID format
+    const idMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+    if (idMatch) {
+      id = idMatch[1];
+    }
   }
+
+  if (id) {
+    // Use the thumbnail endpoint which is generally reliable for public images
+    // sz=w1000 requests a width of 1000px which is good quality
+    return `https://lh3.googleusercontent.com/d/${id}`;
+  }
+
   return url;
 };
 
@@ -46,7 +64,7 @@ const DiretoriaPage = () => {
 
   // Extract content from database
   const content = (pageContent?.content as Record<string, unknown>) || {};
-  
+
   // Diretoria Executiva
   const presidente = (content.presidente as { nome?: string; foto?: string }) || {};
   const vicePresidente = (content.vicePresidente as { nome?: string; foto?: string }) || {};
@@ -63,17 +81,17 @@ const DiretoriaPage = () => {
 
   // Conselho Fiscal (4 membros) - Apply Google Drive URL conversion
   const dbConselhoFiscal = (content.conselhoFiscal as ConselhoFiscalMember[]) || [];
-  const conselhoFiscal = dbConselhoFiscal.length > 0 
+  const conselhoFiscal = dbConselhoFiscal.length > 0
     ? dbConselhoFiscal.map(membro => ({
-        ...membro,
-        foto: convertGoogleDriveUrl(membro.foto)
-      }))
+      ...membro,
+      foto: convertGoogleDriveUrl(membro.foto)
+    }))
     : [
-        { cargo: "Presidente", nome: "" },
-        { cargo: "Segundo Conselheiro", nome: "" },
-        { cargo: "Terceiro Conselheiro", nome: "" },
-        { cargo: "Advogada", nome: "" },
-      ];
+      { cargo: "Presidente", nome: "" },
+      { cargo: "Segundo Conselheiro", nome: "" },
+      { cargo: "Terceiro Conselheiro", nome: "" },
+      { cargo: "Advogada", nome: "" },
+    ];
 
   const diretoriaExecutiva: DiretorMember[] = [
     {
@@ -123,12 +141,12 @@ const DiretoriaPage = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       <main className="container py-8">
         {/* Breadcrumb */}
         <div className="mb-6">
-          <Link 
-            to="/sobre" 
+          <Link
+            to="/sobre"
             className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -159,16 +177,15 @@ const DiretoriaPage = () => {
             {/* All 5 members in responsive grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {diretoriaExecutiva.map((membro, index) => (
-                <div 
+                <div
                   key={index}
-                  className={`bg-card rounded-xl border border-border p-4 md:p-6 hover:shadow-lg transition-shadow group ${
-                    index >= 3 ? 'sm:col-span-1' : ''
-                  }`}
+                  className={`bg-card rounded-xl border border-border p-4 md:p-6 hover:shadow-lg transition-shadow group ${index >= 3 ? 'sm:col-span-1' : ''
+                    }`}
                 >
                   <div className="flex items-start gap-3 md:gap-4">
                     {membro.foto ? (
-                      <img 
-                        src={membro.foto} 
+                      <img
+                        src={membro.foto}
                         alt={membro.nome}
                         className="w-12 h-12 md:w-14 md:h-14 rounded-full object-cover shrink-0"
                       />
@@ -207,13 +224,13 @@ const DiretoriaPage = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
               {conselheirosEstaduais.map((conselheiro, index) => (
-                <div 
+                <div
                   key={index}
                   className="bg-card rounded-xl border border-border p-4 hover:shadow-lg transition-shadow text-center group"
                 >
                   {conselheiro.foto ? (
-                    <img 
-                      src={conselheiro.foto} 
+                    <img
+                      src={conselheiro.foto}
                       alt={conselheiro.nome}
                       className="w-10 h-10 rounded-full object-cover mx-auto mb-3"
                     />
@@ -245,13 +262,13 @@ const DiretoriaPage = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
               {conselhoFiscal.map((membro, index) => (
-                <div 
+                <div
                   key={index}
                   className="bg-card rounded-xl border border-border p-4 md:p-6 hover:shadow-lg transition-shadow text-center group"
                 >
                   {membro.foto ? (
-                    <img 
-                      src={membro.foto} 
+                    <img
+                      src={membro.foto}
                       alt={membro.nome}
                       className="w-14 h-14 md:w-16 md:h-16 rounded-full object-cover mx-auto mb-3 md:mb-4"
                     />
@@ -277,7 +294,7 @@ const DiretoriaPage = () => {
               Quer fazer parte da nossa equipe?
             </h2>
             <p className="text-primary-foreground/80 mb-6 max-w-2xl mx-auto">
-              Entre em contato conosco para saber como você pode contribuir com a AAFAB 
+              Entre em contato conosco para saber como você pode contribuir com a AAFAB
               e ajudar a valorizar nosso trabalho.
             </p>
             <Link
