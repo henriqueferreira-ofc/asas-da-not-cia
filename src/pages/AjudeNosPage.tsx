@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { ArrowLeft, BookOpen, Heart, Copy, Check, QrCode, Download, Gift, Loader2 } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { ArrowLeft, BookOpen, Heart, Copy, Check, QrCode, Download, Gift, Loader2, Share2, ExternalLink } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
@@ -175,22 +175,30 @@ const AjudeNosPage = () => {
                           {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(ebook.price)}
                         </span>
                       </div>
-                      {ebook.pix_link || ebook.card_link ? (
-                        <a href={ebook.pix_link || ebook.card_link || '#'} target="_blank" rel="noopener noreferrer">
-                          <Button className="gap-2">
+                      <div className="flex items-center gap-2">
+                        <Link to={`/ebook/${ebook.id}`}>
+                          <Button variant="ghost" size="sm" className="gap-1 text-xs" title="Ver página / Copiar link para redes sociais">
+                            <Share2 className="w-3.5 h-3.5" />
+                            Compartilhar
+                          </Button>
+                        </Link>
+                        {ebook.pix_link || ebook.card_link ? (
+                          <a href={ebook.pix_link || ebook.card_link || '#'} target="_blank" rel="noopener noreferrer">
+                            <Button className="gap-2">
+                              <Download className="w-4 h-4" />
+                              Adquirir
+                            </Button>
+                          </a>
+                        ) : (
+                          <Button
+                            onClick={() => handleEbookPurchase(ebook.title, ebook.price.toString())}
+                            className="gap-2"
+                          >
                             <Download className="w-4 h-4" />
                             Adquirir
                           </Button>
-                        </a>
-                      ) : (
-                        <Button
-                          onClick={() => handleEbookPurchase(ebook.title, ebook.price.toString())}
-                          className="gap-2"
-                        >
-                          <Download className="w-4 h-4" />
-                          Adquirir
-                        </Button>
-                      )}
+                        )}
+                      </div>
                     </div>
                   </div>
                 ))}
