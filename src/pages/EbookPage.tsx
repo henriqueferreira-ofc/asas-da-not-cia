@@ -1,31 +1,23 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, BookOpen, Download, Copy, Check, QrCode, Share2 } from "lucide-react";
+import { ArrowLeft, BookOpen, Download, Check, Share2 } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { useEbook } from "@/hooks/useEbooks";
 import { toast } from "sonner";
 
 const EbookPage = () => {
   const { id } = useParams<{ id: string }>();
   const { data: ebook, isLoading } = useEbook(id);
-  const [pixModalOpen, setPixModalOpen] = useState(false);
-  const [copied, setCopied] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
 
   // Update document meta tags for social sharing
   useEffect(() => {
     if (!ebook) return;
     document.title = `${ebook.title} | AAFAB`;
-    
+
     const setMeta = (property: string, content: string) => {
       let el = document.querySelector(`meta[property="${property}"]`) || document.querySelector(`meta[name="${property}"]`);
       if (!el) {
@@ -80,14 +72,6 @@ const EbookPage = () => {
     setTimeout(() => setLinkCopied(false), 2000);
   };
 
-  const copyPixCode = async () => {
-    if (ebook?.pix_link) {
-      await navigator.clipboard.writeText(ebook.pix_link);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
-
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background">
@@ -114,6 +98,8 @@ const EbookPage = () => {
       </div>
     );
   }
+
+  const purchaseLink = ebook.card_link || ebook.pix_link;
 
   return (
     <div className="min-h-screen bg-background">
@@ -146,21 +132,16 @@ const EbookPage = () => {
                 </div>
                 <div className="pt-4 border-t border-border">
                   <p className="text-3xl font-bold text-headline mb-4">{formattedPrice}</p>
-                  <div className="flex flex-wrap gap-3">
-                    {ebook.pix_link || ebook.card_link ? (
-                      <a href={ebook.card_link || "#"} target="_blank" rel="noopener noreferrer">
-                        <Button size="lg" className="gap-2">
-                          <Download className="w-5 h-5" />
-                          Adquirir Agora
-                        </Button>
-                      </a>
-                    ) : null}
-                    {ebook.pix_link && (
-                      <Button size="lg" variant="outline" className="gap-2" onClick={() => setPixModalOpen(true)}>
-                        Pagar via PIX
+                  {purchaseLink ? (
+                    <a href={purchaseLink} target="_blank" rel="noopener noreferrer">
+                      <Button size="lg" className="gap-2">
+                        <Download className="w-5 h-5" />
+                        Adquirir Agora
                       </Button>
-                    )}
-                  </div>
+                    </a>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">Link de pagamento não disponível no momento.</p>
+                  )}
                 </div>
               </div>
             </div>
@@ -190,54 +171,6 @@ const EbookPage = () => {
           </div>
         </div>
       </main>
-
-      {/* PIX Modal */}
-      <Dialog open={pixModalOpen} onOpenChange={setPixModalOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-center text-xl font-serif">Pagamento via PIX</DialogTitle>
-          </DialogHeader>
-          <div className="text-center space-y-6 py-4">
-            <div className="bg-secondary rounded-lg p-4">
-              <p className="text-sm text-muted-foreground mb-1">{ebook.title}</p>
-              <p className="text-3xl font-bold text-headline">{formattedPrice}</p>
-            </div>
-            {ebook.pix_link ? (
-              <div className="space-y-4">
-                <div className="flex items-center justify-center gap-2 text-green-600">
-                  <Check className="w-5 h-5" />
-                  <p className="text-sm font-medium">PIX Copia e Cola pronto!</p>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-xs text-muted-foreground uppercase tracking-wide">Código PIX</p>
-                  <div className="bg-secondary rounded-lg p-3">
-                    <p className="text-xs font-mono text-foreground break-all mb-3 max-h-20 overflow-y-auto">{ebook.pix_link}</p>
-                    <Button variant="default" size="sm" onClick={copyPixCode} className="w-full gap-2">
-                      {copied ? (<><Check className="w-4 h-4" />Código Copiado!</>) : (<><Copy className="w-4 h-4" />Copiar Código PIX</>)}
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center gap-4">
-                <div className="w-48 h-48 bg-secondary rounded-xl flex items-center justify-center border-2 border-dashed border-border">
-                  <QrCode className="w-16 h-16 text-muted-foreground" />
-                </div>
-                <p className="text-sm text-muted-foreground">Entre em contato para adquirir</p>
-              </div>
-            )}
-            <div className="text-left bg-accent/5 rounded-lg p-4 text-sm">
-              <p className="font-medium text-headline mb-2">Como pagar:</p>
-              <ol className="list-decimal list-inside space-y-1 text-muted-foreground">
-                <li>Abra o app do seu banco</li>
-                <li>Escolha pagar com PIX</li>
-                <li>Cole o código PIX</li>
-                <li>Confirme o valor e finalize</li>
-              </ol>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
 
       <Footer />
     </div>
