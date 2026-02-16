@@ -72,7 +72,7 @@ const SobreForm = ({ content, onChange }: { content: Record<string, unknown>; on
       <Textarea
         rows={8}
         value={Array.isArray(content.values) ? (content.values as string[]).join('\n') : ''}
-        onChange={(e) => onChange({ ...content, values: e.target.value.split('\n').filter(v => v.trim()) })}
+        onChange={(e) => onChange({ ...content, values: e.target.value.split('\n') })}
         placeholder="1 - Legalidade - Atuamos com base na Constituição...&#10;2 - Ética - Compromisso com a verdade e transparência...&#10;..."
       />
     </div>
@@ -81,7 +81,7 @@ const SobreForm = ({ content, onChange }: { content: Record<string, unknown>; on
       <Textarea
         rows={6}
         value={Array.isArray(content.publico) ? (content.publico as string[]).join('\n') : ''}
-        onChange={(e) => onChange({ ...content, publico: e.target.value.split('\n').filter(v => v.trim()) })}
+        onChange={(e) => onChange({ ...content, publico: e.target.value.split('\n') })}
         placeholder="Militares da ativa e reserva&#10;Pensionistas e familiares&#10;..."
       />
     </div>
@@ -379,7 +379,15 @@ const AdminPaginaForm = () => {
 
   const handleSave = () => {
     if (!slug) return;
-    updateMutation.mutate({ slug, content: content as Record<string, unknown> });
+    // Filter empty lines only on save
+    const cleanContent = { ...content } as Record<string, unknown>;
+    if (Array.isArray(cleanContent.values)) {
+      cleanContent.values = (cleanContent.values as string[]).filter(v => v.trim());
+    }
+    if (Array.isArray(cleanContent.publico)) {
+      cleanContent.publico = (cleanContent.publico as string[]).filter(v => v.trim());
+    }
+    updateMutation.mutate({ slug, content: cleanContent });
   };
 
   const renderForm = () => {
