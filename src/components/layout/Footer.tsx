@@ -9,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 const links = [
   { name: "Sobre a AAFAB", href: "/sobre" },
   { name: "Diretoria", href: "/diretoria" },
-  { name: "Ajude-nos", href: "/ajude-nos" },
+  { name: "E-Books", href: "/ajude-nos" },
   { name: "Contato", href: "/contato" },
 ];
 
