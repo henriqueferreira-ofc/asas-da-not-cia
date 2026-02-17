@@ -9,7 +9,7 @@ const categories = [
   { name: "Sobre a AAFAB", href: "/sobre" },
   { name: "Política Nacional", href: "/categoria/politica" },
   { name: "Internacional", href: "/categoria/internacional" },
-  { name: "Ajude-nos", href: "/ajude-nos" },
+  { name: "E-Books", href: "/ajude-nos" },
 ];
 
 export function Header() {
