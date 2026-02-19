@@ -67,6 +67,7 @@ export type Database = {
           price: number
           published: boolean
           sort_order: number
+          stripe_price_id: string | null
           title: string
           updated_at: string
         }
@@ -83,6 +84,7 @@ export type Database = {
           price?: number
           published?: boolean
           sort_order?: number
+          stripe_price_id?: string | null
           title: string
           updated_at?: string
         }
@@ -99,6 +101,7 @@ export type Database = {
           price?: number
           published?: boolean
           sort_order?: number
+          stripe_price_id?: string | null
           title?: string
           updated_at?: string
         }

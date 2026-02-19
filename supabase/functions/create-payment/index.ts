@@ -28,7 +28,7 @@ serve(async (req) => {
 
     const { data: ebook, error: ebookError } = await supabase
       .from("ebooks")
-      .select("id, title, description, price, cover_url, pdf_url, published")
+      .select("id, title, description, price, cover_url, pdf_url, stripe_price_id, published")
       .eq("id", ebook_id)
       .eq("published", true)
       .single();
@@ -41,6 +41,10 @@ serve(async (req) => {
       throw new Error("Este e-book não possui PDF disponível para download");
     }
 
+    if (!ebook.stripe_price_id) {
+      throw new Error("Este e-book não possui um preço configurado no Stripe");
+    }
+
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
       apiVersion: "2025-08-27.basil",
     });
@@ -50,7 +54,7 @@ serve(async (req) => {
     const session = await stripe.checkout.sessions.create({
       line_items: [
         {
-          price: "price_1T2dRMJXbvU9tQdJdRRNt1Rk",
+          price: ebook.stripe_price_id,
           quantity: 1,
         },
       ],
