@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, BookOpen, Heart, Copy, Check, QrCode, Download, Gift, Loader2, Share2, ExternalLink } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
@@ -20,6 +22,7 @@ const AjudeNosPage = () => {
   const [selectedItem, setSelectedItem] = useState("");
   const [selectedPixCode, setSelectedPixCode] = useState("");
   const [copied, setCopied] = useState(false);
+  const [checkingOutId, setCheckingOutId] = useState<string | null>(null);
 
   const { data: ebooks, isLoading: isLoadingEbooks } = usePublishedEbooks();
   const { data: pageData, isLoading: isLoadingPage } = usePageContent("ajude-nos");
@@ -62,8 +65,30 @@ const AjudeNosPage = () => {
     setPixModalOpen(true);
   };
 
-  const handleEbookPurchase = (title: string, price: string) => {
-    setSelectedValue(price);
+  const handleEbookPurchase = async (ebookId: string, title: string, price: number, stripePrice: string | null, pixLink: string | null, cardLink: string | null) => {
+    // Prefer Stripe if configured
+    if (stripePrice) {
+      setCheckingOutId(ebookId);
+      try {
+        const { data, error } = await supabase.functions.invoke("create-payment", {
+          body: { ebook_id: ebookId },
+        });
+        if (error || !data?.url) throw new Error(error?.message || "Erro ao criar sessão de pagamento");
+        window.location.href = data.url;
+      } catch (err: any) {
+        toast.error(err.message || "Erro ao iniciar pagamento. Tente novamente.");
+        setCheckingOutId(null);
+      }
+      return;
+    }
+    // Fallback: external link (pix/card)
+    const link = pixLink || cardLink;
+    if (link) {
+      window.open(link, "_blank", "noopener,noreferrer");
+      return;
+    }
+    // Last resort: PIX modal
+    setSelectedValue(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price));
     setSelectedItem(title);
     setSelectedPixCode("");
     setPixModalOpen(true);
@@ -182,22 +207,17 @@ const AjudeNosPage = () => {
                             Compartilhar
                           </Button>
                         </Link>
-                        {ebook.pix_link || ebook.card_link ? (
-                          <a href={ebook.pix_link || ebook.card_link || '#'} target="_blank" rel="noopener noreferrer">
-                            <Button className="gap-2">
-                              <Download className="w-4 h-4" />
-                              Adquirir
-                            </Button>
-                          </a>
-                        ) : (
-                          <Button
-                            onClick={() => handleEbookPurchase(ebook.title, ebook.price.toString())}
-                            className="gap-2"
-                          >
-                            <Download className="w-4 h-4" />
-                            Adquirir
-                          </Button>
-                        )}
+                        <Button
+                          className="gap-2"
+                          disabled={checkingOutId === ebook.id}
+                          onClick={() => handleEbookPurchase(ebook.id, ebook.title, ebook.price, ebook.stripe_price_id, ebook.pix_link, ebook.card_link)}
+                        >
+                          {checkingOutId === ebook.id ? (
+                            <><Loader2 className="w-4 h-4 animate-spin" />Aguarde...</>
+                          ) : (
+                            <><Download className="w-4 h-4" />Adquirir</>
+                          )}
+                        </Button>
                       </div>
                     </div>
                   </div>
