@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, BookOpen, Download, Check, Share2 } from "lucide-react";
+import { ArrowLeft, BookOpen, Download, Check, Share2, Loader2 } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEbook } from "@/hooks/useEbooks";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const EbookPage = () => {
   const { id } = useParams<{ id: string }>();
   const { data: ebook, isLoading } = useEbook(id);
   const [linkCopied, setLinkCopied] = useState(false);
+  const [checkingOut, setCheckingOut] = useState(false);
 
   // Update document meta tags for social sharing
   useEffect(() => {
@@ -70,6 +72,21 @@ const EbookPage = () => {
     setLinkCopied(true);
     toast.success("Link copiado!");
     setTimeout(() => setLinkCopied(false), 2000);
+  };
+
+  const handleStripeCheckout = async () => {
+    if (!ebook) return;
+    setCheckingOut(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("create-payment", {
+        body: { ebook_id: ebook.id },
+      });
+      if (error || !data?.url) throw new Error(error?.message || "Erro ao criar sessão de pagamento");
+      window.location.href = data.url;
+    } catch (err: any) {
+      toast.error(err.message || "Erro ao iniciar pagamento. Tente novamente.");
+      setCheckingOut(false);
+    }
   };
 
   if (isLoading) {
@@ -132,15 +149,16 @@ const EbookPage = () => {
                 </div>
                 <div className="pt-4 border-t border-border">
                   <p className="text-3xl font-bold text-headline mb-4">{formattedPrice}</p>
-                  {purchaseLink ? (
-                    <a href={purchaseLink} target="_blank" rel="noopener noreferrer">
-                      <Button size="lg" className="gap-2">
-                        <Download className="w-5 h-5" />
-                        Adquirir Agora
-                      </Button>
-                    </a>
+                  {ebook.pdf_url ? (
+                    <Button size="lg" className="gap-2" onClick={handleStripeCheckout} disabled={checkingOut}>
+                      {checkingOut ? (
+                        <><Loader2 className="w-5 h-5 animate-spin" />Aguarde...</>
+                      ) : (
+                        <><Download className="w-5 h-5" />Adquirir Agora</>
+                      )}
+                    </Button>
                   ) : (
-                    <p className="text-sm text-muted-foreground">Link de pagamento não disponível no momento.</p>
+                    <p className="text-sm text-muted-foreground">PDF não disponível no momento.</p>
                   )}
                 </div>
               </div>
