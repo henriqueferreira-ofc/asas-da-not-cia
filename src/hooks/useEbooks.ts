@@ -11,6 +11,7 @@ export interface Ebook {
   pdf_url: string | null;
   pix_link: string | null;
   card_link: string | null;
+  stripe_price_id: string | null;
   published: boolean;
   featured: boolean;
   sort_order: number;

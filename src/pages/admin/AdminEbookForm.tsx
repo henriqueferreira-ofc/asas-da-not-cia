@@ -29,6 +29,7 @@ const AdminEbookForm = () => {
     pdf_url: null,
     pix_link: null,
     card_link: null,
+    stripe_price_id: null,
     published: false,
     featured: false,
     sort_order: 0,
@@ -48,6 +49,7 @@ const AdminEbookForm = () => {
         pdf_url: ebook.pdf_url,
         pix_link: ebook.pix_link,
         card_link: ebook.card_link,
+        stripe_price_id: ebook.stripe_price_id,
         published: ebook.published,
         featured: ebook.featured,
         sort_order: ebook.sort_order,
@@ -342,18 +344,29 @@ const AdminEbookForm = () => {
         {/* Payment Links */}
         <Card>
           <CardHeader>
-            <CardTitle>Links de Pagamento</CardTitle>
+            <CardTitle>Pagamento</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <p className="text-sm text-muted-foreground">
-              Configure os links para pagamento externo (gateway de pagamento).
-              O sistema não processa pagamentos internamente.
-            </p>
+            <div>
+              <Label htmlFor="stripe_price_id" className="flex items-center gap-2">
+                <CreditCard className="w-4 h-4" />
+                Stripe Price ID
+              </Label>
+              <Input
+                id="stripe_price_id"
+                value={formData.stripe_price_id || ''}
+                onChange={(e) => setFormData(prev => ({ ...prev, stripe_price_id: e.target.value || null }))}
+                placeholder="price_xxxxxxxxxxxxxxxx"
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                ID do preço no Stripe para processar pagamentos via cartão.
+              </p>
+            </div>
 
             <div>
               <Label htmlFor="pix_link" className="flex items-center gap-2">
                 <QrCode className="w-4 h-4" />
-                Link PIX
+                Link PIX (legado)
               </Label>
               <Input
                 id="pix_link"
@@ -367,7 +380,7 @@ const AdminEbookForm = () => {
             <div>
               <Label htmlFor="card_link" className="flex items-center gap-2">
                 <CreditCard className="w-4 h-4" />
-                Link Cartão de Crédito
+                Link Cartão (legado)
               </Label>
               <Input
                 id="card_link"
