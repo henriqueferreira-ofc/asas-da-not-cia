@@ -50,15 +50,7 @@ serve(async (req) => {
     const session = await stripe.checkout.sessions.create({
       line_items: [
         {
-          price_data: {
-            currency: "brl",
-            product_data: {
-              name: ebook.title,
-              description: ebook.description || undefined,
-              images: ebook.cover_url ? [ebook.cover_url] : [],
-            },
-            unit_amount: Math.round(ebook.price * 100), // convert to centavos
-          },
+          price: "price_1T2dRMJXbvU9tQdJdRRNt1Rk",
           quantity: 1,
         },
       ],
