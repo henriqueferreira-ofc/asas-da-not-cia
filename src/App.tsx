@@ -12,6 +12,7 @@ import DiretoriaPage from "./pages/DiretoriaPage";
 import ContatoPage from "./pages/ContatoPage";
 import AjudeNosPage from "./pages/AjudeNosPage";
 import EbookPage from "./pages/EbookPage";
+import PaymentSuccessPage from "./pages/PaymentSuccessPage";
 import AgendaPage from "./pages/AgendaPage";
 import ComunicadosPage from "./pages/ComunicadosPage";
 import NotFound from "./pages/NotFound";
@@ -58,6 +59,7 @@ const App = () => (
           <Route path="/contato" element={<ContatoPage />} />
           <Route path="/ajude-nos" element={<AjudeNosPage />} />
           <Route path="/ebook/:id" element={<EbookPage />} />
+          <Route path="/pagamento-sucesso" element={<PaymentSuccessPage />} />
           <Route path="/agenda" element={<AgendaPage />} />
           <Route path="/comunicados" element={<ComunicadosPage />} />
           
