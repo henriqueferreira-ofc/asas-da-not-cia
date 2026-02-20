@@ -1,3 +1,4 @@
+import { usePageContent } from "@/hooks/usePageContent";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ArrowLeft, FileText } from "lucide-react";
@@ -5,19 +6,26 @@ import { PrefetchLink } from "@/components/common/PrefetchLink";
 import { prefetchIndex } from "@/App";
 
 const TermosPage = () => {
+  const { data: pageData } = usePageContent('termos');
+  const c = (pageData?.content && typeof pageData.content === 'object' && !Array.isArray(pageData.content))
+    ? pageData.content as Record<string, string>
+    : {} as Record<string, string>;
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-white">
       <Header />
       <main>
         {/* Hero */}
-        <div className="bg-primary text-primary-foreground py-16">
+        <div className="bg-white border-b border-border py-12">
           <div className="container max-w-3xl mx-auto text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary-foreground/10 mb-6">
-              <FileText className="w-8 h-8 text-accent" />
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-6">
+              <FileText className="w-8 h-8 text-primary" />
             </div>
-            <h1 className="text-3xl md:text-4xl font-serif font-bold mb-4">Termos de Uso</h1>
-            <p className="text-primary-foreground/70 text-lg">
-              Leia com atenção as condições de uso do portal AAFAB.
+            <h1 className="text-3xl md:text-4xl font-serif font-bold mb-4 text-headline">
+              {c.titulo || 'Termos de Uso'}
+            </h1>
+            <p className="text-muted-foreground text-lg">
+              {c.subtitulo || 'Leia com atenção as condições de uso do portal AAFAB.'}
             </p>
           </div>
         </div>
