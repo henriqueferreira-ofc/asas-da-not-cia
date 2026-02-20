@@ -16,15 +16,15 @@ const PrivacidadePage = () => {
       <Header />
       <main>
         {/* Hero */}
-        <div className="bg-white border-b border-border py-12">
+        <div className="bg-primary text-primary-foreground py-16">
           <div className="container max-w-3xl mx-auto text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-6">
-              <Shield className="w-8 h-8 text-primary" />
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary-foreground/10 mb-6">
+              <Shield className="w-8 h-8 text-accent" />
             </div>
-            <h1 className="text-3xl md:text-4xl font-serif font-bold mb-4 text-headline">
+            <h1 className="text-3xl md:text-4xl font-serif font-bold mb-4 text-white">
               {c.titulo || 'Política de Privacidade'}
             </h1>
-            <p className="text-muted-foreground text-lg">
+            <p className="text-primary-foreground/70 text-lg">
               {c.subtitulo || 'Saiba como coletamos, usamos e protegemos suas informações pessoais.'}
             </p>
           </div>
