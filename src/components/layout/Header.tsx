@@ -2,14 +2,22 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { InlineSearch } from "@/components/InlineSearch";
+import { InlineSearch } from "@/components/common/InlineSearch";
+import { PrefetchLink } from "@/components/common/PrefetchLink";
+import {
+  prefetchSobre,
+  prefetchAjudeNos,
+  prefetchContato,
+  prefetchIndex,
+  prefetchCategoria
+} from "@/App";
 import logoAafab from "@/assets/logo-aafab.png";
 
 const categories = [
-  { name: "Sobre a AAFAB", href: "/sobre" },
-  { name: "Política Nacional", href: "/categoria/politica" },
-  { name: "Internacional", href: "/categoria/internacional" },
-  { name: "E-Books", href: "/ajude-nos" },
+  { name: "Sobre a AAFAB", href: "/sobre", prefetch: prefetchSobre },
+  { name: "Política Nacional", href: "/categoria/politica", prefetch: prefetchCategoria },
+  { name: "Internacional", href: "/categoria/internacional", prefetch: prefetchCategoria },
+  { name: "E-Books", href: "/ajude-nos#ebooks", prefetch: prefetchAjudeNos },
 ];
 
 export function Header() {
@@ -31,9 +39,13 @@ export function Header() {
             <span className="capitalize">{currentDate}</span>
           </div>
           <div className="hidden md:flex items-center gap-6">
-            <Link to="/contato" className="hover:text-primary-foreground transition-colors hover:underline">
+            <PrefetchLink
+              to="/contato"
+              prefetch={prefetchContato}
+              className="hover:text-primary-foreground transition-colors hover:underline"
+            >
               Contato
-            </Link>
+            </PrefetchLink>
           </div>
         </div>
       </div>
@@ -42,10 +54,10 @@ export function Header() {
       <div className="container py-4">
         <div className="flex items-center gap-4">
           {/* Logo on the left */}
-          <Link to="/" className="flex items-center gap-2 md:gap-3 shrink-0">
-            <img 
-              src={logoAafab} 
-              alt="AAFAB - Amigos da Força Aérea Brasileira" 
+          <PrefetchLink to="/" prefetch={prefetchIndex} className="flex items-center gap-2 md:gap-3 shrink-0">
+            <img
+              src={logoAafab}
+              alt="AAFAB - Amigos da Força Aérea Brasileira"
               className="w-10 h-10 md:w-14 md:h-14 lg:w-16 lg:h-16 object-contain bg-white rounded-full p-1"
             />
             <div className="hidden sm:block">
@@ -56,14 +68,14 @@ export function Header() {
                 Associação Amigos da Força Aérea Brasileira
               </p>
             </div>
-          </Link>
+          </PrefetchLink>
 
           {/* Search on the far right + mobile menu */}
           <div className="flex-1 flex items-center justify-end gap-2 md:gap-4 min-w-0">
             <div className="w-full max-w-[22rem] sm:max-w-md md:max-w-lg lg:max-w-xl">
               <InlineSearch />
             </div>
-            
+
             {/* Mobile menu button */}
             <div className="lg:hidden shrink-0">
               <Button
@@ -84,21 +96,23 @@ export function Header() {
         <div className="container">
           <ul className="flex items-center">
             <li>
-              <Link
+              <PrefetchLink
                 to="/"
+                prefetch={prefetchIndex}
                 className="nav-link block px-5 py-3.5 text-sm font-semibold uppercase tracking-wide"
               >
                 Início
-              </Link>
+              </PrefetchLink>
             </li>
             {categories.map((category) => (
               <li key={category.name}>
-                <Link
+                <PrefetchLink
                   to={category.href}
+                  prefetch={category.prefetch}
                   className="nav-link block px-5 py-3.5 text-sm font-semibold uppercase tracking-wide"
                 >
                   {category.name}
-                </Link>
+                </PrefetchLink>
               </li>
             ))}
           </ul>
@@ -111,35 +125,38 @@ export function Header() {
           <div className="container py-4">
             <ul className="space-y-1">
               <li>
-                <Link
+                <PrefetchLink
                   to="/"
+                  prefetch={prefetchIndex}
                   className="flex items-center justify-between px-4 py-3 text-primary-foreground font-medium rounded-lg hover:bg-primary-foreground/10 transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Início
-                </Link>
+                </PrefetchLink>
               </li>
               {categories.map((category) => (
                 <li key={category.name}>
-                  <Link
+                  <PrefetchLink
                     to={category.href}
+                    prefetch={category.prefetch}
                     className="flex items-center justify-between px-4 py-3 text-primary-foreground font-medium rounded-lg hover:bg-primary-foreground/10 transition-colors"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {category.name}
                     <ChevronDown className="w-4 h-4 opacity-50" />
-                  </Link>
+                  </PrefetchLink>
                 </li>
               ))}
             </ul>
             <div className="mt-4 pt-4 border-t border-primary-foreground/10 space-y-2">
-              <Link 
-                to="/contato" 
+              <PrefetchLink
+                to="/contato"
+                prefetch={prefetchContato}
                 className="block px-4 py-2.5 text-primary-foreground/80 hover:text-primary-foreground transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Contato
-              </Link>
+              </PrefetchLink>
             </div>
           </div>
         </div>

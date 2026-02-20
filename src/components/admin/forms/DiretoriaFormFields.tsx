@@ -2,6 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link2 } from "lucide-react";
+import { getGoogleDriveDirectUrl } from "@/lib/google-drive";
 
 // Brazilian states for the 15 state counselors - exact order requested
 const ESTADOS_BRASILEIROS = [
@@ -52,11 +53,11 @@ export const DiretoriaFormFields = ({ content, onChange }: DiretoriaFormFieldsPr
   const secretarioGeral = (content.secretarioGeral as { nome?: string; foto?: string }) || { nome: "", foto: "" };
   const diretorFinanceiro = (content.diretorFinanceiro as { nome?: string; foto?: string }) || { nome: "", foto: "" };
   const viceDiretorFinanceiro = (content.viceDiretorFinanceiro as { nome?: string; foto?: string }) || { nome: "", foto: "" };
-  
-  const conselheirosEstaduais = (content.conselheirosEstaduais as ConselheiroEstadual[]) || 
+
+  const conselheirosEstaduais = (content.conselheirosEstaduais as ConselheiroEstadual[]) ||
     ESTADOS_BRASILEIROS.map(e => ({ estado: e.sigla, nome: "", foto: "" }));
-  
-  const conselhoFiscal = (content.conselhoFiscal as ConselhoFiscalMember[]) || 
+
+  const conselhoFiscal = (content.conselhoFiscal as ConselhoFiscalMember[]) ||
     CARGOS_CONSELHO_FISCAL.map(cargo => ({ cargo, nome: "", foto: "" }));
 
   const updateDiretoria = (key: string, field: "nome" | "foto", value: string) => {
@@ -108,10 +109,10 @@ export const DiretoriaFormFields = ({ content, onChange }: DiretoriaFormFieldsPr
               <div className="flex items-center gap-2">
                 <span className="font-semibold text-sm">{membro.label}</span>
                 {membro.data.foto && (
-                  <img 
-                    src={membro.data.foto} 
-                    alt={membro.data.nome} 
-                    className="w-8 h-8 rounded-full object-cover"
+                  <img
+                    src={getGoogleDriveDirectUrl(membro.data.foto)}
+                    alt={membro.data.nome}
+                    className="w-12 h-12 rounded-full object-cover border-2 border-primary"
                   />
                 )}
               </div>
@@ -149,11 +150,11 @@ export const DiretoriaFormFields = ({ content, onChange }: DiretoriaFormFieldsPr
         <CardContent>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {ESTADOS_BRASILEIROS.map((estado, index) => {
-              const conselheiro = conselheirosEstaduais.find(c => c.estado === estado.sigla) || 
+              const conselheiro = conselheirosEstaduais.find(c => c.estado === estado.sigla) ||
                 { estado: estado.sigla, nome: "", foto: "" };
               const conselheiroIndex = conselheirosEstaduais.findIndex(c => c.estado === estado.sigla);
               const actualIndex = conselheiroIndex >= 0 ? conselheiroIndex : index;
-              
+
               return (
                 <div key={estado.sigla} className="p-3 border border-border rounded-lg space-y-2">
                   <div className="flex items-center gap-2">
@@ -161,10 +162,10 @@ export const DiretoriaFormFields = ({ content, onChange }: DiretoriaFormFieldsPr
                       {estado.sigla} - {estado.nome}
                     </span>
                     {conselheiro.foto && (
-                      <img 
-                        src={conselheiro.foto} 
-                        alt={conselheiro.nome} 
-                        className="w-6 h-6 rounded-full object-cover"
+                      <img
+                        src={getGoogleDriveDirectUrl(conselheiro.foto)}
+                        alt={conselheiro.nome}
+                        className="w-8 h-8 rounded-full object-cover border-2 border-primary"
                       />
                     )}
                   </div>
@@ -222,10 +223,10 @@ export const DiretoriaFormFields = ({ content, onChange }: DiretoriaFormFieldsPr
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-semibold">{cargo}</span>
                     {membro.foto && (
-                      <img 
-                        src={membro.foto} 
-                        alt={membro.nome} 
-                        className="w-6 h-6 rounded-full object-cover"
+                      <img
+                        src={getGoogleDriveDirectUrl(membro.foto)}
+                        alt={membro.nome}
+                        className="w-8 h-8 rounded-full object-cover border-2 border-primary"
                       />
                     )}
                   </div>

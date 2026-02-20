@@ -1,27 +1,21 @@
 import { Link } from 'react-router-dom';
-import { 
-  Newspaper, 
-  Eye, 
-  FileEdit, 
+import {
+  Newspaper,
+  Eye,
+  FileEdit,
   Plus,
   TrendingUp
 } from 'lucide-react';
-import { useAllNoticias } from '@/hooks/useNoticias';
+import { useDashboardStats, useRecentAdminNoticias } from '@/hooks/useNoticias';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const AdminDashboard = () => {
-  const { data: noticias, isLoading } = useAllNoticias();
+  const { data: stats, isLoading: isLoadingStats } = useDashboardStats();
+  const { data: recentNews, isLoading: isLoadingNews } = useRecentAdminNoticias(5);
 
-  const stats = {
-    total: noticias?.length || 0,
-    published: noticias?.filter(n => n.published).length || 0,
-    drafts: noticias?.filter(n => !n.published).length || 0,
-    featured: noticias?.filter(n => n.featured).length || 0,
-  };
-
-  const recentNews = noticias?.slice(0, 5) || [];
+  const isLoading = isLoadingStats || isLoadingNews;
 
   return (
     <div className="p-6 lg:p-8">
@@ -53,10 +47,10 @@ const AdminDashboard = () => {
             <Newspaper className="w-4 h-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            {isLoading ? (
+            {isLoadingStats ? (
               <Skeleton className="h-8 w-16" />
             ) : (
-              <p className="text-2xl font-bold">{stats.total}</p>
+              <p className="text-2xl font-bold">{stats?.total || 0}</p>
             )}
           </CardContent>
         </Card>
@@ -69,10 +63,10 @@ const AdminDashboard = () => {
             <Eye className="w-4 h-4 text-emerald-500" />
           </CardHeader>
           <CardContent>
-            {isLoading ? (
+            {isLoadingStats ? (
               <Skeleton className="h-8 w-16" />
             ) : (
-              <p className="text-2xl font-bold text-emerald-600">{stats.published}</p>
+              <p className="text-2xl font-bold text-emerald-600">{stats?.published || 0}</p>
             )}
           </CardContent>
         </Card>
@@ -85,10 +79,10 @@ const AdminDashboard = () => {
             <FileEdit className="w-4 h-4 text-amber-500" />
           </CardHeader>
           <CardContent>
-            {isLoading ? (
+            {isLoadingStats ? (
               <Skeleton className="h-8 w-16" />
             ) : (
-              <p className="text-2xl font-bold text-amber-600">{stats.drafts}</p>
+              <p className="text-2xl font-bold text-amber-600">{stats?.drafts || 0}</p>
             )}
           </CardContent>
         </Card>
@@ -101,10 +95,10 @@ const AdminDashboard = () => {
             <TrendingUp className="w-4 h-4 text-blue-500" />
           </CardHeader>
           <CardContent>
-            {isLoading ? (
+            {isLoadingStats ? (
               <Skeleton className="h-8 w-16" />
             ) : (
-              <p className="text-2xl font-bold text-blue-600">{stats.featured}</p>
+              <p className="text-2xl font-bold text-blue-600">{stats?.featured || 0}</p>
             )}
           </CardContent>
         </Card>
@@ -121,7 +115,7 @@ const AdminDashboard = () => {
           </Link>
         </CardHeader>
         <CardContent>
-          {isLoading ? (
+          {isLoadingNews ? (
             <div className="space-y-4">
               {[1, 2, 3].map((i) => (
                 <div key={i} className="flex items-center gap-4">
@@ -133,7 +127,7 @@ const AdminDashboard = () => {
                 </div>
               ))}
             </div>
-          ) : recentNews.length === 0 ? (
+          ) : !recentNews || recentNews.length === 0 ? (
             <div className="text-center py-8">
               <p className="text-muted-foreground mb-4">
                 Nenhuma notícia cadastrada ainda.
@@ -145,14 +139,14 @@ const AdminDashboard = () => {
           ) : (
             <div className="space-y-4">
               {recentNews.map((news) => (
-                <Link 
-                  key={news.id} 
+                <Link
+                  key={news.id}
                   to={`/admin/noticias/editar/${news.id}`}
                   className="flex items-center gap-4 p-2 -mx-2 rounded-lg hover:bg-secondary/50 transition-colors"
                 >
                   {news.image_url ? (
-                    <img 
-                      src={news.image_url} 
+                    <img
+                      src={news.image_url}
                       alt={news.title}
                       className="w-16 h-16 object-cover rounded"
                     />
@@ -164,11 +158,10 @@ const AdminDashboard = () => {
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-sm truncate">{news.title}</p>
                     <div className="flex items-center gap-2 mt-1">
-                      <span className={`text-xs px-2 py-0.5 rounded ${
-                        news.published 
-                          ? 'bg-emerald-100 text-emerald-700' 
+                      <span className={`text-xs px-2 py-0.5 rounded ${news.published
+                          ? 'bg-emerald-100 text-emerald-700'
                           : 'bg-amber-100 text-amber-700'
-                      }`}>
+                        }`}>
                         {news.published ? 'Publicada' : 'Rascunho'}
                       </span>
                       <span className="text-xs text-muted-foreground">

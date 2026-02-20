@@ -1,20 +1,19 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, BookOpen, Heart, Copy, Check, QrCode, Download, Gift, Loader2, Share2, ExternalLink } from "lucide-react";
+import { Link } from "react-router-dom";
+import { ArrowLeft, BookOpen, Heart, Gift } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { usePublishedEbooks } from "@/hooks/useEbooks";
 import { usePageContent } from "@/hooks/usePageContent";
 import { Skeleton } from "@/components/ui/skeleton";
+
+// New modular components
+import { EbooksSection } from "@/components/ajude-nos/EbooksSection";
+import { DonationSection } from "@/components/ajude-nos/DonationSection";
+import { ImpactSection } from "@/components/ajude-nos/ImpactSection";
+import { PixModal } from "@/components/ajude-nos/PixModal";
 
 const AjudeNosPage = () => {
   const [pixModalOpen, setPixModalOpen] = useState(false);
@@ -29,6 +28,7 @@ const AjudeNosPage = () => {
 
   const c = (pageData?.content as Record<string, unknown>) || {};
 
+  // Content Configuration
   const pageTitle = (c.title as string) || "Ajude a AAFAB";
   const pageDescription = (c.description as string) || "Sua contribuição fortalece nossa missão de informar, educar e apoiar a AAFAB e seus admiradores.";
   const ebooksTitle = (c.ebooksTitle as string) || "Nossos E-Books";
@@ -58,6 +58,7 @@ const AjudeNosPage = () => {
   ];
   const impactBgs = ["bg-primary/10", "bg-accent/10", "bg-green-500/10"];
 
+  // Handlers
   const handleDonation = (value: string, pixCode: string) => {
     setSelectedValue(value);
     setSelectedItem("Doação");
@@ -66,7 +67,6 @@ const AjudeNosPage = () => {
   };
 
   const handleEbookPurchase = async (ebookId: string, title: string, price: number, stripePrice: string | null, pixLink: string | null, cardLink: string | null) => {
-    // Prefer Stripe if configured
     if (stripePrice) {
       setCheckingOutId(ebookId);
       try {
@@ -81,13 +81,13 @@ const AjudeNosPage = () => {
       }
       return;
     }
-    // Fallback: external link (pix/card)
+
     const link = pixLink || cardLink;
     if (link) {
       window.open(link, "_blank", "noopener,noreferrer");
       return;
     }
-    // Last resort: PIX modal
+
     setSelectedValue(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price));
     setSelectedItem(title);
     setSelectedPixCode("");
@@ -119,7 +119,6 @@ const AjudeNosPage = () => {
       <Header />
 
       <main className="container py-8">
-        {/* Breadcrumb */}
         <div className="mb-6">
           <Link
             to="/"
@@ -131,7 +130,7 @@ const AjudeNosPage = () => {
         </div>
 
         <div className="max-w-5xl mx-auto">
-          {/* Header */}
+          {/* Hero Header */}
           <div className="text-center mb-12">
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent/10 mb-6">
               <Heart className="w-8 h-8 text-accent" />
@@ -144,224 +143,42 @@ const AjudeNosPage = () => {
             </p>
           </div>
 
-          {/* E-Books Section */}
-          <section className="mb-16">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">
-                <BookOpen className="w-5 h-5 text-accent" />
-              </div>
-              <div>
-                <h2 className="text-2xl font-serif font-bold text-headline">
-                  {ebooksTitle}
-                </h2>
-                <p className="text-muted-foreground text-sm">
-                  {ebooksSubtitle}
-                </p>
-              </div>
-            </div>
+          <EbooksSection
+            title={ebooksTitle}
+            subtitle={ebooksSubtitle}
+            ebooks={ebooks}
+            isLoading={isLoadingEbooks}
+            checkingOutId={checkingOutId}
+            onPurchase={handleEbookPurchase}
+          />
 
-            {isLoadingEbooks ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {[1, 2, 3, 4].map((i) => (
-                  <Skeleton key={i} className="h-48 rounded-xl" />
-                ))}
-              </div>
-            ) : ebooks && ebooks.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {ebooks.map((ebook) => (
-                  <div
-                    key={ebook.id}
-                    className="bg-card rounded-xl border-2 border-border p-6 hover:border-accent hover:bg-accent/5 transition-all hover:shadow-lg hover:-translate-y-1"
-                  >
-                    <div className="flex items-start gap-4">
-                      {ebook.cover_url ? (
-                        <img src={ebook.cover_url} alt={ebook.title} className="w-16 h-20 rounded-lg object-cover shrink-0 shadow-md" />
-                      ) : (
-                        <div className="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center shrink-0">
-                          <BookOpen className="w-8 h-8 text-accent" />
-                        </div>
-                      )}
-                      <div className="flex-1">
-                        <h3 className="font-bold text-lg text-headline mb-2 leading-tight">
-                          {ebook.title}
-                        </h3>
-                        <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-                          {ebook.description || 'Sem descrição'}
-                        </p>
-                        <div className="flex items-center gap-3 text-xs text-muted-foreground mb-4">
-                          <span className="bg-secondary px-2 py-1 rounded">PDF</span>
-                          {ebook.pages && <span>{ebook.pages} páginas</span>}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between pt-4 border-t border-border mt-4">
-                      <div>
-                        <span className="text-2xl font-bold text-headline">
-                          {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(ebook.price)}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Link to={`/ebook/${ebook.id}`}>
-                          <Button variant="ghost" size="sm" className="gap-1 text-xs" title="Ver página / Copiar link para redes sociais">
-                            <Share2 className="w-3.5 h-3.5" />
-                            Compartilhar
-                          </Button>
-                        </Link>
-                        <Button
-                          className="gap-2"
-                          disabled={checkingOutId === ebook.id}
-                          onClick={() => handleEbookPurchase(ebook.id, ebook.title, ebook.price, ebook.stripe_price_id, ebook.pix_link, ebook.card_link)}
-                        >
-                          {checkingOutId === ebook.id ? (
-                            <><Loader2 className="w-4 h-4 animate-spin" />Aguarde...</>
-                          ) : (
-                            <><Download className="w-4 h-4" />Adquirir</>
-                          )}
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-center text-muted-foreground py-8">Nenhum e-book disponível no momento.</p>
-            )}
-          </section>
+          <DonationSection
+            title={donationTitle}
+            description={donationDescription}
+            footer={donationFooter}
+            values={donationValues}
+            onDonate={handleDonation}
+          />
 
-          {/* Donation Section */}
-          <section className="mb-16">
-            <div className="bg-gradient-to-br from-accent/5 via-accent/10 to-accent/5 rounded-2xl p-8 md:p-12 border border-accent/20">
-              <div className="text-center mb-8">
-                <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-accent/20 mb-4">
-                  <Gift className="w-7 h-7 text-accent" />
-                </div>
-                <h2 className="text-2xl md:text-3xl font-serif font-bold text-headline mb-3">
-                  {donationTitle}
-                </h2>
-                <p className="text-muted-foreground max-w-xl mx-auto">
-                  {donationDescription}
-                </p>
-              </div>
-
-              <div className="flex flex-wrap justify-center gap-4 mb-8">
-                {donationValues.map((donation) => (
-                  <button
-                    key={donation.value}
-                    onClick={() => handleDonation(donation.value, donation.pixCode)}
-                    className="group relative px-8 py-4 bg-card border-2 border-accent/30 rounded-xl hover:border-accent hover:bg-accent/5 transition-all hover:shadow-lg hover:-translate-y-1"
-                  >
-                    <span className="text-2xl font-bold text-headline group-hover:text-accent transition-colors">
-                      R$ {donation.value}
-                    </span>
-                  </button>
-                ))}
-              </div>
-
-              <p className="text-center text-sm text-muted-foreground">
-                {donationFooter}
-              </p>
-            </div>
-          </section>
-
-          {/* Impact Section */}
-          <section className="text-center">
-            <h2 className="text-2xl font-serif font-bold text-headline mb-6">
-              {impactTitle}
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {impactItems.map((item, i) => (
-                <div key={i} className="bg-card rounded-xl border border-border p-6">
-                  <div className={`w-12 h-12 rounded-full ${impactBgs[i]} flex items-center justify-center mx-auto mb-4`}>
-                    {impactIcons[i]}
-                  </div>
-                  <h3 className="font-bold text-headline mb-2">{item.title}</h3>
-                  <p className="text-sm text-muted-foreground">{item.description}</p>
-                </div>
-              ))}
-            </div>
-          </section>
+          <ImpactSection
+            title={impactTitle}
+            items={impactItems}
+            icons={impactIcons}
+            bgColors={impactBgs}
+          />
         </div>
       </main>
 
-      {/* PIX Modal */}
-      <Dialog open={pixModalOpen} onOpenChange={setPixModalOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-center text-xl font-serif">
-              Pagamento via PIX
-            </DialogTitle>
-          </DialogHeader>
-
-          <div className="text-center space-y-6 py-4">
-            <div className="bg-secondary rounded-lg p-4">
-              <p className="text-sm text-muted-foreground mb-1">{selectedItem}</p>
-              <p className="text-3xl font-bold text-headline">R$ {selectedValue}</p>
-            </div>
-
-            {selectedPixCode ? (
-              <div className="space-y-4">
-                <div className="flex items-center justify-center gap-2 text-green-600">
-                  <Check className="w-5 h-5" />
-                  <p className="text-sm font-medium">PIX Copia e Cola pronto!</p>
-                </div>
-
-                <div className="space-y-2">
-                  <p className="text-xs text-muted-foreground uppercase tracking-wide">Código PIX</p>
-                  <div className="bg-secondary rounded-lg p-3">
-                    <p className="text-xs font-mono text-foreground break-all mb-3 max-h-20 overflow-y-auto">
-                      {selectedPixCode}
-                    </p>
-                    <Button
-                      variant="default"
-                      size="sm"
-                      onClick={copyPixCode}
-                      className="w-full gap-2"
-                    >
-                      {copied ? (
-                        <>
-                          <Check className="w-4 h-4" />
-                          Código Copiado!
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="w-4 h-4" />
-                          Copiar Código PIX
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center gap-4">
-                <div className="w-48 h-48 bg-secondary rounded-xl flex items-center justify-center border-2 border-dashed border-border">
-                  <div className="text-center">
-                    <QrCode className="w-16 h-16 text-muted-foreground mx-auto mb-2" />
-                    <p className="text-xs text-muted-foreground">Entre em contato para PIX</p>
-                  </div>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  Para E-Books, entre em contato conosco
-                </p>
-              </div>
-            )}
-
-            <div className="text-sm text-muted-foreground">
-              <p className="font-medium text-foreground">{pixBeneficiary}</p>
-            </div>
-
-            <div className="text-left bg-accent/5 rounded-lg p-4 text-sm">
-              <p className="font-medium text-headline mb-2">Como pagar:</p>
-              <ol className="list-decimal list-inside space-y-1 text-muted-foreground">
-                <li>Abra o app do seu banco</li>
-                <li>Escolha pagar com PIX</li>
-                <li>Escaneie o QR Code ou cole a chave</li>
-                <li>Confirme o valor e finalize</li>
-              </ol>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <PixModal
+        isOpen={pixModalOpen}
+        onOpenChange={setPixModalOpen}
+        selectedItem={selectedItem}
+        selectedValue={selectedValue}
+        selectedPixCode={selectedPixCode}
+        copied={copied}
+        onCopyPixCode={copyPixCode}
+        pixBeneficiary={pixBeneficiary}
+      />
 
       <Footer />
     </div>

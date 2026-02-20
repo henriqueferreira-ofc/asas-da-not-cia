@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { ArrowLeft, Clock, User } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { ShareButtons } from "@/components/ShareButtons";
+import { ShareButtons } from "@/components/common/ShareButtons";
 import { NewsCard, NewsCategory } from "@/components/news/NewsCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useNoticia, useRelatedNoticias, useIncrementViewCount } from "@/hooks/useNoticias";
@@ -24,8 +24,8 @@ const formatDate = (dateString: string) => {
 // Helper to map category from DB to component type
 const mapCategory = (category: string): NewsCategory => {
   const validCategories: NewsCategory[] = ["aafab", "politica", "internacional", "comunicados"];
-  return validCategories.includes(category as NewsCategory) 
-    ? (category as NewsCategory) 
+  return validCategories.includes(category as NewsCategory)
+    ? (category as NewsCategory)
     : "aafab";
 };
 
@@ -44,7 +44,7 @@ const getCategoryLabel = (category: string): string => {
 const renderTextWithLinks = (text: string) => {
   const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+)/g;
   const parts = text.split(urlRegex);
-  
+
   return parts.map((part, i) => {
     if (urlRegex.test(part)) {
       const href = part.startsWith('http') ? part : `https://${part}`;
@@ -118,12 +118,12 @@ const NoticiaPage = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       <main className="container py-8">
         {/* Breadcrumb */}
         <div className="mb-6">
-          <Link 
-            to="/" 
+          <Link
+            to="/"
             className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -133,7 +133,7 @@ const NoticiaPage = () => {
 
         <article className="max-w-4xl mx-auto">
           {/* Category Badge */}
-          <Link 
+          <Link
             to={`/categoria/${noticia.category}`}
             className="inline-block mb-4"
           >
@@ -177,7 +177,7 @@ const NoticiaPage = () => {
           </div>
 
           {/* Content */}
-          <div 
+          <div
             className="prose prose-lg max-w-none mb-8"
             dangerouslySetInnerHTML={{ __html: noticia.content }}
           />

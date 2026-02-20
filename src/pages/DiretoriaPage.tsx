@@ -3,41 +3,13 @@ import { ArrowLeft, User, Users, Shield, Scale, Loader2, MapPin } from "lucide-r
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { usePageContent } from "@/hooks/usePageContent";
+import { getGoogleDriveDirectUrl } from "@/lib/google-drive";
 
 // Brazilian states for the 15 state counselors (exact order requested)
 const ESTADOS_BRASILEIROS = [
   "SP", "RJ", "AM", "PR", "BA", "CE", "DF", "ES", "GO", "MA",
   "MG", "RN", "RO", "PA", "PE"
 ] as const;
-
-// Helper function to convert Google Drive links to direct image URLs
-// Helper function to convert Google Drive links to direct image URLs
-const convertGoogleDriveUrl = (url: string | undefined): string | undefined => {
-  if (!url) return undefined;
-
-  // Extract ID from various Google Drive URL formats
-  let id = null;
-
-  // Try /d/ID format
-  const parts = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  if (parts) {
-    id = parts[1];
-  } else {
-    // Try id=ID format
-    const idMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-    if (idMatch) {
-      id = idMatch[1];
-    }
-  }
-
-  if (id) {
-    // Use the thumbnail endpoint which is generally reliable for public images
-    // sz=w1000 requests a width of 1000px which is good quality
-    return `https://lh3.googleusercontent.com/d/${id}`;
-  }
-
-  return url;
-};
 
 interface DiretorMember {
   cargo: string;
@@ -76,7 +48,7 @@ const DiretoriaPage = () => {
   const dbConselheiros = (content.conselheirosEstaduais as ConselheiroEstadual[]) || [];
   const conselheirosEstaduais = ESTADOS_BRASILEIROS.map((estado) => {
     const existing = dbConselheiros.find(c => c.estado === estado);
-    return { estado, nome: existing?.nome || "", foto: convertGoogleDriveUrl(existing?.foto) || "" };
+    return { estado, nome: existing?.nome || "", foto: getGoogleDriveDirectUrl(existing?.foto) || "" };
   });
 
   // Conselho Fiscal (4 membros) - Apply Google Drive URL conversion
@@ -84,7 +56,7 @@ const DiretoriaPage = () => {
   const conselhoFiscal = dbConselhoFiscal.length > 0
     ? dbConselhoFiscal.map(membro => ({
       ...membro,
-      foto: convertGoogleDriveUrl(membro.foto)
+      foto: getGoogleDriveDirectUrl(membro.foto)
     }))
     : [
       { cargo: "Presidente", nome: "" },
@@ -97,31 +69,31 @@ const DiretoriaPage = () => {
     {
       cargo: "Presidente",
       nome: presidente.nome || "A definir",
-      foto: convertGoogleDriveUrl(presidente.foto),
+      foto: getGoogleDriveDirectUrl(presidente.foto),
       icon: <Shield className="w-6 h-6" />,
     },
     {
       cargo: "Vice-Presidente",
       nome: vicePresidente.nome || "A definir",
-      foto: convertGoogleDriveUrl(vicePresidente.foto),
+      foto: getGoogleDriveDirectUrl(vicePresidente.foto),
       icon: <Shield className="w-6 h-6" />,
     },
     {
       cargo: "Secretário Geral",
       nome: secretarioGeral.nome || "A definir",
-      foto: convertGoogleDriveUrl(secretarioGeral.foto),
+      foto: getGoogleDriveDirectUrl(secretarioGeral.foto),
       icon: <User className="w-6 h-6" />,
     },
     {
       cargo: "Diretor Financeiro",
       nome: diretorFinanceiro.nome || "A definir",
-      foto: convertGoogleDriveUrl(diretorFinanceiro.foto),
+      foto: getGoogleDriveDirectUrl(diretorFinanceiro.foto),
       icon: <User className="w-6 h-6" />,
     },
     {
       cargo: "Vice Diretor Financeiro",
       nome: viceDiretorFinanceiro.nome || "A definir",
-      foto: convertGoogleDriveUrl(viceDiretorFinanceiro.foto),
+      foto: getGoogleDriveDirectUrl(viceDiretorFinanceiro.foto),
       icon: <User className="w-6 h-6" />,
     },
   ];

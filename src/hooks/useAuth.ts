@@ -43,45 +43,54 @@ export function useAuth() {
   }, []);
 
   useEffect(() => {
-    // Set up auth state listener FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        const user = session?.user || null;
-        
-        // Update basic auth state immediately (synchronous)
-        setState(prev => ({
-          ...prev,
-          user,
-          session,
-          isLoading: user ? prev.isLoading : false,
-          isAdmin: user ? prev.isAdmin : false,
-          isEditor: user ? prev.isEditor : false,
-        }));
-        
-        // CRITICAL: Defer Supabase calls with setTimeout to prevent deadlock
-        if (user) {
-          setTimeout(() => {
-            checkUserRoles(user.id).then(({ isAdmin, isEditor }) => {
-              setState(prev => ({
-                ...prev,
-                isLoading: false,
-                isAdmin,
-                isEditor,
-              }));
+    let mounted = true;
+
+    const initializeAuth = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!mounted) return;
+
+        if (session?.user) {
+          const { isAdmin, isEditor } = await checkUserRoles(session.user.id);
+          if (mounted) {
+            setState({
+              user: session.user,
+              session,
+              isLoading: false,
+              isAdmin,
+              isEditor,
             });
-          }, 0);
+          }
+        } else {
+          if (mounted) {
+            setState({
+              user: null,
+              session: null,
+              isLoading: false,
+              isAdmin: false,
+              isEditor: false,
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Auth initialization error:', error);
+        if (mounted) {
+          setState(prev => ({ ...prev, isLoading: false }));
         }
       }
-    );
+    };
 
-    // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      const user = session?.user || null;
-      
-      if (user) {
-        // Defer role check to prevent potential issues
-        setTimeout(() => {
-          checkUserRoles(user.id).then(({ isAdmin, isEditor }) => {
+    initializeAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (!mounted) return;
+
+        const user = session?.user || null;
+
+        if (user) {
+          const { isAdmin, isEditor } = await checkUserRoles(user.id);
+          if (mounted) {
             setState({
               user,
               session,
@@ -89,44 +98,46 @@ export function useAuth() {
               isAdmin,
               isEditor,
             });
-          });
-        }, 0);
-      } else {
-        setState({
-          user: null,
-          session: null,
-          isLoading: false,
-          isAdmin: false,
-          isEditor: false,
-        });
+          }
+        } else {
+          if (mounted) {
+            setState({
+              user: null,
+              session: null,
+              isLoading: false,
+              isAdmin: false,
+              isEditor: false,
+            });
+          }
+        }
       }
-    });
+    );
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, [checkUserRoles]);
 
   const signIn = async (email: string, password: string) => {
-    const { data, error } = await supabase.auth.signInWithPassword({
+    return await supabase.auth.signInWithPassword({
       email,
       password,
     });
-    return { data, error };
   };
 
   const signUp = async (email: string, password: string) => {
-    const { data, error } = await supabase.auth.signUp({
+    return await supabase.auth.signUp({
       email,
       password,
       options: {
         emailRedirectTo: window.location.origin,
       },
     });
-    return { data, error };
   };
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    return { error };
+    return await supabase.auth.signOut();
   };
 
   return {

@@ -57,6 +57,45 @@ export function useAllNoticias() {
   });
 }
 
+// Optimized hook for dashboard stats
+export function useDashboardStats() {
+  return useQuery({
+    queryKey: ['noticias', 'stats'],
+    queryFn: async () => {
+      const [total, published, drafts, featured] = await Promise.all([
+        supabase.from('noticias').select('*', { count: 'exact', head: true }),
+        supabase.from('noticias').select('*', { count: 'exact', head: true }).eq('published', true),
+        supabase.from('noticias').select('*', { count: 'exact', head: true }).eq('published', false),
+        supabase.from('noticias').select('*', { count: 'exact', head: true }).eq('featured', true),
+      ]);
+
+      return {
+        total: total.count || 0,
+        published: published.count || 0,
+        drafts: drafts.count || 0,
+        featured: featured.count || 0,
+      };
+    },
+  });
+}
+
+// Optimized hook for recent admin news
+export function useRecentAdminNoticias(limit = 5) {
+  return useQuery({
+    queryKey: ['noticias', 'admin-recent', limit],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('noticias')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(limit);
+
+      if (error) throw error;
+      return data;
+    },
+  });
+}
+
 // Fetch single news by ID
 export function useNoticia(id: string | undefined) {
   return useQuery({

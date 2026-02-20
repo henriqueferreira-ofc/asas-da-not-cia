@@ -5,7 +5,7 @@ import { BreakingNews } from "@/components/news/BreakingNews";
 import { NewsSection } from "@/components/news/NewsSection";
 import { Sidebar } from "@/components/sidebar/Sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { FloatingCommunityButton } from "@/components/FloatingCommunityButton";
+import { FloatingCommunityButton } from "@/components/common/FloatingCommunityButton";
 import { useRecentNoticias, useNoticiasByCategory, useFeaturedNoticias } from "@/hooks/useNoticias";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -25,8 +25,8 @@ const formatDate = (dateString: string) => {
 // Helper to map category from DB to component type
 const mapCategory = (category: string): NewsCategory => {
   const validCategories: NewsCategory[] = ["aafab", "politica", "internacional", "comunicados"];
-  return validCategories.includes(category as NewsCategory) 
-    ? (category as NewsCategory) 
+  return validCategories.includes(category as NewsCategory)
+    ? (category as NewsCategory)
     : "aafab";
 };
 
@@ -49,10 +49,10 @@ const Index = () => {
   const { data: internacionalNoticias, isLoading: loadingInternacional } = useNoticiasByCategory("internacional");
 
   // Use featured news if available, otherwise use the most recent published news as fallback
-  const featuredNews = (featuredNoticias && featuredNoticias.length > 0) 
-    ? featuredNoticias 
+  const featuredNews = (featuredNoticias && featuredNoticias.length > 0)
+    ? featuredNoticias
     : (recentNoticias?.slice(0, 1) || []);
-  
+
   // Transform featured news for the grid
   const transformedFeatured = featuredNews.map((noticia) => ({
     id: noticia.id,
@@ -82,7 +82,7 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <BreakingNews />
-      
+
       <main className="container py-8 md:py-10">
         {/* Featured News Grid - 1 main + up to 3 secondary */}
         <section className="mb-10 md:mb-12">
