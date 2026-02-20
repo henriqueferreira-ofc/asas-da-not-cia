@@ -12,6 +12,8 @@ import { ContatoFormFields } from '@/components/admin/forms/ContatoFormFields';
 import { AjudeNosFormFields } from '@/components/admin/forms/AjudeNosFormFields';
 import { DiretoriaFormFields } from '@/components/admin/forms/DiretoriaFormFields';
 import { InicioFormFields } from '@/components/admin/forms/InicioFormFields';
+import { PrivacidadeFormFields } from '@/components/admin/forms/PrivacidadeFormFields';
+import { TermosFormFields } from '@/components/admin/forms/TermosFormFields';
 
 const AdminPaginaForm = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -53,6 +55,10 @@ const AdminPaginaForm = () => {
         return <DiretoriaFormFields content={content} onChange={setContent} />;
       case 'inicio':
         return <InicioFormFields content={content} onChange={setContent} />;
+      case 'privacidade':
+        return <PrivacidadeFormFields content={content} onChange={setContent} />;
+      case 'termos':
+        return <TermosFormFields content={content} onChange={setContent} />;
       default:
         return <p className="text-muted-foreground">Formulário não disponível para esta página.</p>;
     }

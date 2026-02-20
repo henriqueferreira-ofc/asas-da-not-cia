@@ -11,6 +11,8 @@ const pageRoutes: Record<string, string> = {
   'ajude-nos': '/ajude-nos',
   'contato': '/contato',
   'diretoria': '/diretoria',
+  'privacidade': '/privacidade',
+  'termos': '/termos',
 };
 
 const AdminPaginas = () => {

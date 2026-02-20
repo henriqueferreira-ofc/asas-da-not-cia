@@ -82,17 +82,8 @@ const queryClient = new QueryClient({
 });
 
 const PageLoader = () => (
-  <div className="min-h-screen flex items-center justify-center bg-background/50 backdrop-blur-sm fixed inset-0 z-[9999]">
-    <div className="flex flex-col items-center gap-4 p-8 rounded-2xl bg-card border border-border shadow-2xl animate-fade-in">
-      <div className="relative">
-        <Loader2 className="w-12 h-12 animate-spin text-primary" />
-        <div className="absolute inset-0 w-12 h-12 rounded-full border-4 border-primary/10" />
-      </div>
-      <div className="space-y-1 text-center">
-        <p className="text-base font-bold text-headline">AAFAB</p>
-        <p className="text-xs font-medium text-muted-foreground animate-pulse">Carregando conteúdo...</p>
-      </div>
-    </div>
+  <div className="min-h-screen flex items-center justify-center bg-background">
+    <Loader2 className="w-8 h-8 animate-spin text-primary" />
   </div>
 );
 
