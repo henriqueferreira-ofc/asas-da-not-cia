@@ -20,6 +20,8 @@ const EbookPageLoader = () => import("./pages/EbookPage");
 const PaymentSuccessPageLoader = () => import("./pages/PaymentSuccessPage");
 const AgendaPageLoader = () => import("./pages/AgendaPage");
 const ComunicadosPageLoader = () => import("./pages/ComunicadosPage");
+const PrivacidadePageLoader = () => import("./pages/PrivacidadePage");
+const TermosPageLoader = () => import("./pages/TermosPage");
 const NotFoundLoader = () => import("./pages/NotFound");
 
 export const prefetchIndex = () => IndexLoader();
@@ -33,6 +35,8 @@ export const prefetchEbook = () => EbookPageLoader();
 export const prefetchPaymentSuccess = () => PaymentSuccessPageLoader();
 export const prefetchAgenda = () => AgendaPageLoader();
 export const prefetchComunicados = () => ComunicadosPageLoader();
+export const prefetchPrivacidade = () => PrivacidadePageLoader();
+export const prefetchTermos = () => TermosPageLoader();
 
 const Index = lazy(IndexLoader);
 const CategoriaPage = lazy(CategoriaPageLoader);
@@ -45,6 +49,8 @@ const EbookPage = lazy(EbookPageLoader);
 const PaymentSuccessPage = lazy(PaymentSuccessPageLoader);
 const AgendaPage = lazy(AgendaPageLoader);
 const ComunicadosPage = lazy(ComunicadosPageLoader);
+const PrivacidadePage = lazy(PrivacidadePageLoader);
+const TermosPage = lazy(TermosPageLoader);
 const NotFound = lazy(NotFoundLoader);
 
 // Lazy admin pages
@@ -115,6 +121,8 @@ const App = () => (
             <Route path="/pagamento-sucesso" element={<PaymentSuccessPage />} />
             <Route path="/agenda" element={<AgendaPage />} />
             <Route path="/comunicados" element={<ComunicadosPage />} />
+            <Route path="/privacidade" element={<PrivacidadePage />} />
+            <Route path="/termos" element={<TermosPage />} />
 
             {/* Admin Routes */}
             <Route path="/admin/login" element={<AdminLogin />} />
