@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { Facebook, Instagram, Twitter, Youtube, Linkedin, Mail, Phone, MapPin, Send, Loader2 } from "lucide-react";
 import { AdminLoginModal } from "@/components/admin/AdminLoginModal";
 import { useSiteSettingsMap } from "@/hooks/useSiteSettings";
@@ -11,7 +10,9 @@ import {
   prefetchDiretoria,
   prefetchAjudeNos,
   prefetchContato,
-  prefetchIndex
+  prefetchIndex,
+  prefetchPrivacidade,
+  prefetchTermos,
 } from "@/App";
 
 const links = [
@@ -229,16 +230,16 @@ export function Footer() {
               </p>
               <div className="flex items-center gap-6 text-primary-foreground/60">
                 <PrefetchLink
-                  to="/sobre"
-                  prefetch={prefetchSobre}
+                  to="/privacidade"
+                  prefetch={prefetchPrivacidade}
                   className="hover:text-primary-foreground transition-colors"
                 >
                   Privacidade
                 </PrefetchLink>
                 <span className="text-primary-foreground/30">|</span>
                 <PrefetchLink
-                  to="/sobre"
-                  prefetch={prefetchSobre}
+                  to="/termos"
+                  prefetch={prefetchTermos}
                   className="hover:text-primary-foreground transition-colors"
                 >
                   Termos de Uso
