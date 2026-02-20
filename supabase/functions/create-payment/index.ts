@@ -59,7 +59,7 @@ serve(async (req) => {
         },
       ],
       mode: "payment",
-      payment_method_types: ["card"],
+      payment_method_types: ["card", "pix"],
       success_url: `${origin}/pagamento-sucesso?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/ebook/${ebook_id}?cancelado=1`,
       metadata: {
