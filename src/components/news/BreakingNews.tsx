@@ -1,6 +1,13 @@
 import { AlertCircle, Radio } from "lucide-react";
+import { useSiteSetting } from "@/hooks/useSiteSettings";
+
+const DEFAULT_TEXT = "FAB realiza maior exercício de defesa aérea da história • Ministro da Defesa anuncia novos investimentos em tecnologia militar • AAFAB completa 25 anos de atuação institucional • Brasil assina acordo de cooperação em defesa com países do BRICS";
 
 export function BreakingNews() {
+  const { data: setting } = useSiteSetting("breaking_news_text");
+  const text = setting?.value || DEFAULT_TEXT;
+  const items = text.split("•").map(s => s.trim()).filter(Boolean);
+
   return (
     <div className="bg-gradient-to-r from-red-700 via-red-600 to-red-700 text-white shadow-md">
       <div className="container py-2.5">
@@ -14,13 +21,12 @@ export function BreakingNews() {
             <p className="animate-marquee text-sm font-medium">
               <span className="inline-flex items-center gap-3">
                 <AlertCircle className="w-4 h-4 shrink-0" />
-                <span>FAB realiza maior exercício de defesa aérea da história</span>
-                <span className="text-white/50">•</span>
-                <span>Ministro da Defesa anuncia novos investimentos em tecnologia militar</span>
-                <span className="text-white/50">•</span>
-                <span>AAFAB completa 25 anos de atuação institucional</span>
-                <span className="text-white/50">•</span>
-                <span>Brasil assina acordo de cooperação em defesa com países do BRICS</span>
+                {items.map((item, i) => (
+                  <span key={i} className="inline-flex items-center gap-3">
+                    <span>{item}</span>
+                    {i < items.length - 1 && <span className="text-white/50">•</span>}
+                  </span>
+                ))}
               </span>
             </p>
           </div>

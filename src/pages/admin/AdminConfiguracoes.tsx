@@ -81,12 +81,39 @@ const AdminConfiguracoes = () => {
       </div>
 
       <Tabs defaultValue="contato" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4 lg:w-[500px]">
+        <TabsList className="grid w-full grid-cols-5 lg:w-[600px]">
+          <TabsTrigger value="geral">Geral</TabsTrigger>
           <TabsTrigger value="contato">Contato</TabsTrigger>
           <TabsTrigger value="redes">Redes Sociais</TabsTrigger>
           <TabsTrigger value="botao">Botão Flutuante</TabsTrigger>
           <TabsTrigger value="links">Links Especiais</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="geral">
+          <Card>
+            <CardHeader>
+              <CardTitle>Barra "Ao Vivo"</CardTitle>
+              <CardDescription>
+                Texto que aparece rolando na barra vermelha no topo do site. Separe cada manchete com o caractere •
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label htmlFor="breaking_news_text">Texto do Ao Vivo</Label>
+                <Textarea
+                  id="breaking_news_text"
+                  value={formData.breaking_news_text || ''}
+                  onChange={(e) => handleChange('breaking_news_text', e.target.value)}
+                  placeholder="Manchete 1 • Manchete 2 • Manchete 3"
+                  rows={4}
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  Use • para separar as manchetes
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
         <TabsContent value="contato">
           <Card>
