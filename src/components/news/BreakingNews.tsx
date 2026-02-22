@@ -18,27 +18,28 @@ export function BreakingNews() {
           </div>
           <div className="h-4 w-px bg-white/30 shrink-0" />
           <div className="overflow-hidden whitespace-nowrap flex-1">
-            <p className="animate-marquee text-sm font-medium">
-              <span className="inline-flex items-center gap-3">
-                <AlertCircle className="w-4 h-4 shrink-0" />
-                {items.map((item, i) => (
-                  <span key={i} className="inline-flex items-center gap-3">
-                    <span>{item}</span>
-                    {i < items.length - 1 && <span className="text-white/50">•</span>}
-                  </span>
-                ))}
-              </span>
-            </p>
+            <div className="animate-marquee inline-flex text-sm font-medium">
+              {[0, 1].map((copy) => (
+                <span key={copy} className="inline-flex items-center gap-3 pr-6">
+                  <AlertCircle className="w-4 h-4 shrink-0" />
+                  {items.map((item, i) => (
+                    <span key={i} className="inline-flex items-center gap-3">
+                      <span>{item}</span>
+                      <span className="text-white/50">•</span>
+                    </span>
+                  ))}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </div>
       <style>{`
         @keyframes marquee {
-          0% { transform: translateX(50%); }
-          100% { transform: translateX(-100%); }
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
         }
         .animate-marquee {
-          display: inline-block;
           animation: marquee 35s linear infinite;
         }
         .animate-marquee:hover {
