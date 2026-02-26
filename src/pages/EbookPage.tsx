@@ -80,8 +80,15 @@ const EbookPage = () => {
     if (!ebook) return;
     setCheckingOut(true);
     try {
+      const successUrl = `${window.location.origin}${import.meta.env.BASE_URL.replace(/\/$/, "")}/pagamento-sucesso?session_id={CHECKOUT_SESSION_ID}`;
+      const cancelUrl = `${window.location.origin}${import.meta.env.BASE_URL.replace(/\/$/, "")}/ebook/${ebook.id}?cancelado=1`;
+
       const { data, error } = await supabase.functions.invoke("create-payment", {
-        body: { ebook_id: ebook.id },
+        body: {
+          ebook_id: ebook.id,
+          success_url: successUrl,
+          cancel_url: cancelUrl
+        },
       });
       if (error || !data?.url) throw new Error(error?.message || "Erro ao criar sessão de pagamento");
       window.location.href = data.url;

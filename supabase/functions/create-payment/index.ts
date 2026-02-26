@@ -14,7 +14,7 @@ serve(async (req) => {
   }
 
   try {
-    const { ebook_id } = await req.json();
+    const { ebook_id, success_url, cancel_url } = await req.json();
 
     if (!ebook_id) {
       throw new Error("ebook_id é obrigatório");
@@ -51,6 +51,10 @@ serve(async (req) => {
 
     const origin = req.headers.get("origin") || "http://localhost:5173";
 
+    // Use URLs from request if provided, otherwise fall back to default logic
+    const finalSuccessUrl = success_url || `${origin}/pagamento-sucesso?session_id={CHECKOUT_SESSION_ID}`;
+    const finalCancelUrl = cancel_url || `${origin}/ebook/${ebook_id}?cancelado=1`;
+
     const session = await stripe.checkout.sessions.create({
       line_items: [
         {
@@ -60,8 +64,8 @@ serve(async (req) => {
       ],
       mode: "payment",
       payment_method_types: ["card"],
-      success_url: `${origin}/pagamento-sucesso?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/ebook/${ebook_id}?cancelado=1`,
+      success_url: finalSuccessUrl,
+      cancel_url: finalCancelUrl,
       metadata: {
         ebook_id: ebook.id,
         pdf_url: ebook.pdf_url,

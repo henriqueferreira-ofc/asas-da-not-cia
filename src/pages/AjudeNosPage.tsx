@@ -70,8 +70,15 @@ const AjudeNosPage = () => {
     if (stripePrice) {
       setCheckingOutId(ebookId);
       try {
+        const successUrl = `${window.location.origin}${import.meta.env.BASE_URL.replace(/\/$/, "")}/pagamento-sucesso?session_id={CHECKOUT_SESSION_ID}`;
+        const cancelUrl = `${window.location.origin}${import.meta.env.BASE_URL.replace(/\/$/, "")}/ajude-nos#ebooks`;
+
         const { data, error } = await supabase.functions.invoke("create-payment", {
-          body: { ebook_id: ebookId },
+          body: {
+            ebook_id: ebookId,
+            success_url: successUrl,
+            cancel_url: cancelUrl
+          },
         });
         if (error || !data?.url) throw new Error(error?.message || "Erro ao criar sessão de pagamento");
         window.location.href = data.url;
