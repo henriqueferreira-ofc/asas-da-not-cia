@@ -53,6 +53,27 @@ export type Database = {
         }
         Relationships: []
       }
+      cesd_ratings: {
+        Row: {
+          created_at: string
+          id: string
+          rating: number
+          visitor_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          rating: number
+          visitor_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          rating?: number
+          visitor_id?: string
+        }
+        Relationships: []
+      }
       ebooks: {
         Row: {
           card_link: string | null
@@ -304,6 +325,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_cesd_rating_stats: {
+        Args: never
+        Returns: {
+          average_rating: number
+          total_ratings: number
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

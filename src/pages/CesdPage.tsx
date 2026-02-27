@@ -1,3 +1,4 @@
+import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -6,6 +7,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { usePageContent } from "@/hooks/usePageContent";
 import { getGoogleDriveDirectUrl } from "@/lib/google-drive";
+import { supabase } from "@/integrations/supabase/client";
 import heroBg from "@/assets/images/cesd-hero-new.png";
 
 export default function CesdPage() {
@@ -56,10 +58,61 @@ export default function CesdPage() {
     };
 
     const content = (pageData?.content as any) || defaultContent;
-    const [rating, setRating] = (window as any).useState ? (window as any).useState(0) : [0, () => { }]; // Basic state for rating if available
+    const [userRating, setUserRating] = useState(0);
+    const [hoveredRating, setHoveredRating] = useState(0);
+    const [hasRated, setHasRated] = useState(false);
+    const [totalRatings, setTotalRatings] = useState(0);
+    const [averageRating, setAverageRating] = useState(0);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const [userRating, setUserRating] = (window as any).useState ? (window as any).useState(0) : [0, () => { }];
-    const [hoveredRating, setHoveredRating] = (window as any).useState ? (window as any).useState(0) : [0, () => { }];
+    // Generate or retrieve visitor ID
+    const getVisitorId = useCallback(() => {
+        let id = localStorage.getItem("cesd_visitor_id");
+        if (!id) {
+            id = crypto.randomUUID();
+            localStorage.setItem("cesd_visitor_id", id);
+        }
+        return id;
+    }, []);
+
+    // Load stats and check if already rated
+    useEffect(() => {
+        const loadStats = async () => {
+            const { data } = await supabase.rpc("get_cesd_rating_stats");
+            if (data && data.length > 0) {
+                setTotalRatings(Number(data[0].total_ratings));
+                setAverageRating(Number(data[0].average_rating));
+            }
+            // Check if visitor already rated
+            const visitorId = getVisitorId();
+            const { data: existing } = await supabase
+                .from("cesd_ratings" as any)
+                .select("rating")
+                .eq("visitor_id", visitorId)
+                .maybeSingle();
+            if (existing) {
+                setUserRating((existing as any).rating);
+                setHasRated(true);
+            }
+        };
+        loadStats();
+    }, [getVisitorId]);
+
+    const handleRate = async (star: number) => {
+        if (hasRated || isSubmitting) return;
+        setIsSubmitting(true);
+        setUserRating(star);
+        const visitorId = getVisitorId();
+        await supabase.from("cesd_ratings" as any).insert({ rating: star, visitor_id: visitorId } as any);
+        setHasRated(true);
+        // Refresh stats
+        const { data } = await supabase.rpc("get_cesd_rating_stats");
+        if (data && data.length > 0) {
+            setTotalRatings(Number(data[0].total_ratings));
+            setAverageRating(Number(data[0].average_rating));
+        }
+        setIsSubmitting(false);
+    };
 
     if (isLoading) {
         return (
@@ -514,27 +567,38 @@ export default function CesdPage() {
                                 {[1, 2, 3, 4, 5].map((star) => (
                                     <button
                                         key={star}
-                                        onMouseEnter={() => (window as any).setHoveredRating ? (window as any).setHoveredRating(star) : null}
-                                        onMouseLeave={() => (window as any).setHoveredRating ? (window as any).setHoveredRating(0) : null}
-                                        onClick={() => (window as any).setUserRating ? (window as any).setUserRating(star) : null}
-                                        className="focus:outline-none transition-transform active:scale-95"
+                                        onMouseEnter={() => !hasRated && setHoveredRating(star)}
+                                        onMouseLeave={() => !hasRated && setHoveredRating(0)}
+                                        onClick={() => handleRate(star)}
+                                        disabled={hasRated || isSubmitting}
+                                        className="focus:outline-none transition-transform active:scale-95 disabled:cursor-default"
                                     >
                                         <Star
-                                            className={`w-6 h-6 transition-all duration-300 ${star <= ((window as any).hoveredRating || (window as any).userRating || 0)
+                                            className={`w-7 h-7 transition-all duration-300 ${star <= (hoveredRating || userRating)
                                                 ? 'text-yellow-400 fill-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.8)]'
-                                                : 'text-slate-800'
+                                                : 'text-slate-700 hover:text-slate-600'
                                                 }`}
                                         />
                                     </button>
                                 ))}
                             </div>
-                            {((window as any).userRating > 0) && (
+
+                            {/* Rating stats */}
+                            {totalRatings > 0 && (
+                                <div className="flex items-center justify-center gap-2 mb-1">
+                                    <span className="text-yellow-400 font-bold text-sm">{averageRating}</span>
+                                    <span className="text-slate-500 text-xs">•</span>
+                                    <span className="text-slate-400 text-xs">{totalRatings} {totalRatings === 1 ? 'avaliação' : 'avaliações'}</span>
+                                </div>
+                            )}
+
+                            {hasRated && (
                                 <motion.p
                                     initial={{ opacity: 0, scale: 0.9 }}
                                     animate={{ opacity: 1, scale: 1 }}
-                                    className="text-blue-400 text-[10px] font-bold"
+                                    className="text-blue-400 text-xs font-bold mt-1"
                                 >
-                                    Obrigado!
+                                    ✨ Obrigado pela sua avaliação!
                                 </motion.p>
                             )}
                         </motion.div>
