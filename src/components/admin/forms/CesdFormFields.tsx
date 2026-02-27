@@ -82,6 +82,24 @@ export const CesdFormFields = ({ content, onChange }: CesdFormFieldsProps) => {
         onChange({ ...content, testimonials });
     };
 
+    const addManifestacao = () => {
+        const manifestacoes = [...(content.manifestacoes || [])];
+        manifestacoes.push({ title: '', content: '', imageUrl: '', location: '' });
+        onChange({ ...content, manifestacoes });
+    };
+
+    const removeManifestacao = (index: number) => {
+        const manifestacoes = [...(content.manifestacoes || [])];
+        manifestacoes.splice(index, 1);
+        onChange({ ...content, manifestacoes });
+    };
+
+    const updateManifestacao = (index: number, field: string, value: string) => {
+        const manifestacoes = [...(content.manifestacoes || [])];
+        manifestacoes[index] = { ...manifestacoes[index], [field]: value };
+        onChange({ ...content, manifestacoes });
+    };
+
     return (
         <div className="space-y-12">
             {/* HERO SECTION */}
@@ -153,6 +171,49 @@ export const CesdFormFields = ({ content, onChange }: CesdFormFieldsProps) => {
                                 <div className="md:col-span-3 space-y-2">
                                     <Label>Descrição</Label>
                                     <Textarea value={item.description || ''} onChange={(e) => updateTimelineYear(index, 'description', e.target.value)} />
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* MANIFESTAÇÕES SECTION */}
+            <div className="space-y-4">
+                <div className="flex items-center justify-between border-b pb-2">
+                    <h3 className="text-xl font-bold">Manifestações em Brasília</h3>
+                    <Button type="button" variant="outline" size="sm" onClick={addManifestacao} className="gap-2">
+                        <Plus className="w-4 h-4" /> Adicionar Momento
+                    </Button>
+                </div>
+                <div className="grid gap-6">
+                    {(content.manifestacoes || []).map((item: any, index: number) => (
+                        <div key={index} className="p-4 border rounded-lg bg-muted/30 relative">
+                            <Button
+                                type="button"
+                                variant="destructive"
+                                size="icon"
+                                className="absolute top-2 right-2 w-8 h-8"
+                                onClick={() => removeManifestacao(index)}
+                            >
+                                <Trash2 className="w-4 h-4" />
+                            </Button>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label>Título do Momento</Label>
+                                    <Input value={item.title || ''} onChange={(e) => updateManifestacao(index, 'title', e.target.value)} placeholder="Ex: O Grito por Justiça" />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Local / Tag</Label>
+                                    <Input value={item.location || ''} onChange={(e) => updateManifestacao(index, 'location', e.target.value)} placeholder="Ex: Esplanada dos Ministérios" />
+                                </div>
+                                <div className="md:col-span-2 space-y-2">
+                                    <Label>História / Conteúdo</Label>
+                                    <Textarea value={item.content || ''} onChange={(e) => updateManifestacao(index, 'content', e.target.value)} rows={3} />
+                                </div>
+                                <div className="md:col-span-2 space-y-2">
+                                    <Label>URL da Foto (Google Drive ou link)</Label>
+                                    <Input value={item.imageUrl || ''} onChange={(e) => updateManifestacao(index, 'imageUrl', e.target.value)} placeholder="https://..." />
                                 </div>
                             </div>
                         </div>
