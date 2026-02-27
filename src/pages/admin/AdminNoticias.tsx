@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  Plus, 
-  Search, 
-  Edit, 
-  Trash2, 
-  Eye, 
+import {
+  Plus,
+  Search,
+  Edit,
+  Trash2,
+  Eye,
   EyeOff,
   MoreHorizontal,
   Newspaper
@@ -44,7 +44,7 @@ import { useAuth } from '@/hooks/useAuth';
 
 const categoryLabels: Record<string, string> = {
   aafab: 'AAFAB',
-  politica: 'Política Nacional',
+  politica: 'Notícia Nacional',
   internacional: 'Internacional',
   comunicados: 'Comunicados',
   // Compatibilidade com categorias antigas
@@ -60,18 +60,18 @@ const AdminNoticias = () => {
   const togglePublished = useTogglePublished();
   const { toast } = useToast();
   const { isAdmin } = useAuth();
-  
+
   const [search, setSearch] = useState('');
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const filteredNews = noticias?.filter(news => 
+  const filteredNews = noticias?.filter(news =>
     news.title.toLowerCase().includes(search.toLowerCase()) ||
     news.category.toLowerCase().includes(search.toLowerCase())
   ) || [];
 
   const handleDelete = async () => {
     if (!deleteId) return;
-    
+
     try {
       await deleteNoticia.mutateAsync(deleteId);
       toast({
@@ -94,8 +94,8 @@ const AdminNoticias = () => {
       await togglePublished.mutateAsync({ id, published: !currentStatus });
       toast({
         title: currentStatus ? 'Notícia despublicada' : 'Notícia publicada',
-        description: currentStatus 
-          ? 'A notícia foi movida para rascunhos.' 
+        description: currentStatus
+          ? 'A notícia foi movida para rascunhos.'
           : 'A notícia está agora visível no site.',
       });
     } catch (error) {
@@ -186,8 +186,8 @@ const AdminNoticias = () => {
                   <TableCell>
                     <div className="flex items-center gap-3">
                       {news.image_url ? (
-                        <img 
-                          src={news.image_url} 
+                        <img
+                          src={news.image_url}
                           alt=""
                           className="w-12 h-12 object-cover rounded"
                         />
@@ -205,11 +205,10 @@ const AdminNoticias = () => {
                     </span>
                   </TableCell>
                   <TableCell>
-                    <span className={`text-xs px-2 py-1 rounded-full ${
-                      news.published 
-                        ? 'bg-emerald-100 text-emerald-700' 
+                    <span className={`text-xs px-2 py-1 rounded-full ${news.published
+                        ? 'bg-emerald-100 text-emerald-700'
                         : 'bg-amber-100 text-amber-700'
-                    }`}>
+                      }`}>
                       {news.published ? 'Publicada' : 'Rascunho'}
                     </span>
                   </TableCell>
@@ -230,7 +229,7 @@ const AdminNoticias = () => {
                             Editar
                           </Link>
                         </DropdownMenuItem>
-                        <DropdownMenuItem 
+                        <DropdownMenuItem
                           onClick={() => handleTogglePublished(news.id, news.published)}
                         >
                           {news.published ? (
@@ -248,7 +247,7 @@ const AdminNoticias = () => {
                         {isAdmin && (
                           <>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem 
+                            <DropdownMenuItem
                               className="text-destructive"
                               onClick={() => setDeleteId(news.id)}
                             >

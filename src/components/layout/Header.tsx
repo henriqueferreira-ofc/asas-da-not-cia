@@ -9,15 +9,17 @@ import {
   prefetchAjudeNos,
   prefetchContato,
   prefetchIndex,
-  prefetchCategoria
+  prefetchCategoria,
+  prefetchCesd
 } from "@/App";
 import logoAafab from "@/assets/logo-aafab.png";
 
 const categories = [
   { name: "Sobre a AAFAB", href: "/sobre", prefetch: prefetchSobre },
-  { name: "Política Nacional", href: "/categoria/politica", prefetch: prefetchCategoria },
+  { name: "Notícia Nacional", href: "/categoria/noticia", prefetch: prefetchCategoria },
   { name: "Internacional", href: "/categoria/internacional", prefetch: prefetchCategoria },
   { name: "E-Books", href: "/ajude-nos#ebooks", prefetch: prefetchAjudeNos },
+  { name: "CESD", href: "/cesd", prefetch: prefetchCesd },
 ];
 
 export function Header() {

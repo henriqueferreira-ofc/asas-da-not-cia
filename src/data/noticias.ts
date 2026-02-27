@@ -27,11 +27,11 @@ export const categoryInfo: Record<string, { name: string; description: string }>
     description: "Notícias, eventos e comunicados oficiais da Associação Amigos da Força Aérea Brasileira.",
   },
   politica: {
-    name: "Política Nacional",
+    name: "Notícia Nacional",
     description: "Cobertura completa sobre política brasileira, Executivo, Legislativo e Judiciário.",
   },
   internacional: {
-    name: "Política Internacional",
+    name: "Internacional",
     description: "Análises e notícias sobre relações internacionais e geopolítica global.",
   },
   comunicados: {

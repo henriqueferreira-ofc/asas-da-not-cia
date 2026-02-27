@@ -34,7 +34,7 @@ const mapCategory = (category: string): NewsCategory => {
 const getCategoryLabel = (category: string): string => {
   const labels: Record<string, string> = {
     aafab: "AAFAB",
-    politica: "Política Nacional",
+    politica: "Nacional",
     internacional: "Internacional",
     comunicados: "Comunicados",
   };
@@ -59,7 +59,7 @@ const Index = () => {
     title: noticia.title,
     excerpt: noticia.excerpt,
     image: noticia.image_url || heroImage,
-    category: noticia.category_label || getCategoryLabel(noticia.category),
+    category: getCategoryLabel(noticia.category),
     author: noticia.author,
     date: formatDate(noticia.created_at),
   }));
@@ -72,7 +72,7 @@ const Index = () => {
       excerpt: noticia.excerpt,
       image: noticia.image_url || heroImage,
       category: mapCategory(noticia.category),
-      categoryLabel: noticia.category_label || getCategoryLabel(noticia.category),
+      categoryLabel: getCategoryLabel(noticia.category),
       author: noticia.author,
       date: formatDate(noticia.created_at),
     }));
@@ -133,7 +133,7 @@ const Index = () => {
               </section>
             ) : (politicaNoticias?.length ?? 0) > 0 ? (
               <NewsSection
-                title="Política Nacional"
+                title="Notícia Nacional"
                 news={transformNews(politicaNoticias, 3)}
                 categorySlug="politica"
               />

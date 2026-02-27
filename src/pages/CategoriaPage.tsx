@@ -24,8 +24,8 @@ const formatDate = (dateString: string) => {
 // Helper to map category from DB to component type
 const mapCategory = (category: string): NewsCategory => {
   const validCategories: NewsCategory[] = ["aafab", "politica", "internacional", "comunicados"];
-  return validCategories.includes(category as NewsCategory) 
-    ? (category as NewsCategory) 
+  return validCategories.includes(category as NewsCategory)
+    ? (category as NewsCategory)
     : "aafab";
 };
 
@@ -33,7 +33,7 @@ const mapCategory = (category: string): NewsCategory => {
 const getCategoryLabel = (category: string): string => {
   const labels: Record<string, string> = {
     aafab: "AAFAB",
-    politica: "Política Nacional",
+    politica: "Nacional", // Updated to just Nacional
     internacional: "Internacional",
     comunicados: "Comunicados",
   };
@@ -42,8 +42,11 @@ const getCategoryLabel = (category: string): string => {
 
 const CategoriaPage = () => {
   const { slug } = useParams<{ slug: string }>();
-  const { data: noticias, isLoading, error } = useNoticiasByCategory(slug);
-  const category = categoryInfo[slug || ""];
+  // Alias 'noticia' to 'politica' so the content remains the same
+  const effectiveSlug = slug === "noticia" ? "politica" : slug;
+
+  const { data: noticias, isLoading, error } = useNoticiasByCategory(effectiveSlug);
+  const category = categoryInfo[effectiveSlug || ""];
 
   if (!category) {
     return (
@@ -67,12 +70,12 @@ const CategoriaPage = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       <main className="container py-8">
         {/* Breadcrumb */}
         <div className="mb-6">
-          <Link 
-            to="/" 
+          <Link
+            to="/"
             className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -115,7 +118,7 @@ const CategoriaPage = () => {
                     excerpt={noticia.excerpt}
                     image={noticia.image_url || heroImage}
                     category={mapCategory(noticia.category)}
-                    categoryLabel={noticia.category_label || getCategoryLabel(noticia.category)}
+                    categoryLabel={getCategoryLabel(noticia.category)}
                     author={noticia.author}
                     date={formatDate(noticia.created_at)}
                   />

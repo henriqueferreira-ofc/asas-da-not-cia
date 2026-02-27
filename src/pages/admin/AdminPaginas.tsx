@@ -13,6 +13,18 @@ const pageRoutes: Record<string, string> = {
   'diretoria': '/diretoria',
   'privacidade': '/privacidade',
   'termos': '/termos',
+  'cesd': '/cesd',
+};
+
+const pageLabels: Record<string, string> = {
+  'inicio': 'Início',
+  'sobre': 'Sobre a AAFAB',
+  'ajude-nos': 'Ajude-nos',
+  'contato': 'Contato',
+  'diretoria': 'Diretoria',
+  'privacidade': 'Política de Privacidade',
+  'termos': 'Termos de Uso',
+  'cesd': 'CESD - Memorial Digital',
 };
 
 const AdminPaginas = () => {
@@ -37,34 +49,40 @@ const AdminPaginas = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {pages?.map((page) => (
-            <Card key={page.id} className="hover:shadow-md transition-shadow">
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-primary" />
-                  {page.page_title}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Última atualização: {new Date(page.updated_at).toLocaleDateString('pt-BR')}
-                </p>
-                <div className="flex gap-2">
-                  <Link to={`/admin/paginas/editar/${page.page_slug}`} className="flex-1">
-                    <Button className="w-full gap-2" size="sm">
-                      <Edit className="w-4 h-4" />
-                      Editar
-                    </Button>
-                  </Link>
-                  <Link to={pageRoutes[page.page_slug] || '/'} target="_blank">
-                    <Button variant="outline" size="sm">
-                      <ExternalLink className="w-4 h-4" />
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+          {Object.keys(pageRoutes).map((slug) => {
+            const page = pages?.find(p => p.page_slug === slug);
+            const title = page?.page_title || pageLabels[slug] || slug;
+            const updatedAt = page?.updated_at ? new Date(page.updated_at).toLocaleDateString('pt-BR') : 'Não inicializada';
+
+            return (
+              <Card key={slug} className="hover:shadow-md transition-shadow">
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <FileText className={`w-5 h-5 ${page ? 'text-primary' : 'text-muted-foreground'}`} />
+                    {title}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Última atualização: {updatedAt}
+                  </p>
+                  <div className="flex gap-2">
+                    <Link to={`/admin/paginas/editar/${slug}`} className="flex-1">
+                      <Button className="w-full gap-2" size="sm" variant={page ? "default" : "secondary"}>
+                        <Edit className="w-4 h-4" />
+                        {page ? 'Editar' : 'Inicializar'}
+                      </Button>
+                    </Link>
+                    <Link to={pageRoutes[slug] || '/'} target="_blank">
+                      <Button variant="outline" size="sm">
+                        <ExternalLink className="w-4 h-4" />
+                      </Button>
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       )}
     </div>

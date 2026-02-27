@@ -23,6 +23,7 @@ const ComunicadosPageLoader = () => import("./pages/ComunicadosPage");
 const PrivacidadePageLoader = () => import("./pages/PrivacidadePage");
 const TermosPageLoader = () => import("./pages/TermosPage");
 const NotFoundLoader = () => import("./pages/NotFound");
+const CesdPageLoader = () => import("./pages/CesdPage");
 
 export const prefetchIndex = () => IndexLoader();
 export const prefetchCategoria = () => CategoriaPageLoader();
@@ -37,6 +38,7 @@ export const prefetchAgenda = () => AgendaPageLoader();
 export const prefetchComunicados = () => ComunicadosPageLoader();
 export const prefetchPrivacidade = () => PrivacidadePageLoader();
 export const prefetchTermos = () => TermosPageLoader();
+export const prefetchCesd = () => CesdPageLoader();
 
 const Index = lazy(IndexLoader);
 const CategoriaPage = lazy(CategoriaPageLoader);
@@ -52,6 +54,7 @@ const ComunicadosPage = lazy(ComunicadosPageLoader);
 const PrivacidadePage = lazy(PrivacidadePageLoader);
 const TermosPage = lazy(TermosPageLoader);
 const NotFound = lazy(NotFoundLoader);
+const CesdPage = lazy(CesdPageLoader);
 
 // Lazy admin pages
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
@@ -115,6 +118,7 @@ const App = () => (
             <Route path="/comunicados" element={<ComunicadosPage />} />
             <Route path="/privacidade" element={<PrivacidadePage />} />
             <Route path="/termos" element={<TermosPage />} />
+            <Route path="/cesd" element={<CesdPage />} />
 
             {/* Admin Routes */}
             <Route path="/admin/login" element={<AdminLogin />} />

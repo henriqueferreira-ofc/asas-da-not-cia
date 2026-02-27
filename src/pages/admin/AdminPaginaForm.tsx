@@ -14,6 +14,7 @@ import { DiretoriaFormFields } from '@/components/admin/forms/DiretoriaFormField
 import { InicioFormFields } from '@/components/admin/forms/InicioFormFields';
 import { PrivacidadeFormFields } from '@/components/admin/forms/PrivacidadeFormFields';
 import { TermosFormFields } from '@/components/admin/forms/TermosFormFields';
+import { CesdFormFields } from '@/components/admin/forms/CesdFormFields';
 
 const AdminPaginaForm = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -59,6 +60,8 @@ const AdminPaginaForm = () => {
         return <PrivacidadeFormFields content={content} onChange={setContent} />;
       case 'termos':
         return <TermosFormFields content={content} onChange={setContent} />;
+      case 'cesd':
+        return <CesdFormFields content={content} onChange={setContent} />;
       default:
         return <p className="text-muted-foreground">Formulário não disponível para esta página.</p>;
     }

@@ -4,10 +4,10 @@ import { ArrowLeft, Save, Eye, Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { 
-  useNoticia, 
-  useCreateNoticia, 
-  useUpdateNoticia 
+import {
+  useNoticia,
+  useCreateNoticia,
+  useUpdateNoticia
 } from '@/hooks/useNoticias';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -40,14 +40,14 @@ type NoticiaFormData = z.infer<typeof noticiaSchema>;
 
 const categories = [
   { value: 'aafab', label: 'AAFAB' },
-  { value: 'politica', label: 'Política Nacional' },
+  { value: 'politica', label: 'Notícia Nacional' },
   { value: 'internacional', label: 'Internacional' },
   { value: 'comunicados', label: 'Comunicados' },
 ];
 
 const categoryLabels: Record<string, string> = {
   aafab: 'AAFAB',
-  politica: 'Política Nacional',
+  politica: 'Notícia Nacional',
   internacional: 'Internacional',
   comunicados: 'Comunicados',
 };
@@ -156,7 +156,7 @@ const AdminNoticiaForm = () => {
     <div className="p-6 lg:p-8 max-w-4xl">
       {/* Header */}
       <div className="mb-6">
-        <Link 
+        <Link
           to="/admin/noticias"
           className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4 transition-colors"
         >

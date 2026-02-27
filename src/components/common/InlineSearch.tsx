@@ -19,7 +19,7 @@ const staticPages: SearchResult[] = [
   { id: "home", title: "Início", description: "Página inicial da AAFAB", type: "page", href: "/", icon: Menu },
   { id: "sobre", title: "Sobre a AAFAB", description: "Conheça a história e missão da AAFAB", type: "page", href: "/sobre", icon: FileText },
   { id: "diretoria", title: "Diretoria", description: "Conheça os membros da diretoria", type: "page", href: "/diretoria", icon: Users },
-  { id: "politica", title: "Política Nacional", description: "Notícias sobre política nacional", type: "menu", href: "/categoria/politica", icon: Menu },
+  { id: "politica", title: "Notícia Nacional", description: "Notícias sobre política nacional", type: "menu", href: "/categoria/politica", icon: Menu },
   { id: "internacional", title: "Internacional", description: "Notícias internacionais", type: "menu", href: "/categoria/internacional", icon: Menu },
   { id: "ajude", title: "Ajude-nos", description: "Saiba como apoiar a AAFAB", type: "page", href: "/ajude-nos", icon: FileText },
   { id: "contato", title: "Contato", description: "Entre em contato conosco", type: "page", href: "/contato", icon: FileText },
@@ -56,12 +56,12 @@ export function InlineSearch() {
       }
 
       setIsLoading(true);
-      
+
       try {
         // Filter static pages
         const queryLower = query.toLowerCase();
         const filteredPages = staticPages.filter(
-          page => 
+          page =>
             page.title.toLowerCase().includes(queryLower) ||
             page.description.toLowerCase().includes(queryLower)
         );

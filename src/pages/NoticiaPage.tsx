@@ -33,7 +33,7 @@ const mapCategory = (category: string): NewsCategory => {
 const getCategoryLabel = (category: string): string => {
   const labels: Record<string, string> = {
     aafab: "AAFAB",
-    politica: "Política Nacional",
+    politica: "Nacional",
     internacional: "Internacional",
     comunicados: "Comunicados",
   };
@@ -138,7 +138,7 @@ const NoticiaPage = () => {
             className="inline-block mb-4"
           >
             <span className="category-badge category-aafab">
-              {noticia.category_label || getCategoryLabel(noticia.category)}
+              {getCategoryLabel(noticia.category)}
             </span>
           </Link>
 
@@ -198,7 +198,7 @@ const NoticiaPage = () => {
                     excerpt={item.excerpt}
                     image={item.image_url || heroImage}
                     category={mapCategory(item.category)}
-                    categoryLabel={item.category_label || getCategoryLabel(item.category)}
+                    categoryLabel={getCategoryLabel(item.category)}
                     author={item.author}
                     date={formatDate(item.created_at)}
                     size="small"

@@ -1,10 +1,8 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&display=swap');
 
-@layer base {
+@tailwind base;
+@tailwind components;
+@tailwind utilities;@layer base {
   :root {
     /* Institutional Blue Palette */
     --background: 210 20% 98%;

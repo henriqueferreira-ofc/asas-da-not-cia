@@ -57,8 +57,11 @@ export function useUpdatePageContent() {
     }) => {
       const { data, error } = await supabase
         .from("page_contents")
-        .update({ content: content as unknown as Json })
-        .eq("page_slug", slug)
+        .upsert({
+          page_slug: slug,
+          content: content as unknown as Json,
+          page_title: "CESD - Memorial Digital" // Default title for new ones
+        }, { onConflict: 'page_slug' })
         .select()
         .single();
 
