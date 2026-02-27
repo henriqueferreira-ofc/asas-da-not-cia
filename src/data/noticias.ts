@@ -1,8 +1,8 @@
 import heroImage from "@/assets/hero-fab.jpg";
-import ceremonyImage from "@/assets/news-ceremony.jpg";
-import congressImage from "@/assets/news-congress.jpg";
-import defenseImage from "@/assets/news-defense.jpg";
-import internationalImage from "@/assets/news-international.jpg";
+import ceremonyImage from "@/assets/hero-fab.jpg";
+import congressImage from "@/assets/hero-fab.jpg";
+import defenseImage from "@/assets/hero-fab.jpg";
+import internationalImage from "@/assets/news-aircraft.jpg";
 import aircraftImage from "@/assets/news-aircraft.jpg";
 
 export type NewsCategory = "aafab" | "politica" | "internacional" | "comunicados";
