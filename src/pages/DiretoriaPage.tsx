@@ -118,11 +118,11 @@ const DiretoriaPage = () => {
         {/* Breadcrumb */}
         <div className="mb-6">
           <Link
-            to="/sobre"
+            to="/"
             className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm"
           >
             <ArrowLeft className="w-4 h-4" />
-            Voltar para Sobre a AAFAB
+            Voltar para o Início
           </Link>
         </div>
 
