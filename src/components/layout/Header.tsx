@@ -10,7 +10,8 @@ import {
   prefetchContato,
   prefetchIndex,
   prefetchCategoria,
-  prefetchCesd
+  prefetchCesd,
+  prefetchDiretoria
 } from "@/App";
 import logoAafab from "@/assets/logo-aafab.png";
 
@@ -20,6 +21,7 @@ const categories = [
   { name: "Internacional", href: "/categoria/internacional", prefetch: prefetchCategoria },
   { name: "E-Books", href: "/ajude-nos#ebooks", prefetch: prefetchAjudeNos },
   { name: "CESD", href: "/cesd", prefetch: prefetchCesd },
+  { name: "Diretoria", href: "/diretoria", prefetch: prefetchDiretoria },
 ];
 
 export function Header() {
