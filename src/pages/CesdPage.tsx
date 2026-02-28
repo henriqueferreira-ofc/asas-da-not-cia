@@ -231,7 +231,7 @@ export default function CesdPage() {
                         viewport={{ once: true, margin: "-100px" }}
                         className="text-center mb-16"
                     >
-                        <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">A Linha do Tempo</h2>
+                        <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">{content.sectionTitles?.timeline || 'A Linha do Tempo'}</h2>
                         <div className="w-24 h-1 bg-blue-600 mx-auto rounded-full shadow-[0_0_10px_rgba(37,99,235,0.8)]" />
                     </motion.div>
 
@@ -275,7 +275,7 @@ export default function CesdPage() {
                         <div className="flex items-center justify-center gap-3 text-blue-400 font-medium tracking-widest uppercase text-sm mb-4">
                             <Flag className="w-5 h-5" /> História e Luta
                         </div>
-                        <h2 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tighter">Manifestações em Brasília</h2>
+                        <h2 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tighter">{content.sectionTitles?.manifestacoes || 'Manifestações em Brasília'}</h2>
                         <div className="w-40 h-1.5 bg-gradient-to-r from-blue-600 to-blue-400 mx-auto rounded-full shadow-[0_0_15px_rgba(37,99,235,0.6)]" />
                     </motion.div>
 
@@ -291,22 +291,41 @@ export default function CesdPage() {
                                 >
                                     <div className={`${idx % 2 !== 0 ? 'order-1 md:order-2' : ''} relative group`}>
                                         <div className="absolute -inset-4 bg-blue-600/20 rounded-3xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                                        <motion.div
-                                            whileHover={{ scale: 1.02 }}
-                                            transition={{ duration: 0.5, ease: "easeOut" }}
-                                            className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-blue-500/30 shadow-2xl bg-slate-800 flex items-center justify-center group"
-                                        >
-                                            {item.imageUrl ? (
-                                                <img
-                                                    src={getGoogleDriveDirectUrl(item.imageUrl)}
-                                                    alt={item.title}
-                                                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                                                />
-                                            ) : (
-                                                <ImageIcon className="w-12 h-12 text-blue-900/50" />
-                                            )}
-                                            <div className="absolute inset-0 bg-blue-600/10 opacity-0 group-hover:opacity-100 transition-all duration-500" />
-                                        </motion.div>
+                                        {(() => {
+                                            const photos = item.imageUrls && item.imageUrls.length > 0 
+                                                ? item.imageUrls.filter((u: string) => u) 
+                                                : (item.imageUrl ? [item.imageUrl] : []);
+                                            if (photos.length === 0) {
+                                                return (
+                                                    <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-blue-500/30 shadow-2xl bg-slate-800 flex items-center justify-center">
+                                                        <ImageIcon className="w-12 h-12 text-blue-900/50" />
+                                                    </div>
+                                                );
+                                            }
+                                            if (photos.length === 1) {
+                                                return (
+                                                    <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.5 }} className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-blue-500/30 shadow-2xl bg-slate-800">
+                                                        <img src={getGoogleDriveDirectUrl(photos[0])} alt={item.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+                                                        <div className="absolute inset-0 bg-blue-600/10 opacity-0 group-hover:opacity-100 transition-all duration-500" />
+                                                    </motion.div>
+                                                );
+                                            }
+                                            return (
+                                                <div className="grid grid-cols-2 gap-2">
+                                                    {photos.map((photoUrl: string, pIdx: number) => (
+                                                        <motion.div
+                                                            key={pIdx}
+                                                            whileHover={{ scale: 1.03 }}
+                                                            transition={{ duration: 0.4 }}
+                                                            className={`relative rounded-xl overflow-hidden border border-blue-500/30 shadow-xl bg-slate-800 ${pIdx === 0 && photos.length === 3 ? 'col-span-2 aspect-[16/9]' : 'aspect-square'}`}
+                                                        >
+                                                            <img src={getGoogleDriveDirectUrl(photoUrl)} alt={`${item.title} - Foto ${pIdx + 1}`} className="w-full h-full object-cover transition-transform duration-700 hover:scale-110" />
+                                                            <div className="absolute inset-0 bg-blue-600/10 opacity-0 hover:opacity-100 transition-all duration-500" />
+                                                        </motion.div>
+                                                    ))}
+                                                </div>
+                                            );
+                                        })()}
                                     </div>
                                     <div className={`${idx % 2 !== 0 ? 'order-2 md:order-1' : ''} space-y-6`}>
                                         <h3 className="text-2xl md:text-3xl font-bold text-blue-100">{item.title}</h3>
@@ -385,7 +404,7 @@ export default function CesdPage() {
                         viewport={{ once: true }}
                         className="text-center mb-16"
                     >
-                        <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 drop-shadow-[0_0_10px_rgba(59,130,246,0.5)]">Memórias Visuais</h2>
+                        <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 drop-shadow-[0_0_10px_rgba(59,130,246,0.5)]">{content.sectionTitles?.gallery || 'Memórias Visuais'}</h2>
                         <p className="text-blue-200/60 max-w-2xl mx-auto">Fragmentos de um tempo que moldou o nosso caráter.</p>
                     </motion.div>
 
@@ -505,7 +524,7 @@ export default function CesdPage() {
                         viewport={{ once: true }}
                         className="text-center mb-16"
                     >
-                        <h2 className="text-3xl md:text-4xl font-black text-white mb-4">Palavras da Tropa</h2>
+                        <h2 className="text-3xl md:text-4xl font-black text-white mb-4">{content.sectionTitles?.testimonials || 'Palavras da Tropa'}</h2>
                         <p className="text-blue-200/40">Depoimentos reais de quem viveu a caserna</p>
                     </motion.div>
 

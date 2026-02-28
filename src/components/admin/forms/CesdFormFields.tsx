@@ -10,7 +10,6 @@ interface CesdFormFieldsProps {
 }
 
 export const CesdFormFields = ({ content, onChange }: CesdFormFieldsProps) => {
-    // Helper to update specific nested fields
     const updateHero = (field: string, value: string) => {
         const hero = { ...(content.hero || {}), [field]: value };
         onChange({ ...content, hero });
@@ -27,77 +26,114 @@ export const CesdFormFields = ({ content, onChange }: CesdFormFieldsProps) => {
         onChange({ ...content, sections });
     };
 
-    // Array field helpers
+    const updateSectionTitle = (key: string, value: string) => {
+        const sectionTitles = { ...(content.sectionTitles || {}), [key]: value };
+        onChange({ ...content, sectionTitles });
+    };
+
+    // Timeline
     const addTimelineYear = () => {
         const timeline = [...(content.timeline || [])];
         timeline.push({ year: '', title: '', description: '' });
         onChange({ ...content, timeline });
     };
-
     const removeTimelineYear = (index: number) => {
         const timeline = [...(content.timeline || [])];
         timeline.splice(index, 1);
         onChange({ ...content, timeline });
     };
-
     const updateTimelineYear = (index: number, field: string, value: string) => {
         const timeline = [...(content.timeline || [])];
         timeline[index] = { ...timeline[index], [field]: value };
         onChange({ ...content, timeline });
     };
 
+    // Gallery
     const addGalleryImage = () => {
         const gallery = [...(content.gallery || [])];
         gallery.push({ url: '', caption: '' });
         onChange({ ...content, gallery });
     };
-
     const removeGalleryImage = (index: number) => {
         const gallery = [...(content.gallery || [])];
         gallery.splice(index, 1);
         onChange({ ...content, gallery });
     };
-
     const updateGalleryImage = (index: number, field: string, value: string) => {
         const gallery = [...(content.gallery || [])];
         gallery[index] = { ...gallery[index], [field]: value };
         onChange({ ...content, gallery });
     };
 
+    // Testimonials
     const addTestimonial = () => {
         const testimonials = [...(content.testimonials || [])];
         testimonials.push({ name: '', role: '', text: '', photoUrl: '' });
         onChange({ ...content, testimonials });
     };
-
     const removeTestimonial = (index: number) => {
         const testimonials = [...(content.testimonials || [])];
         testimonials.splice(index, 1);
         onChange({ ...content, testimonials });
     };
-
     const updateTestimonial = (index: number, field: string, value: string) => {
         const testimonials = [...(content.testimonials || [])];
         testimonials[index] = { ...testimonials[index], [field]: value };
         onChange({ ...content, testimonials });
     };
 
+    // Manifestações
     const addManifestacao = () => {
         const manifestacoes = [...(content.manifestacoes || [])];
-        manifestacoes.push({ title: '', content: '', imageUrl: '', location: '' });
+        manifestacoes.push({ title: '', content: '', imageUrls: [], location: '' });
         onChange({ ...content, manifestacoes });
     };
-
     const removeManifestacao = (index: number) => {
         const manifestacoes = [...(content.manifestacoes || [])];
         manifestacoes.splice(index, 1);
         onChange({ ...content, manifestacoes });
     };
-
     const updateManifestacao = (index: number, field: string, value: string) => {
         const manifestacoes = [...(content.manifestacoes || [])];
         manifestacoes[index] = { ...manifestacoes[index], [field]: value };
         onChange({ ...content, manifestacoes });
+    };
+
+    // Multiple photos per manifestação
+    const addManifestacaoPhoto = (index: number) => {
+        const manifestacoes = [...(content.manifestacoes || [])];
+        const item = { ...manifestacoes[index] };
+        // Support legacy single imageUrl field by migrating it
+        const urls = [...(item.imageUrls || (item.imageUrl ? [item.imageUrl] : []))];
+        urls.push('');
+        item.imageUrls = urls;
+        manifestacoes[index] = item;
+        onChange({ ...content, manifestacoes });
+    };
+    const removeManifestacaoPhoto = (mIndex: number, pIndex: number) => {
+        const manifestacoes = [...(content.manifestacoes || [])];
+        const item = { ...manifestacoes[mIndex] };
+        const urls = [...(item.imageUrls || [])];
+        urls.splice(pIndex, 1);
+        item.imageUrls = urls;
+        manifestacoes[mIndex] = item;
+        onChange({ ...content, manifestacoes });
+    };
+    const updateManifestacaoPhoto = (mIndex: number, pIndex: number, value: string) => {
+        const manifestacoes = [...(content.manifestacoes || [])];
+        const item = { ...manifestacoes[mIndex] };
+        const urls = [...(item.imageUrls || [])];
+        urls[pIndex] = value;
+        item.imageUrls = urls;
+        manifestacoes[mIndex] = item;
+        onChange({ ...content, manifestacoes });
+    };
+
+    // Helper to get photos array from a manifestação (supports legacy imageUrl)
+    const getManifestacaoPhotos = (item: any): string[] => {
+        if (item.imageUrls && item.imageUrls.length > 0) return item.imageUrls;
+        if (item.imageUrl) return [item.imageUrl];
+        return [];
     };
 
     return (
@@ -108,34 +144,60 @@ export const CesdFormFields = ({ content, onChange }: CesdFormFieldsProps) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                         <Label>Título do Hero</Label>
-                        <Input
-                            value={content.hero?.title || ''}
-                            onChange={(e) => updateHero('title', e.target.value)}
-                            placeholder="Ex: PRD – Memorial Digital CESD"
-                        />
+                        <Input value={content.hero?.title || ''} onChange={(e) => updateHero('title', e.target.value)} placeholder="Ex: PRD – Memorial Digital CESD" />
                     </div>
                     <div className="space-y-2">
                         <Label>Texto do Botão</Label>
-                        <Input
-                            value={content.hero?.buttonText || ''}
-                            onChange={(e) => updateHero('buttonText', e.target.value)}
-                        />
+                        <Input value={content.hero?.buttonText || ''} onChange={(e) => updateHero('buttonText', e.target.value)} />
                     </div>
                 </div>
                 <div className="space-y-2">
                     <Label>Subtítulo / Descrição</Label>
-                    <Textarea
-                        value={content.hero?.subtitle || ''}
-                        onChange={(e) => updateHero('subtitle', e.target.value)}
-                    />
+                    <Textarea value={content.hero?.subtitle || ''} onChange={(e) => updateHero('subtitle', e.target.value)} />
                 </div>
                 <div className="space-y-2">
                     <Label>URL do Vídeo de Fundo (Opcional)</Label>
-                    <Input
-                        value={content.hero?.videoUrl || ''}
-                        onChange={(e) => updateHero('videoUrl', e.target.value)}
-                        placeholder="https://..."
-                    />
+                    <Input value={content.hero?.videoUrl || ''} onChange={(e) => updateHero('videoUrl', e.target.value)} placeholder="https://..." />
+                </div>
+            </div>
+
+            {/* SECTION TITLES */}
+            <div className="space-y-4">
+                <h3 className="text-xl font-bold border-b pb-2">Títulos das Seções</h3>
+                <p className="text-sm text-muted-foreground">Personalize os títulos exibidos em cada seção da página.</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                        <Label>Título: Timeline</Label>
+                        <Input
+                            value={content.sectionTitles?.timeline || ''}
+                            onChange={(e) => updateSectionTitle('timeline', e.target.value)}
+                            placeholder="A Linha do Tempo"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label>Título: Manifestações</Label>
+                        <Input
+                            value={content.sectionTitles?.manifestacoes || ''}
+                            onChange={(e) => updateSectionTitle('manifestacoes', e.target.value)}
+                            placeholder="Manifestações em Brasília"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label>Título: Galeria</Label>
+                        <Input
+                            value={content.sectionTitles?.gallery || ''}
+                            onChange={(e) => updateSectionTitle('gallery', e.target.value)}
+                            placeholder="Memórias Visuais"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label>Título: Depoimentos</Label>
+                        <Input
+                            value={content.sectionTitles?.testimonials || ''}
+                            onChange={(e) => updateSectionTitle('testimonials', e.target.value)}
+                            placeholder="Palavras da Tropa"
+                        />
+                    </div>
                 </div>
             </div>
 
@@ -150,13 +212,7 @@ export const CesdFormFields = ({ content, onChange }: CesdFormFieldsProps) => {
                 <div className="grid gap-6">
                     {(content.timeline || []).map((item: any, index: number) => (
                         <div key={index} className="p-4 border rounded-lg bg-muted/30 relative">
-                            <Button
-                                type="button"
-                                variant="destructive"
-                                size="icon"
-                                className="absolute top-2 right-2 w-8 h-8"
-                                onClick={() => removeTimelineYear(index)}
-                            >
+                            <Button type="button" variant="destructive" size="icon" className="absolute top-2 right-2 w-8 h-8" onClick={() => removeTimelineYear(index)}>
                                 <Trash2 className="w-4 h-4" />
                             </Button>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -187,37 +243,56 @@ export const CesdFormFields = ({ content, onChange }: CesdFormFieldsProps) => {
                     </Button>
                 </div>
                 <div className="grid gap-6">
-                    {(content.manifestacoes || []).map((item: any, index: number) => (
-                        <div key={index} className="p-4 border rounded-lg bg-muted/30 relative">
-                            <Button
-                                type="button"
-                                variant="destructive"
-                                size="icon"
-                                className="absolute top-2 right-2 w-8 h-8"
-                                onClick={() => removeManifestacao(index)}
-                            >
-                                <Trash2 className="w-4 h-4" />
-                            </Button>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                    <Label>Título do Momento</Label>
-                                    <Input value={item.title || ''} onChange={(e) => updateManifestacao(index, 'title', e.target.value)} placeholder="Ex: O Grito por Justiça" />
+                    {(content.manifestacoes || []).map((item: any, index: number) => {
+                        const photos = getManifestacaoPhotos(item);
+                        return (
+                            <div key={index} className="p-4 border rounded-lg bg-muted/30 relative">
+                                <Button type="button" variant="destructive" size="icon" className="absolute top-2 right-2 w-8 h-8" onClick={() => removeManifestacao(index)}>
+                                    <Trash2 className="w-4 h-4" />
+                                </Button>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <Label>Título do Momento</Label>
+                                        <Input value={item.title || ''} onChange={(e) => updateManifestacao(index, 'title', e.target.value)} placeholder="Ex: O Grito por Justiça" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Local / Tag</Label>
+                                        <Input value={item.location || ''} onChange={(e) => updateManifestacao(index, 'location', e.target.value)} placeholder="Ex: Esplanada dos Ministérios" />
+                                    </div>
+                                    <div className="md:col-span-2 space-y-2">
+                                        <Label>História / Conteúdo</Label>
+                                        <Textarea value={item.content || ''} onChange={(e) => updateManifestacao(index, 'content', e.target.value)} rows={3} />
+                                    </div>
                                 </div>
-                                <div className="space-y-2">
-                                    <Label>Local / Tag</Label>
-                                    <Input value={item.location || ''} onChange={(e) => updateManifestacao(index, 'location', e.target.value)} placeholder="Ex: Esplanada dos Ministérios" />
-                                </div>
-                                <div className="md:col-span-2 space-y-2">
-                                    <Label>História / Conteúdo</Label>
-                                    <Textarea value={item.content || ''} onChange={(e) => updateManifestacao(index, 'content', e.target.value)} rows={3} />
-                                </div>
-                                <div className="md:col-span-2 space-y-2">
-                                    <Label>URL da Foto (Google Drive ou link)</Label>
-                                    <Input value={item.imageUrl || ''} onChange={(e) => updateManifestacao(index, 'imageUrl', e.target.value)} placeholder="https://..." />
+
+                                {/* Multiple Photos */}
+                                <div className="mt-4 space-y-3">
+                                    <div className="flex items-center justify-between">
+                                        <Label className="text-sm font-semibold">Fotos deste Momento ({photos.length})</Label>
+                                        <Button type="button" variant="outline" size="sm" onClick={() => addManifestacaoPhoto(index)} className="gap-2">
+                                            <Plus className="w-3 h-3" /> Adicionar Foto
+                                        </Button>
+                                    </div>
+                                    {photos.length === 0 && (
+                                        <p className="text-xs text-muted-foreground">Nenhuma foto adicionada. Clique em "Adicionar Foto" para inserir URLs.</p>
+                                    )}
+                                    {photos.map((url: string, pIndex: number) => (
+                                        <div key={pIndex} className="flex items-center gap-2">
+                                            <Input
+                                                value={url}
+                                                onChange={(e) => updateManifestacaoPhoto(index, pIndex, e.target.value)}
+                                                placeholder={`URL da Foto ${pIndex + 1} (Google Drive ou link direto)`}
+                                                className="flex-1"
+                                            />
+                                            <Button type="button" variant="destructive" size="icon" className="w-8 h-8 shrink-0" onClick={() => removeManifestacaoPhoto(index, pIndex)}>
+                                                <Trash2 className="w-3 h-3" />
+                                            </Button>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             </div>
 
@@ -232,13 +307,7 @@ export const CesdFormFields = ({ content, onChange }: CesdFormFieldsProps) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {(content.gallery || []).map((item: any, index: number) => (
                         <div key={index} className="p-4 border rounded-lg bg-muted/30 relative flex flex-col gap-2">
-                            <Button
-                                type="button"
-                                variant="destructive"
-                                size="icon"
-                                className="absolute top-2 right-2 w-8 h-8"
-                                onClick={() => removeGalleryImage(index)}
-                            >
+                            <Button type="button" variant="destructive" size="icon" className="absolute top-2 right-2 w-8 h-8" onClick={() => removeGalleryImage(index)}>
                                 <Trash2 className="w-4 h-4" />
                             </Button>
                             <div className="space-y-2 mt-6">
@@ -257,58 +326,34 @@ export const CesdFormFields = ({ content, onChange }: CesdFormFieldsProps) => {
             {/* DETAILED SECTIONS */}
             <div className="space-y-8">
                 <h3 className="text-xl font-bold border-b pb-2">Seções de Conteúdo</h3>
-
-                {/* A Caserna */}
                 <div className="space-y-4 p-4 border rounded-lg bg-muted/30">
                     <h4 className="font-bold text-blue-600">Seção: A Caserna</h4>
                     <div className="space-y-2">
                         <Label>Título da Seção</Label>
-                        <Input
-                            value={content.sections?.caserna?.title || ''}
-                            onChange={(e) => updateSection('caserna', 'title', e.target.value)}
-                        />
+                        <Input value={content.sections?.caserna?.title || ''} onChange={(e) => updateSection('caserna', 'title', e.target.value)} />
                     </div>
                     <div className="space-y-2">
                         <Label>Conteúdo</Label>
-                        <Textarea
-                            rows={5}
-                            value={content.sections?.caserna?.content || ''}
-                            onChange={(e) => updateSection('caserna', 'content', e.target.value)}
-                        />
+                        <Textarea rows={5} value={content.sections?.caserna?.content || ''} onChange={(e) => updateSection('caserna', 'content', e.target.value)} />
                     </div>
                     <div className="space-y-2">
                         <Label>URL da Imagem</Label>
-                        <Input
-                            value={content.sections?.caserna?.imageUrl || ''}
-                            onChange={(e) => updateSection('caserna', 'imageUrl', e.target.value)}
-                        />
+                        <Input value={content.sections?.caserna?.imageUrl || ''} onChange={(e) => updateSection('caserna', 'imageUrl', e.target.value)} />
                     </div>
                 </div>
-
-                {/* A Farda Azul */}
                 <div className="space-y-4 p-4 border rounded-lg bg-muted/30">
                     <h4 className="font-bold text-blue-600">Seção: A Farda Azul</h4>
                     <div className="space-y-2">
                         <Label>Título da Seção</Label>
-                        <Input
-                            value={content.sections?.farda?.title || ''}
-                            onChange={(e) => updateSection('farda', 'title', e.target.value)}
-                        />
+                        <Input value={content.sections?.farda?.title || ''} onChange={(e) => updateSection('farda', 'title', e.target.value)} />
                     </div>
                     <div className="space-y-2">
                         <Label>Conteúdo</Label>
-                        <Textarea
-                            rows={5}
-                            value={content.sections?.farda?.content || ''}
-                            onChange={(e) => updateSection('farda', 'content', e.target.value)}
-                        />
+                        <Textarea rows={5} value={content.sections?.farda?.content || ''} onChange={(e) => updateSection('farda', 'content', e.target.value)} />
                     </div>
                     <div className="space-y-2">
                         <Label>URL da Imagem</Label>
-                        <Input
-                            value={content.sections?.farda?.imageUrl || ''}
-                            onChange={(e) => updateSection('farda', 'imageUrl', e.target.value)}
-                        />
+                        <Input value={content.sections?.farda?.imageUrl || ''} onChange={(e) => updateSection('farda', 'imageUrl', e.target.value)} />
                     </div>
                 </div>
             </div>
@@ -324,13 +369,7 @@ export const CesdFormFields = ({ content, onChange }: CesdFormFieldsProps) => {
                 <div className="grid gap-6">
                     {(content.testimonials || []).map((item: any, index: number) => (
                         <div key={index} className="p-4 border rounded-lg bg-muted/30 relative">
-                            <Button
-                                type="button"
-                                variant="destructive"
-                                size="icon"
-                                className="absolute top-2 right-2 w-8 h-8"
-                                onClick={() => removeTestimonial(index)}
-                            >
+                            <Button type="button" variant="destructive" size="icon" className="absolute top-2 right-2 w-8 h-8" onClick={() => removeTestimonial(index)}>
                                 <Trash2 className="w-4 h-4" />
                             </Button>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -361,24 +400,15 @@ export const CesdFormFields = ({ content, onChange }: CesdFormFieldsProps) => {
                 <h3 className="text-xl font-bold border-b pb-2">Finalização (CTA)</h3>
                 <div className="space-y-2">
                     <Label>Título</Label>
-                    <Input
-                        value={content.cta?.title || ''}
-                        onChange={(e) => updateCTA('title', e.target.value)}
-                    />
+                    <Input value={content.cta?.title || ''} onChange={(e) => updateCTA('title', e.target.value)} />
                 </div>
                 <div className="space-y-2">
                     <Label>Descrição</Label>
-                    <Textarea
-                        value={content.cta?.description || ''}
-                        onChange={(e) => updateCTA('description', e.target.value)}
-                    />
+                    <Textarea value={content.cta?.description || ''} onChange={(e) => updateCTA('description', e.target.value)} />
                 </div>
                 <div className="space-y-2">
                     <Label>Texto do Botão</Label>
-                    <Input
-                        value={content.cta?.buttonText || ''}
-                        onChange={(e) => updateCTA('buttonText', e.target.value)}
-                    />
+                    <Input value={content.cta?.buttonText || ''} onChange={(e) => updateCTA('buttonText', e.target.value)} />
                 </div>
             </div>
         </div>
