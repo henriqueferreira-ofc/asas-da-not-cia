@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { ArrowRight, ChevronDown, Shield, Star, Users, Loader2, Flag, Image as ImageIcon, MessageSquare } from "lucide-react";
+import { ArrowRight, ChevronDown, Shield, Star, Users, Loader2, Flag, Image as ImageIcon, MessageSquare, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { usePageContent } from "@/hooks/usePageContent";
@@ -64,6 +64,7 @@ export default function CesdPage() {
     const [totalRatings, setTotalRatings] = useState(0);
     const [averageRating, setAverageRating] = useState(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [lightboxImage, setLightboxImage] = useState<string | null>(null);
 
     // Generate or retrieve visitor ID
     const getVisitorId = useCallback(() => {
@@ -281,114 +282,93 @@ export default function CesdPage() {
 
                     <div className="max-w-6xl mx-auto space-y-24">
                         {(content.manifestacoes && content.manifestacoes.length > 0) ? (
-                            content.manifestacoes.map((item: any, idx: number) => (
-                                <motion.div
-                                    key={idx}
-                                    initial={{ opacity: 0, y: 30 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    className={`grid md:grid-cols-2 gap-12 items-center ${idx % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}
-                                >
-                                    <div className={`${idx % 2 !== 0 ? 'order-1 md:order-2' : ''} relative group`}>
-                                        <div className="absolute -inset-4 bg-blue-600/20 rounded-3xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                                        {(() => {
-                                            const photos = item.imageUrls && item.imageUrls.length > 0 
-                                                ? item.imageUrls.filter((u: string) => u) 
-                                                : (item.imageUrl ? [item.imageUrl] : []);
-                                            if (photos.length === 0) {
-                                                return (
-                                                    <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-blue-500/30 shadow-2xl bg-slate-800 flex items-center justify-center">
-                                                        <ImageIcon className="w-12 h-12 text-blue-900/50" />
+                            content.manifestacoes.map((item: any, idx: number) => {
+                                const photos = item.imageUrls && item.imageUrls.length > 0 
+                                    ? item.imageUrls.filter((u: string) => u) 
+                                    : (item.imageUrl ? [item.imageUrl] : []);
+                                return (
+                                    <motion.div
+                                        key={idx}
+                                        initial={{ opacity: 0, y: 30 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true }}
+                                        className="bg-slate-900/40 border border-blue-900/30 rounded-2xl p-8 md:p-10 backdrop-blur-md"
+                                    >
+                                        {/* Title */}
+                                        <h3 className="text-2xl md:text-3xl font-bold text-blue-100 mb-6">{item.title}</h3>
+                                        
+                                        {/* Description + Location aligned right */}
+                                        <div className="flex justify-end mb-8">
+                                            <div className="text-right max-w-2xl space-y-3">
+                                                <p className="text-slate-400 text-lg leading-relaxed">{item.content}</p>
+                                                {item.location && (
+                                                    <div className="inline-block p-1 px-4 rounded-lg bg-blue-950/50 border border-blue-500/20 text-blue-400 text-sm font-semibold">
+                                                        {item.location}
                                                     </div>
-                                                );
-                                            }
-                                            if (photos.length === 1) {
-                                                return (
-                                                    <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.5 }} className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-blue-500/30 shadow-2xl bg-slate-800">
-                                                        <img src={getGoogleDriveDirectUrl(photos[0])} alt={item.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
-                                                        <div className="absolute inset-0 bg-blue-600/10 opacity-0 group-hover:opacity-100 transition-all duration-500" />
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {/* Photos grid - 4 per row */}
+                                        {photos.length > 0 && (
+                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                                {photos.map((photoUrl: string, pIdx: number) => (
+                                                    <motion.div
+                                                        key={pIdx}
+                                                        whileHover={{ scale: 1.03 }}
+                                                        transition={{ duration: 0.3 }}
+                                                        className="relative aspect-square rounded-xl overflow-hidden border border-blue-500/30 shadow-xl bg-slate-800 cursor-pointer group"
+                                                        onClick={() => setLightboxImage(getGoogleDriveDirectUrl(photoUrl) || photoUrl)}
+                                                    >
+                                                        <img 
+                                                            src={getGoogleDriveDirectUrl(photoUrl)} 
+                                                            alt={`${item.title} - Foto ${pIdx + 1}`} 
+                                                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                                                        />
+                                                        <div className="absolute inset-0 bg-blue-600/0 group-hover:bg-blue-600/20 transition-all duration-300 flex items-center justify-center">
+                                                            <ImageIcon className="w-8 h-8 text-white opacity-0 group-hover:opacity-80 transition-opacity duration-300" />
+                                                        </div>
                                                     </motion.div>
-                                                );
-                                            }
-                                            return (
-                                                <div className="grid grid-cols-2 gap-2">
-                                                    {photos.map((photoUrl: string, pIdx: number) => (
-                                                        <motion.div
-                                                            key={pIdx}
-                                                            whileHover={{ scale: 1.03 }}
-                                                            transition={{ duration: 0.4 }}
-                                                            className={`relative rounded-xl overflow-hidden border border-blue-500/30 shadow-xl bg-slate-800 ${pIdx === 0 && photos.length === 3 ? 'col-span-2 aspect-[16/9]' : 'aspect-square'}`}
-                                                        >
-                                                            <img src={getGoogleDriveDirectUrl(photoUrl)} alt={`${item.title} - Foto ${pIdx + 1}`} className="w-full h-full object-cover transition-transform duration-700 hover:scale-110" />
-                                                            <div className="absolute inset-0 bg-blue-600/10 opacity-0 hover:opacity-100 transition-all duration-500" />
-                                                        </motion.div>
-                                                    ))}
-                                                </div>
-                                            );
-                                        })()}
-                                    </div>
-                                    <div className={`${idx % 2 !== 0 ? 'order-2 md:order-1' : ''} space-y-6`}>
-                                        <h3 className="text-2xl md:text-3xl font-bold text-blue-100">{item.title}</h3>
-                                        <p className="text-slate-400 text-lg leading-relaxed">{item.content}</p>
-                                        {item.location && (
-                                            <div className="p-1 px-4 rounded-lg bg-blue-950/50 border border-blue-500/20 inline-block text-blue-400 text-sm font-semibold">
-                                                {item.location}
+                                                ))}
                                             </div>
                                         )}
-                                    </div>
-                                </motion.div>
-                            ))
+
+                                        {photos.length === 0 && (
+                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                                <div className="aspect-square rounded-xl border border-blue-500/20 bg-slate-800 flex items-center justify-center">
+                                                    <ImageIcon className="w-8 h-8 text-blue-900/50" />
+                                                </div>
+                                            </div>
+                                        )}
+                                    </motion.div>
+                                );
+                            })
                         ) : (
-                            <>
-                                <motion.div
-                                    initial={{ opacity: 0, y: 30 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    className="grid md:grid-cols-2 gap-12 items-center"
-                                >
-                                    <div className="relative group">
-                                        <div className="absolute -inset-4 bg-blue-600/20 rounded-3xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                                        <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-blue-500/30 shadow-2xl bg-slate-800 flex items-center justify-center">
-                                            <ImageIcon className="w-12 h-12 text-blue-900/50" />
-                                            <span className="absolute inset-0 flex items-center justify-center text-slate-500 font-mono text-xs uppercase tracking-widest bg-slate-900/50 backdrop-blur-sm">Frame para Foto 1</span>
-                                        </div>
-                                        <div className="absolute -bottom-6 -right-6 w-24 h-24 bg-blue-600/10 rounded-full blur-2xl" />
-                                    </div>
-                                    <div className="space-y-6">
-                                        <h3 className="text-2xl md:text-3xl font-bold text-blue-100">O Grito por Justiça</h3>
+                            <motion.div
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                className="bg-slate-900/40 border border-blue-900/30 rounded-2xl p-8 md:p-10 backdrop-blur-md"
+                            >
+                                <h3 className="text-2xl md:text-3xl font-bold text-blue-100 mb-6">O Grito por Justiça</h3>
+                                <div className="flex justify-end mb-8">
+                                    <div className="text-right max-w-2xl space-y-3">
                                         <p className="text-slate-400 text-lg leading-relaxed">
-                                            Em momentos cruciais da nossa história, ocupamos os espaços de poder em Brasília para garantir que o legado dos soldados não fosse esquecido. Cada passo na Esplanada era um eco da nossa camaradagem.
+                                            Em momentos cruciais da nossa história, ocupamos os espaços de poder em Brasília para garantir que o legado dos soldados não fosse esquecido.
                                         </p>
-                                        <div className="p-1 px-4 rounded-lg bg-blue-950/50 border border-blue-500/20 inline-block text-blue-400 text-sm font-semibold">
+                                        <div className="inline-block p-1 px-4 rounded-lg bg-blue-950/50 border border-blue-500/20 text-blue-400 text-sm font-semibold">
                                             Esplanada dos Ministérios
                                         </div>
                                     </div>
-                                </motion.div>
-
-                                <motion.div
-                                    initial={{ opacity: 0, y: 30 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    className="grid md:grid-cols-2 gap-12 items-center md:flex-row-reverse"
-                                >
-                                    <div className="order-2 md:order-1 space-y-6">
-                                        <h3 className="text-2xl md:text-3xl font-bold text-blue-100">União e Resiliência</h3>
-                                        <p className="text-slate-400 text-lg leading-relaxed">
-                                            Debaixo do sol forte do cerrado, nossa união se mostrou inabalável. Mais do que protestos, eram reencontros de irmãos de farda lutando por um reconhecimento digno.
-                                        </p>
-                                        <div className="p-1 px-4 rounded-lg bg-blue-950/50 border border-blue-500/20 inline-block text-blue-400 text-sm font-semibold">
-                                            Congresso Nacional
+                                </div>
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                    {[1, 2, 3, 4].map(i => (
+                                        <div key={i} className="aspect-square rounded-xl border border-blue-500/20 bg-slate-800 flex items-center justify-center">
+                                            <ImageIcon className="w-8 h-8 text-blue-900/50" />
                                         </div>
-                                    </div>
-                                    <div className="order-1 md:order-2 relative group">
-                                        <div className="absolute -inset-4 bg-blue-600/20 rounded-3xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                                        <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-blue-500/30 shadow-2xl bg-slate-800 flex items-center justify-center">
-                                            <ImageIcon className="w-12 h-12 text-blue-900/50" />
-                                            <span className="absolute inset-0 flex items-center justify-center text-slate-500 font-mono text-xs uppercase tracking-widest bg-slate-900/50 backdrop-blur-sm">Frame para Foto 2</span>
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            </>
+                                    ))}
+                                </div>
+                            </motion.div>
                         )}
                     </div>
                 </div>
@@ -650,6 +630,40 @@ export default function CesdPage() {
             </section>
 
             <Footer />
+
+            {/* Lightbox Modal */}
+            <AnimatePresence>
+                {lightboxImage && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 cursor-pointer"
+                        onClick={() => setLightboxImage(null)}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.8, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.8, opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="relative max-w-5xl max-h-[90vh] w-full"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <button
+                                onClick={() => setLightboxImage(null)}
+                                className="absolute -top-12 right-0 text-white/70 hover:text-white transition-colors"
+                            >
+                                <X className="w-8 h-8" />
+                            </button>
+                            <img
+                                src={lightboxImage}
+                                alt="Foto ampliada"
+                                className="w-full h-full max-h-[85vh] object-contain rounded-lg"
+                            />
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }
