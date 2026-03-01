@@ -292,21 +292,19 @@ export default function CesdPage() {
                                         initial={{ opacity: 0, y: 30 }}
                                         whileInView={{ opacity: 1, y: 0 }}
                                         viewport={{ once: true }}
-                                        className="bg-slate-900/40 border border-blue-900/30 rounded-2xl p-8 md:p-10 backdrop-blur-md"
+                                        className="p-8 md:p-10"
                                     >
                                         {/* Title */}
                                         <h3 className="text-2xl md:text-3xl font-bold text-blue-100 mb-6">{item.title}</h3>
                                         
-                                        {/* Description + Location aligned right */}
-                                        <div className="flex justify-end mb-8">
-                                            <div className="text-right max-w-2xl space-y-3">
-                                                <p className="text-slate-400 text-lg leading-relaxed">{item.content}</p>
-                                                {item.location && (
-                                                    <div className="inline-block p-1 px-4 rounded-lg bg-blue-950/50 border border-blue-500/20 text-blue-400 text-sm font-semibold">
-                                                        {item.location}
-                                                    </div>
-                                                )}
-                                            </div>
+                                        {/* Description + Location aligned left */}
+                                        <div className="mb-8 max-w-2xl space-y-3">
+                                            <p className="text-slate-400 text-lg leading-relaxed">{item.content}</p>
+                                            {item.location && (
+                                                <div className="inline-block p-1 px-4 rounded-lg bg-blue-950/50 border border-blue-500/20 text-blue-400 text-sm font-semibold">
+                                                    {item.location}
+                                                </div>
+                                            )}
                                         </div>
 
                                         {/* Photos grid - 4 per row */}
