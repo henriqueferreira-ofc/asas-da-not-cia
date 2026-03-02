@@ -188,6 +188,7 @@ export type Database = {
           expires_at: string | null
           featured: boolean
           id: string
+          image_credit: string | null
           image_url: string | null
           is_pinned: boolean
           meta_description: string | null
@@ -209,6 +210,7 @@ export type Database = {
           expires_at?: string | null
           featured?: boolean
           id?: string
+          image_credit?: string | null
           image_url?: string | null
           is_pinned?: boolean
           meta_description?: string | null
@@ -230,6 +232,7 @@ export type Database = {
           expires_at?: string | null
           featured?: boolean
           id?: string
+          image_credit?: string | null
           image_url?: string | null
           is_pinned?: boolean
           meta_description?: string | null
