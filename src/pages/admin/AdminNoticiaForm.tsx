@@ -32,6 +32,7 @@ const noticiaSchema = z.object({
   author: z.string().min(1, 'Autor é obrigatório').max(100, 'Nome muito longo'),
   author_role: z.string().max(100, 'Cargo muito longo').optional(),
   image_url: z.string().optional(),
+  image_credit: z.string().max(200, 'Crédito muito longo').optional(),
   published: z.boolean(),
   featured: z.boolean(),
 });
@@ -79,6 +80,7 @@ const AdminNoticiaForm = () => {
       author: 'Redação AAFAB',
       author_role: '',
       image_url: '',
+      image_credit: '',
       published: false,
       featured: false,
     },
@@ -99,6 +101,7 @@ const AdminNoticiaForm = () => {
         author: existingNews.author,
         author_role: existingNews.author_role || '',
         image_url: existingNews.image_url || '',
+        image_credit: existingNews.image_credit || '',
         published: existingNews.published,
         featured: existingNews.featured,
       });
@@ -115,6 +118,7 @@ const AdminNoticiaForm = () => {
         author: data.author,
         author_role: data.author_role || null,
         image_url: data.image_url || null,
+        image_credit: data.image_credit || null,
         published: data.published,
         featured: data.featured,
         category_label: categoryLabels[data.category] || data.category,
@@ -177,14 +181,27 @@ const AdminNoticiaForm = () => {
             value={imageUrl}
             onChange={(url) => setValue('image_url', url)}
           />
-          <div className="bg-secondary/50 rounded-lg p-4 mt-3">
-            <p className="text-sm font-medium text-foreground mb-2">📐 Tamanhos recomendados de imagem:</p>
-            <ul className="text-xs text-muted-foreground space-y-1">
-              <li><strong>Destaque principal:</strong> 1200 x 675 px (proporção 16:9)</li>
-              <li><strong>Cards de notícia:</strong> 800 x 450 px (proporção 16:9)</li>
-              <li><strong>Imagem no artigo:</strong> 1200 x 675 px ou maior</li>
-              <li><strong>Formato:</strong> JPG ou PNG (máx. 2MB recomendado)</li>
-            </ul>
+          <div className="mt-3 space-y-3">
+            <div className="space-y-2">
+              <Label htmlFor="image_credit">Crédito da Foto</Label>
+              <Input
+                id="image_credit"
+                {...register('image_credit')}
+                placeholder="Ex: Foto: Marcelo Camargo / Agência Brasil"
+              />
+              {errors.image_credit && (
+                <p className="text-sm text-destructive">{errors.image_credit.message}</p>
+              )}
+            </div>
+            <div className="bg-secondary/50 rounded-lg p-4">
+              <p className="text-sm font-medium text-foreground mb-2">📐 Tamanhos recomendados de imagem:</p>
+              <ul className="text-xs text-muted-foreground space-y-1">
+                <li><strong>Destaque principal:</strong> 1200 x 675 px (proporção 16:9)</li>
+                <li><strong>Cards de notícia:</strong> 800 x 450 px (proporção 16:9)</li>
+                <li><strong>Imagem no artigo:</strong> 1200 x 675 px ou maior</li>
+                <li><strong>Formato:</strong> JPG ou PNG (máx. 2MB recomendado)</li>
+              </ul>
+            </div>
           </div>
         </div>
 

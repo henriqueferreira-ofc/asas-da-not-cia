@@ -1,0 +1,1 @@
+ALTER TABLE public.noticias ADD COLUMN image_credit text DEFAULT NULL;

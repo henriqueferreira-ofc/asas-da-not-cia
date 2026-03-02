@@ -168,12 +168,19 @@ const NoticiaPage = () => {
           </div>
 
           {/* Featured Image */}
-          <div className="relative rounded-xl overflow-hidden mb-8">
-            <img
-              src={noticia.image_url || heroImage}
-              alt={noticia.title}
-              className="w-full h-auto object-cover aspect-video"
-            />
+          <div className="mb-8">
+            <div className="relative rounded-xl overflow-hidden">
+              <img
+                src={noticia.image_url || heroImage}
+                alt={noticia.title}
+                className="w-full h-auto object-cover aspect-video"
+              />
+            </div>
+            {noticia.image_credit && (
+              <p className="text-xs text-muted-foreground mt-2 italic">
+                {noticia.image_credit}
+              </p>
+            )}
           </div>
 
           {/* Content */}
