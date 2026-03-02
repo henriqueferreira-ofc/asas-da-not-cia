@@ -6,7 +6,7 @@ import { NewsSection } from "@/components/news/NewsSection";
 import { Sidebar } from "@/components/sidebar/Sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FloatingCommunityButton } from "@/components/common/FloatingCommunityButton";
-import { useRecentNoticias, useNoticiasByCategory, useFeaturedNoticias } from "@/hooks/useNoticias";
+import { useRecentNoticias, usePublishedNoticias, useFeaturedNoticias } from "@/hooks/useNoticias";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -44,9 +44,8 @@ const getCategoryLabel = (category: string): string => {
 const Index = () => {
   // Fetch up to 4 featured news for the grid layout (1 main + 3 secondary)
   const { data: featuredNoticias, isLoading: loadingFeatured } = useFeaturedNoticias(4);
-  const { data: recentNoticias, isLoading: loadingRecent } = useRecentNoticias(6);
-  const { data: politicaNoticias, isLoading: loadingPolitica } = useNoticiasByCategory("politica");
-  const { data: internacionalNoticias, isLoading: loadingInternacional } = useNoticiasByCategory("internacional");
+  const { data: recentNoticias, isLoading: loadingRecent } = useRecentNoticias(12);
+  const { data: allPublished, isLoading: loadingAll } = usePublishedNoticias();
 
   // Use featured news if available, otherwise use the most recent published news as fallback
   const featuredNews = (featuredNoticias && featuredNoticias.length > 0)
@@ -103,7 +102,7 @@ const Index = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
           {/* Main Content */}
           <div className="lg:col-span-2">
-            {/* Latest News */}
+            {/* Latest News - most recent */}
             {loadingRecent ? (
               <section className="mb-12">
                 <Skeleton className="h-8 w-48 mb-6" />
@@ -116,13 +115,13 @@ const Index = () => {
             ) : (recentNoticias?.length ?? 0) > 0 ? (
               <NewsSection
                 title="Últimas Notícias"
-                news={transformNews(recentNoticias, 3)}
+                news={transformNews(recentNoticias, 6)}
                 showViewAll={false}
               />
             ) : null}
 
-            {/* Política Nacional */}
-            {loadingPolitica ? (
+            {/* Older news - all published beyond the recent ones */}
+            {loadingAll ? (
               <section className="mb-12">
                 <Skeleton className="h-8 w-48 mb-6" />
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -131,31 +130,18 @@ const Index = () => {
                   ))}
                 </div>
               </section>
-            ) : (politicaNoticias?.length ?? 0) > 0 ? (
-              <NewsSection
-                title="Notícia Nacional"
-                news={transformNews(politicaNoticias, 3)}
-                categorySlug="politica"
-              />
-            ) : null}
-
-            {/* Internacional */}
-            {loadingInternacional ? (
-              <section className="mb-12">
-                <Skeleton className="h-8 w-48 mb-6" />
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {[1, 2, 3].map((i) => (
-                    <Skeleton key={i} className="h-[300px] rounded-xl" />
-                  ))}
-                </div>
-              </section>
-            ) : (internacionalNoticias?.length ?? 0) > 0 ? (
-              <NewsSection
-                title="Internacional"
-                news={transformNews(internacionalNoticias, 3)}
-                categorySlug="internacional"
-              />
-            ) : null}
+            ) : (() => {
+              const recentIds = new Set((recentNoticias || []).map(n => n.id));
+              const featuredIds = new Set((featuredNoticias || []).map(n => n.id));
+              const olderNews = (allPublished || []).filter(n => !recentIds.has(n.id) && !featuredIds.has(n.id));
+              return olderNews.length > 0 ? (
+                <NewsSection
+                  title="Notícias Anteriores"
+                  news={transformNews(olderNews, 9)}
+                  showViewAll={false}
+                />
+              ) : null;
+            })()}
           </div>
 
           {/* Sidebar */}

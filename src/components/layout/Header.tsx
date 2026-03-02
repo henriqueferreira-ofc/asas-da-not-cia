@@ -17,8 +17,6 @@ import logoAafab from "@/assets/logo-aafab.png";
 
 const categories = [
   { name: "Sobre a AAFAB", href: "/sobre", prefetch: prefetchSobre },
-  { name: "Notícia Nacional", href: "/categoria/noticia", prefetch: prefetchCategoria },
-  { name: "Internacional", href: "/categoria/internacional", prefetch: prefetchCategoria },
   { name: "E-Books", href: "/ajude-nos#ebooks", prefetch: prefetchAjudeNos },
   { name: "CESD", href: "/cesd", prefetch: prefetchCesd },
   { name: "Diretoria", href: "/diretoria", prefetch: prefetchDiretoria },
@@ -105,7 +103,7 @@ export function Header() {
                 prefetch={prefetchIndex}
                 className="nav-link block px-5 py-3.5 text-sm font-semibold uppercase tracking-wide"
               >
-                Início
+                AAFAB Notícias
               </PrefetchLink>
             </li>
             {categories.map((category) => (
@@ -135,7 +133,7 @@ export function Header() {
                   className="flex items-center justify-between px-4 py-3 text-primary-foreground font-medium rounded-lg hover:bg-primary-foreground/10 transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Início
+                  AAFAB Notícias
                 </PrefetchLink>
               </li>
               {categories.map((category) => (
