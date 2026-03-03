@@ -155,7 +155,15 @@ const NoticiaPage = () => {
           {/* Meta */}
           <div className="flex flex-wrap items-center gap-4 pb-6 mb-6 border-b border-border">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <User className="w-4 h-4" />
+              {(noticia as any).author_image ? (
+                <img
+                  src={(noticia as any).author_image}
+                  alt={noticia.author}
+                  className="w-8 h-8 rounded-full object-cover"
+                />
+              ) : (
+                <User className="w-4 h-4" />
+              )}
               <span className="font-medium text-foreground">{noticia.author}</span>
               {noticia.author_role && (
                 <span className="text-muted-foreground">• {noticia.author_role}</span>

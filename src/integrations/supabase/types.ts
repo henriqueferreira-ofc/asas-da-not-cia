@@ -179,6 +179,7 @@ export type Database = {
       noticias: {
         Row: {
           author: string
+          author_image: string | null
           author_role: string | null
           category: string
           category_label: string
@@ -201,6 +202,7 @@ export type Database = {
         }
         Insert: {
           author?: string
+          author_image?: string | null
           author_role?: string | null
           category?: string
           category_label?: string
@@ -223,6 +225,7 @@ export type Database = {
         }
         Update: {
           author?: string
+          author_image?: string | null
           author_role?: string | null
           category?: string
           category_label?: string

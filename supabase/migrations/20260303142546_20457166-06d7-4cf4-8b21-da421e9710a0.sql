@@ -1,0 +1,1 @@
+ALTER TABLE public.noticias ADD COLUMN IF NOT EXISTS author_image text DEFAULT NULL;

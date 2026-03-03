@@ -31,6 +31,7 @@ const noticiaSchema = z.object({
   category: z.string().min(1, 'Categoria é obrigatória'),
   author: z.string().min(1, 'Autor é obrigatório').max(100, 'Nome muito longo'),
   author_role: z.string().max(100, 'Cargo muito longo').optional(),
+  author_image: z.string().optional(),
   image_url: z.string().optional(),
   image_credit: z.string().max(200, 'Crédito muito longo').optional(),
   published: z.boolean(),
@@ -79,6 +80,7 @@ const AdminNoticiaForm = () => {
       category: 'aafab',
       author: 'Redação AAFAB',
       author_role: '',
+      author_image: '',
       image_url: '',
       image_credit: '',
       published: false,
@@ -100,6 +102,7 @@ const AdminNoticiaForm = () => {
         category: existingNews.category,
         author: existingNews.author,
         author_role: existingNews.author_role || '',
+        author_image: (existingNews as any).author_image || '',
         image_url: existingNews.image_url || '',
         image_credit: existingNews.image_credit || '',
         published: existingNews.published,
@@ -117,6 +120,7 @@ const AdminNoticiaForm = () => {
         category: data.category,
         author: data.author,
         author_role: data.author_role || null,
+        author_image: data.author_image || null,
         image_url: data.image_url || null,
         image_credit: data.image_credit || null,
         published: data.published,
@@ -294,6 +298,18 @@ const AdminNoticiaForm = () => {
               placeholder="Ex: Correspondente Parlamentar"
             />
           </div>
+        </div>
+
+        {/* Author Image */}
+        <div className="space-y-2">
+          <Label>Foto do Autor (opcional)</Label>
+          <ImageUpload
+            value={watch('author_image')}
+            onChange={(url) => setValue('author_image', url)}
+          />
+          <p className="text-xs text-muted-foreground">
+            Foto pequena que aparece ao lado do nome do autor. Recomendado: 80x80 px, formato quadrado.
+          </p>
         </div>
 
         {/* Toggles */}
