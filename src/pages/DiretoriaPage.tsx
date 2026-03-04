@@ -260,22 +260,6 @@ const DiretoriaPage = () => {
             </div>
           </section>
 
-          {/* CTA */}
-          <section className="bg-primary rounded-xl p-8 text-center">
-            <h2 className="text-2xl font-serif font-bold text-primary-foreground mb-4">
-              Quer fazer parte da nossa equipe?
-            </h2>
-            <p className="text-primary-foreground/80 mb-6 max-w-2xl mx-auto">
-              Entre em contato conosco para saber como você pode contribuir com a AAFAB
-              e ajudar a valorizar nosso trabalho.
-            </p>
-            <Link
-              to="/contato"
-              className="inline-flex items-center gap-2 px-8 py-3 bg-accent text-accent-foreground rounded-lg font-semibold hover:bg-accent/90 transition-colors"
-            >
-              Entrar em Contato
-            </Link>
-          </section>
         </div>
       </main>
 
