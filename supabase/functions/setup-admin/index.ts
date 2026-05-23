@@ -72,7 +72,7 @@ const handler = async (req: Request): Promise<Response> => {
     if (authError) {
       console.error("Error creating user:", authError);
       return new Response(
-        JSON.stringify({ error: authError.message }),
+        JSON.stringify({ error: "Setup failed. Please verify your setup key and try again." }),
         {
           status: 400,
           headers: { "Content-Type": "application/json", ...corsHeaders },
