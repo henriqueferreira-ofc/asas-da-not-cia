@@ -35,6 +35,28 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error("Todos os campos são obrigatórios");
     }
 
+    // Basic email format + length validation
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRe.test(email) || email.length > 254) {
+      throw new Error("E-mail inválido");
+    }
+    if (name.length > 200 || subject.length > 300 || message.length > 5000) {
+      throw new Error("Campos excedem o tamanho permitido");
+    }
+
+    // HTML-escape all user-provided values to prevent HTML injection in the email
+    const esc = (s: string) =>
+      s.replace(/&/g, "&amp;")
+       .replace(/</g, "&lt;")
+       .replace(/>/g, "&gt;")
+       .replace(/"/g, "&quot;")
+       .replace(/'/g, "&#39;");
+
+    const safeName = esc(name);
+    const safeEmail = esc(email);
+    const safeSubject = esc(subject);
+    const safeMessage = esc(message).replace(/\n/g, "<br>");
+
     console.log("Sending contact email from:", email, "Subject:", subject);
 
     const res = await fetch("https://api.resend.com/emails", {
@@ -47,7 +69,7 @@ const handler = async (req: Request): Promise<Response> => {
         from: "AAFAB Contato <onboarding@resend.dev>",
         to: ["aafabdm@gmail.com"],
         reply_to: email,
-        subject: `[Contato AAFAB] ${subject}`,
+        subject: `[Contato AAFAB] ${safeSubject}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
             <h2 style="color: #1e3a5f; border-bottom: 2px solid #1e3a5f; padding-bottom: 10px;">
@@ -55,15 +77,15 @@ const handler = async (req: Request): Promise<Response> => {
             </h2>
             
             <div style="background-color: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <p style="margin: 10px 0;"><strong>Nome:</strong> ${name}</p>
-              <p style="margin: 10px 0;"><strong>E-mail:</strong> ${email}</p>
-              <p style="margin: 10px 0;"><strong>Assunto:</strong> ${subject}</p>
+              <p style="margin: 10px 0;"><strong>Nome:</strong> ${safeName}</p>
+              <p style="margin: 10px 0;"><strong>E-mail:</strong> ${safeEmail}</p>
+              <p style="margin: 10px 0;"><strong>Assunto:</strong> ${safeSubject}</p>
             </div>
             
             <div style="margin: 20px 0;">
               <h3 style="color: #333;">Mensagem:</h3>
               <p style="background-color: #fff; padding: 15px; border-left: 4px solid #1e3a5f; margin: 0;">
-                ${message.replace(/\n/g, "<br>")}
+                ${safeMessage}
               </p>
             </div>
             
