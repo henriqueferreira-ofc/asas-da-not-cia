@@ -87,7 +87,7 @@ const AdminEbookForm = () => {
     setIsUploading(true);
     try {
       const url = await uploadEbookPdf(file);
-      setFormData(prev => ({ ...prev, pdf_url: url }));
+      setPdfUrl(url);
       toast({ title: 'PDF enviado com sucesso' });
     } catch (error) {
       toast({ title: 'Erro ao enviar PDF', variant: 'destructive' });
@@ -106,12 +106,17 @@ const AdminEbookForm = () => {
 
     setIsSubmitting(true);
     try {
+      let ebookId = id;
       if (isEditing && id) {
         await updateEbook.mutateAsync({ id, ...formData });
         toast({ title: 'E-book atualizado com sucesso' });
       } else {
-        await createEbook.mutateAsync(formData);
+        const created = await createEbook.mutateAsync(formData);
+        ebookId = created.id;
         toast({ title: 'E-book criado com sucesso' });
+      }
+      if (ebookId) {
+        await upsertEbookPdfUrl(ebookId, pdfUrl);
       }
       navigate('/admin/ebooks');
     } catch (error) {
