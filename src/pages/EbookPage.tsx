@@ -162,7 +162,7 @@ const EbookPage = () => {
                 </div>
                 <div className="pt-4 border-t border-border">
                   <p className="text-3xl font-bold text-headline mb-4">{formattedPrice}</p>
-                  {ebook.pdf_url ? (
+                  {ebook.stripe_price_id ? (
                     <Button size="lg" className="gap-2" onClick={handleStripeCheckout} disabled={checkingOut}>
                       {checkingOut ? (
                         <><Loader2 className="w-5 h-5 animate-spin" />Aguarde...</>
@@ -171,7 +171,7 @@ const EbookPage = () => {
                       )}
                     </Button>
                   ) : (
-                    <p className="text-sm text-muted-foreground">PDF não disponível no momento.</p>
+                    <p className="text-sm text-muted-foreground">E-book indisponível no momento.</p>
                   )}
                 </div>
               </div>
