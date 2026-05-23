@@ -8,7 +8,6 @@ export interface Ebook {
   price: number;
   pages: number | null;
   cover_url: string | null;
-  pdf_url: string | null;
   pix_link: string | null;
   card_link: string | null;
   stripe_price_id: string | null;
@@ -21,6 +20,30 @@ export interface Ebook {
 
 export type EbookInsert = Omit<Ebook, 'id' | 'created_at' | 'updated_at'>;
 export type EbookUpdate = Partial<EbookInsert>;
+
+// Admin-only: fetch the private PDF URL for an ebook
+export async function getEbookPdfUrl(ebookId: string): Promise<string | null> {
+  const { data, error } = await supabase
+    .from('ebook_files')
+    .select('pdf_url')
+    .eq('ebook_id', ebookId)
+    .maybeSingle();
+  if (error) throw error;
+  return (data as { pdf_url: string } | null)?.pdf_url ?? null;
+}
+
+// Admin-only: upsert the private PDF URL for an ebook
+export async function upsertEbookPdfUrl(ebookId: string, pdfUrl: string | null): Promise<void> {
+  if (!pdfUrl) {
+    const { error } = await supabase.from('ebook_files').delete().eq('ebook_id', ebookId);
+    if (error) throw error;
+    return;
+  }
+  const { error } = await supabase
+    .from('ebook_files')
+    .upsert({ ebook_id: ebookId, pdf_url: pdfUrl }, { onConflict: 'ebook_id' });
+  if (error) throw error;
+}
 
 // Fetch all published ebooks (public)
 export function usePublishedEbooks() {
