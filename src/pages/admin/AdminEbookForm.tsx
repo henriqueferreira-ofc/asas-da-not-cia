@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Upload, Loader2, CreditCard, QrCode, X, Trash2 } from 'lucide-react';
-import { useEbook, useCreateEbook, useUpdateEbook, uploadEbookCover, uploadEbookPdf, EbookInsert } from '@/hooks/useEbooks';
+import { useEbook, useCreateEbook, useUpdateEbook, uploadEbookCover, uploadEbookPdf, EbookInsert, getEbookPdfUrl, upsertEbookPdfUrl } from '@/hooks/useEbooks';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
