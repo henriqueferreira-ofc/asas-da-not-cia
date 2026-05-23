@@ -14,7 +14,7 @@ serve(async (req) => {
   }
 
   try {
-    const { ebook_id, success_url, cancel_url } = await req.json();
+    const { ebook_id } = await req.json();
 
     if (!ebook_id) {
       throw new Error("ebook_id é obrigatório");
@@ -51,19 +51,25 @@ serve(async (req) => {
       throw new Error("Este e-book não possui um preço configurado no Stripe");
     }
 
-    if (!ebook.stripe_price_id) {
-      throw new Error("Este e-book não possui um preço configurado no Stripe");
-    }
-
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
       apiVersion: "2025-08-27.basil",
     });
 
-    const origin = req.headers.get("origin") || "http://localhost:5173";
+    // Compute redirect URLs from a server-side allow-list (never trust client input)
+    const ALLOWED_ORIGINS = [
+      "https://fab-horizon-news.lovable.app",
+      "https://id-preview--72d137b2-3bee-4cea-a85f-915d698567f0.lovable.app",
+    ];
+    const appOriginEnv = Deno.env.get("APP_ORIGIN");
+    if (appOriginEnv) ALLOWED_ORIGINS.push(appOriginEnv);
 
-    // Use URLs from request if provided, otherwise fall back to default logic
-    const finalSuccessUrl = success_url || `${origin}/pagamento-sucesso?session_id={CHECKOUT_SESSION_ID}`;
-    const finalCancelUrl = cancel_url || `${origin}/ebook/${ebook_id}?cancelado=1`;
+    const requestOrigin = req.headers.get("origin") || "";
+    const appOrigin = ALLOWED_ORIGINS.includes(requestOrigin)
+      ? requestOrigin
+      : (appOriginEnv || ALLOWED_ORIGINS[0]);
+
+    const finalSuccessUrl = `${appOrigin}/pagamento-sucesso?session_id={CHECKOUT_SESSION_ID}`;
+    const finalCancelUrl = `${appOrigin}/ebook/${ebook_id}?cancelado=1`;
 
     const session = await stripe.checkout.sessions.create({
       line_items: [
