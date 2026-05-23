@@ -314,10 +314,10 @@ const AdminEbookForm = () => {
                   disabled={isUploading}
                 />
 
-                {formData.pdf_url && (
+                {pdfUrl && (
                   <div className="mt-4 p-4 bg-muted rounded-lg flex items-center justify-between group/pdf">
                     <span className="text-sm font-medium truncate max-w-[200px] lg:max-w-md">
-                      {formData.pdf_url.split('/').pop()}
+                      {pdfUrl.split('/').pop()}
                     </span>
                     <div className="flex items-center gap-2">
                       <Button
@@ -326,7 +326,7 @@ const AdminEbookForm = () => {
                         size="sm"
                         asChild
                       >
-                        <a href={formData.pdf_url} target="_blank" rel="noopener noreferrer">
+                        <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
                           Visualizar
                         </a>
                       </Button>
@@ -335,7 +335,7 @@ const AdminEbookForm = () => {
                         variant="ghost"
                         size="icon"
                         className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                        onClick={() => setFormData(prev => ({ ...prev, pdf_url: null }))}
+                        onClick={() => setPdfUrl(null)}
                         title="Remover PDF"
                       >
                         <Trash2 className="w-4 h-4" />
