@@ -28,7 +28,7 @@ serve(async (req) => {
 
     const { data: ebook, error: ebookError } = await supabase
       .from("ebooks")
-      .select("id, title, description, price, cover_url, pdf_url, stripe_price_id, published")
+      .select("id, title, description, price, cover_url, stripe_price_id, published")
       .eq("id", ebook_id)
       .eq("published", true)
       .single();
@@ -37,8 +37,18 @@ serve(async (req) => {
       throw new Error("E-book não encontrado ou não publicado");
     }
 
-    if (!ebook.pdf_url) {
+    const { data: ebookFile } = await supabase
+      .from("ebook_files")
+      .select("pdf_url")
+      .eq("ebook_id", ebook_id)
+      .maybeSingle();
+
+    if (!ebookFile?.pdf_url) {
       throw new Error("Este e-book não possui PDF disponível para download");
+    }
+
+    if (!ebook.stripe_price_id) {
+      throw new Error("Este e-book não possui um preço configurado no Stripe");
     }
 
     if (!ebook.stripe_price_id) {
