@@ -78,7 +78,7 @@ serve(async (req) => {
       cancel_url: finalCancelUrl,
       metadata: {
         ebook_id: ebook.id,
-        pdf_url: ebook.pdf_url,
+        pdf_url: ebookFile.pdf_url,
         ebook_title: ebook.title,
       },
     });
