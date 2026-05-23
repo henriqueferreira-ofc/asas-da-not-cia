@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { ArrowLeft, Clock, User } from "lucide-react";
+import DOMPurify from "isomorphic-dompurify";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ShareButtons } from "@/components/common/ShareButtons";
