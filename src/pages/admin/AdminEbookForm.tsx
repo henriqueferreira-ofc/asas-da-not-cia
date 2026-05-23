@@ -26,7 +26,6 @@ const AdminEbookForm = () => {
     price: 0,
     pages: null,
     cover_url: null,
-    pdf_url: null,
     pix_link: null,
     card_link: null,
     stripe_price_id: null,
@@ -34,6 +33,8 @@ const AdminEbookForm = () => {
     featured: false,
     sort_order: 0,
   });
+
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 
   const [isUploading, setIsUploading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -46,7 +47,6 @@ const AdminEbookForm = () => {
         price: ebook.price,
         pages: ebook.pages,
         cover_url: ebook.cover_url,
-        pdf_url: ebook.pdf_url,
         pix_link: ebook.pix_link,
         card_link: ebook.card_link,
         stripe_price_id: ebook.stripe_price_id,
@@ -54,6 +54,8 @@ const AdminEbookForm = () => {
         featured: ebook.featured,
         sort_order: ebook.sort_order,
       });
+      // Load private pdf url
+      getEbookPdfUrl(ebook.id).then(setPdfUrl).catch(() => setPdfUrl(null));
     }
   }, [ebook]);
 
