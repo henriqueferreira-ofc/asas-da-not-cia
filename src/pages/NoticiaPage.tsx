@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { ArrowLeft, Clock, User } from "lucide-react";
+import DOMPurify from "isomorphic-dompurify";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ShareButtons } from "@/components/common/ShareButtons";
@@ -194,8 +195,15 @@ const NoticiaPage = () => {
           {/* Content */}
           <div
             className="prose prose-lg max-w-none mb-8"
-            dangerouslySetInnerHTML={{ __html: noticia.content }}
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(noticia.content, {
+                ALLOWED_TAGS: ['p','br','h2','h3','h4','ul','ol','li','strong','em','b','i','u','a','blockquote','img','figure','figcaption','span','div','hr'],
+                ALLOWED_ATTR: ['href','target','rel','src','alt','title','class'],
+                ALLOWED_URI_REGEXP: /^(?:(?:https?|mailto|tel):|[^a-z]|[a-z+.-]+(?:[^a-z+.\-:]|$))/i,
+              }),
+            }}
           />
+
 
           {/* Share */}
           <ShareButtons title={noticia.title} />

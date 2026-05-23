@@ -74,6 +74,35 @@ export type Database = {
         }
         Relationships: []
       }
+      ebook_files: {
+        Row: {
+          created_at: string
+          ebook_id: string
+          pdf_url: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          ebook_id: string
+          pdf_url: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          ebook_id?: string
+          pdf_url?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ebook_files_ebook_id_fkey"
+            columns: ["ebook_id"]
+            isOneToOne: true
+            referencedRelation: "ebooks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ebooks: {
         Row: {
           card_link: string | null
@@ -83,7 +112,6 @@ export type Database = {
           featured: boolean
           id: string
           pages: number | null
-          pdf_url: string | null
           pix_link: string | null
           price: number
           published: boolean
@@ -100,7 +128,6 @@ export type Database = {
           featured?: boolean
           id?: string
           pages?: number | null
-          pdf_url?: string | null
           pix_link?: string | null
           price?: number
           published?: boolean
@@ -117,7 +144,6 @@ export type Database = {
           featured?: boolean
           id?: string
           pages?: number | null
-          pdf_url?: string | null
           pix_link?: string | null
           price?: number
           published?: boolean

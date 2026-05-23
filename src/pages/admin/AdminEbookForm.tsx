@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Upload, Loader2, CreditCard, QrCode, X, Trash2 } from 'lucide-react';
-import { useEbook, useCreateEbook, useUpdateEbook, uploadEbookCover, uploadEbookPdf, EbookInsert } from '@/hooks/useEbooks';
+import { useEbook, useCreateEbook, useUpdateEbook, uploadEbookCover, uploadEbookPdf, EbookInsert, getEbookPdfUrl, upsertEbookPdfUrl } from '@/hooks/useEbooks';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -26,7 +26,6 @@ const AdminEbookForm = () => {
     price: 0,
     pages: null,
     cover_url: null,
-    pdf_url: null,
     pix_link: null,
     card_link: null,
     stripe_price_id: null,
@@ -34,6 +33,8 @@ const AdminEbookForm = () => {
     featured: false,
     sort_order: 0,
   });
+
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 
   const [isUploading, setIsUploading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -46,7 +47,6 @@ const AdminEbookForm = () => {
         price: ebook.price,
         pages: ebook.pages,
         cover_url: ebook.cover_url,
-        pdf_url: ebook.pdf_url,
         pix_link: ebook.pix_link,
         card_link: ebook.card_link,
         stripe_price_id: ebook.stripe_price_id,
@@ -54,6 +54,8 @@ const AdminEbookForm = () => {
         featured: ebook.featured,
         sort_order: ebook.sort_order,
       });
+      // Load private pdf url
+      getEbookPdfUrl(ebook.id).then(setPdfUrl).catch(() => setPdfUrl(null));
     }
   }, [ebook]);
 
@@ -85,7 +87,7 @@ const AdminEbookForm = () => {
     setIsUploading(true);
     try {
       const url = await uploadEbookPdf(file);
-      setFormData(prev => ({ ...prev, pdf_url: url }));
+      setPdfUrl(url);
       toast({ title: 'PDF enviado com sucesso' });
     } catch (error) {
       toast({ title: 'Erro ao enviar PDF', variant: 'destructive' });
@@ -104,12 +106,17 @@ const AdminEbookForm = () => {
 
     setIsSubmitting(true);
     try {
+      let ebookId = id;
       if (isEditing && id) {
         await updateEbook.mutateAsync({ id, ...formData });
         toast({ title: 'E-book atualizado com sucesso' });
       } else {
-        await createEbook.mutateAsync(formData);
+        const created = await createEbook.mutateAsync(formData);
+        ebookId = created.id;
         toast({ title: 'E-book criado com sucesso' });
+      }
+      if (ebookId) {
+        await upsertEbookPdfUrl(ebookId, pdfUrl);
       }
       navigate('/admin/ebooks');
     } catch (error) {
@@ -307,10 +314,10 @@ const AdminEbookForm = () => {
                   disabled={isUploading}
                 />
 
-                {formData.pdf_url && (
+                {pdfUrl && (
                   <div className="mt-4 p-4 bg-muted rounded-lg flex items-center justify-between group/pdf">
                     <span className="text-sm font-medium truncate max-w-[200px] lg:max-w-md">
-                      {formData.pdf_url.split('/').pop()}
+                      {pdfUrl.split('/').pop()}
                     </span>
                     <div className="flex items-center gap-2">
                       <Button
@@ -319,7 +326,7 @@ const AdminEbookForm = () => {
                         size="sm"
                         asChild
                       >
-                        <a href={formData.pdf_url} target="_blank" rel="noopener noreferrer">
+                        <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
                           Visualizar
                         </a>
                       </Button>
@@ -328,7 +335,7 @@ const AdminEbookForm = () => {
                         variant="ghost"
                         size="icon"
                         className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                        onClick={() => setFormData(prev => ({ ...prev, pdf_url: null }))}
+                        onClick={() => setPdfUrl(null)}
                         title="Remover PDF"
                       >
                         <Trash2 className="w-4 h-4" />

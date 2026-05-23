@@ -72,7 +72,7 @@ const handler = async (req: Request): Promise<Response> => {
     if (authError) {
       console.error("Error creating user:", authError);
       return new Response(
-        JSON.stringify({ error: authError.message }),
+        JSON.stringify({ error: "Setup failed. Please verify your setup key and try again." }),
         {
           status: 400,
           headers: { "Content-Type": "application/json", ...corsHeaders },
@@ -127,7 +127,7 @@ const handler = async (req: Request): Promise<Response> => {
   } catch (error: any) {
     console.error("Error in setup-admin function:", error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: "An unexpected error occurred. Please try again." }),
       {
         status: 500,
         headers: { "Content-Type": "application/json", ...corsHeaders },
