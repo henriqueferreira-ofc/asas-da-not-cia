@@ -4,6 +4,7 @@ import { FeaturedNewsGrid } from "@/components/news/FeaturedNewsGrid";
 import { BreakingNews } from "@/components/news/BreakingNews";
 import { NewsSection } from "@/components/news/NewsSection";
 import { Sidebar } from "@/components/sidebar/Sidebar";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useRecentNoticias, usePublishedNoticias, useFeaturedNoticias } from "@/hooks/useNoticias";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
