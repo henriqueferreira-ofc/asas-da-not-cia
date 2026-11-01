@@ -85,7 +85,6 @@ const AdminConfiguracoes = () => {
           <TabsTrigger value="geral">Geral</TabsTrigger>
           <TabsTrigger value="contato">Contato</TabsTrigger>
           <TabsTrigger value="redes">Redes Sociais</TabsTrigger>
-          <TabsTrigger value="botao">Botão Flutuante</TabsTrigger>
           <TabsTrigger value="links">Links Especiais</TabsTrigger>
         </TabsList>
 
@@ -247,69 +246,6 @@ const AdminConfiguracoes = () => {
                   onChange={(e) => handleChange('linkedin', e.target.value)}
                   placeholder="https://linkedin.com/company/aafab"
                 />
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="botao">
-          <Card>
-            <CardHeader>
-              <CardTitle>Botão Flutuante</CardTitle>
-              <CardDescription>
-                Configure o botão de comunidade que aparece no canto da tela
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label>Botão Ativo</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Exibir botão flutuante no site
-                  </p>
-                </div>
-                <Switch
-                  checked={formData.floating_button_enabled === 'true'}
-                  onCheckedChange={(checked) => handleChange('floating_button_enabled', checked ? 'true' : 'false')}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="floating_button_text">Texto do Botão</Label>
-                <Input
-                  id="floating_button_text"
-                  value={formData.floating_button_text || ''}
-                  onChange={(e) => handleChange('floating_button_text', e.target.value)}
-                  placeholder="Entrar na nossa comunidade"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="floating_button_link">Link do Botão</Label>
-                <Input
-                  id="floating_button_link"
-                  value={formData.floating_button_link || ''}
-                  onChange={(e) => handleChange('floating_button_link', e.target.value)}
-                  placeholder="https://chat.whatsapp.com/..."
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="floating_button_position">Posição do Botão</Label>
-                <Select
-                  value={formData.floating_button_position || 'bottom-right'}
-                  onValueChange={(value) => handleChange('floating_button_position', value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="bottom-right">Inferior Direito</SelectItem>
-                    <SelectItem value="bottom-left">Inferior Esquerdo</SelectItem>
-                    <SelectItem value="top-right">Superior Direito</SelectItem>
-                    <SelectItem value="top-left">Superior Esquerdo</SelectItem>
-                  </SelectContent>
-                </Select>
               </div>
             </CardContent>
           </Card>
