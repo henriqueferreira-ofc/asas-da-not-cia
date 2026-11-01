@@ -5,7 +5,6 @@ import { BreakingNews } from "@/components/news/BreakingNews";
 import { NewsSection } from "@/components/news/NewsSection";
 import { Sidebar } from "@/components/sidebar/Sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { FloatingCommunityButton } from "@/components/common/FloatingCommunityButton";
 import { useRecentNoticias, usePublishedNoticias, useFeaturedNoticias } from "@/hooks/useNoticias";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -154,7 +153,6 @@ const Index = () => {
       </main>
 
       <Footer />
-      <FloatingCommunityButton />
     </div>
   );
 };
