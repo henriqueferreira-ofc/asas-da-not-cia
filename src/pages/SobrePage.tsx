@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, Target, Eye, Users, Award } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { useSiteSettingsMap } from "@/hooks/useSiteSettings";
 import { usePageContent } from "@/hooks/usePageContent";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -24,9 +23,7 @@ const formatRichText = (text: string) => {
 };
 
 const SobrePage = () => {
-  const { data: settings } = useSiteSettingsMap();
   const { data: pageData, isLoading } = usePageContent('sobre');
-  const communityLink = settings?.floating_button_link || '#';
 
   const content = (pageData?.content && typeof pageData.content === 'object' && !Array.isArray(pageData.content))
     ? pageData.content as Record<string, unknown>
@@ -40,8 +37,6 @@ const SobrePage = () => {
   const vision = (content.vision as string) || '';
   const values = Array.isArray(content.values) ? (content.values as string[]) : [];
   const publico = Array.isArray(content.publico) ? (content.publico as string[]) : [];
-  const ctaTitle = (content.ctaTitle as string) || 'Faça Parte da Nossa Comunidade';
-  const ctaText = (content.ctaText as string) || '';
 
   if (isLoading) {
     return (
