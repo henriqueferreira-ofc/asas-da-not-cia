@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown, UserRound, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InlineSearch } from "@/components/common/InlineSearch";
 import { PrefetchLink } from "@/components/common/PrefetchLink";
+import { useSiteSettingsMap } from "@/hooks/useSiteSettings";
+import { getPortalUrl } from "@/lib/portal-link";
 import {
   prefetchSobre,
   prefetchAjudeNos,
@@ -24,6 +25,8 @@ const categories = [
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { data: settingsMap } = useSiteSettingsMap();
+  const portalUrl = getPortalUrl(settingsMap);
 
   const currentDate = new Date().toLocaleDateString("pt-BR", {
     weekday: "long",
@@ -117,6 +120,20 @@ export function Header() {
                 </PrefetchLink>
               </li>
             ))}
+            {portalUrl && (
+              <li className="ml-auto flex items-center">
+                <a
+                  href={portalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-xs font-bold uppercase tracking-wider text-accent-foreground shadow-md shadow-accent/30 ring-1 ring-accent-foreground/15 transition-all duration-200 hover:-translate-y-0.5 hover:brightness-110 hover:shadow-lg"
+                >
+                  <UserRound className="h-4 w-4" />
+                  Portal do Associado
+                  <ExternalLink className="h-3 w-3 opacity-70 transition-transform duration-200 group-hover:translate-x-0.5" />
+                </a>
+              </li>
+            )}
           </ul>
         </div>
       </nav>
@@ -149,6 +166,20 @@ export function Header() {
                   </PrefetchLink>
                 </li>
               ))}
+              {portalUrl && (
+                <li className="pt-2">
+                  <a
+                    href={portalUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 rounded-full bg-accent px-4 py-3 text-sm font-bold uppercase tracking-wide text-accent-foreground shadow-md ring-1 ring-accent-foreground/15"
+                  >
+                    <UserRound className="h-4 w-4" />
+                    Portal do Associado
+                    <ExternalLink className="h-3.5 w-3.5 opacity-70" />
+                  </a>
+                </li>
+              )}
             </ul>
             <div className="mt-4 pt-4 border-t border-primary-foreground/10 space-y-2">
               <PrefetchLink
