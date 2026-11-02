@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Calendar, TrendingUp, FileText, ChevronRight, Flame, Loader2, UserRound, ExternalLink } from "lucide-react";
+import { Calendar, TrendingUp, FileText, ChevronRight, Flame, Loader2, UserRound } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useUpcomingEventos } from "@/hooks/useEventos";
@@ -40,13 +40,11 @@ export function Sidebar() {
           </p>
           <a
             href={portalUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+            target="_top"
             className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-4 py-2.5 text-sm font-bold text-accent-foreground transition-all duration-200 hover:brightness-110"
           >
             <UserRound className="h-4 w-4" />
             Entrar no Portal
-            <ExternalLink className="h-3.5 w-3.5 opacity-70" />
           </a>
         </div>
       )}

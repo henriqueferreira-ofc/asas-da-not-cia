@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Menu, X, ChevronDown, UserRound, ExternalLink } from "lucide-react";
+import { Menu, X, ChevronDown, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InlineSearch } from "@/components/common/InlineSearch";
 import { PrefetchLink } from "@/components/common/PrefetchLink";
@@ -124,13 +124,11 @@ export function Header() {
               <li className="ml-auto flex items-center">
                 <a
                   href={portalUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target="_top"
                   className="group inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-xs font-bold uppercase tracking-wider text-accent-foreground shadow-md shadow-accent/30 ring-1 ring-accent-foreground/15 transition-all duration-200 hover:-translate-y-0.5 hover:brightness-110 hover:shadow-lg"
                 >
                   <UserRound className="h-4 w-4" />
                   Portal do Associado
-                  <ExternalLink className="h-3 w-3 opacity-70 transition-transform duration-200 group-hover:translate-x-0.5" />
                 </a>
               </li>
             )}
@@ -170,13 +168,11 @@ export function Header() {
                 <li className="pt-2">
                   <a
                     href={portalUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    target="_top"
                     className="flex items-center justify-center gap-2 rounded-full bg-accent px-4 py-3 text-sm font-bold uppercase tracking-wide text-accent-foreground shadow-md ring-1 ring-accent-foreground/15"
                   >
                     <UserRound className="h-4 w-4" />
                     Portal do Associado
-                    <ExternalLink className="h-3.5 w-3.5 opacity-70" />
                   </a>
                 </li>
               )}
