@@ -270,6 +270,19 @@ const AdminConfiguracoes = () => {
                   placeholder="https://forms.gle/... ou https://seusite.com/recadastramento"
                 />
               </div>
+
+              <div>
+                <Label htmlFor="portal_associado_url">Link do Portal do Associado</Label>
+                <p className="text-sm text-muted-foreground mb-2">
+                  Este link aparecerá no menu do topo e na barra lateral da página inicial
+                </p>
+                <Input
+                  id="portal_associado_url"
+                  value={formData.portal_associado_url || ''}
+                  onChange={(e) => handleChange('portal_associado_url', e.target.value)}
+                  placeholder="https://aafab.com.br/"
+                />
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

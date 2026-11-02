@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
-import { Calendar, TrendingUp, FileText, ChevronRight, Flame, Loader2 } from "lucide-react";
+import { Calendar, TrendingUp, FileText, ChevronRight, Flame, Loader2, UserRound, ExternalLink } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useUpcomingEventos } from "@/hooks/useEventos";
 import { useNoticiasByCategory, useMostViewedNoticias } from "@/hooks/useNoticias";
+import { useSiteSettingsMap } from "@/hooks/useSiteSettings";
+import { getPortalUrl } from "@/lib/portal-link";
 
 // Format view count for display
 const formatViewCount = (count: number): string => {
@@ -18,9 +20,37 @@ export function Sidebar() {
   const { data: eventos, isLoading: isLoadingEventos, error: errorEventos } = useUpcomingEventos(4);
   const { data: comunicados, isLoading: isLoadingComunicados, error: errorComunicados } = useNoticiasByCategory("comunicados");
   const { data: mostViewed, isLoading: isLoadingMostViewed } = useMostViewedNoticias(4);
+  const { data: settingsMap } = useSiteSettingsMap();
+  const portalUrl = getPortalUrl(settingsMap);
 
   return (
     <aside className="space-y-6">
+      {/* Portal do Associado */}
+      {portalUrl && (
+        <div className="overflow-hidden rounded-xl border border-accent/30 bg-gradient-to-br from-primary to-primary/85 p-5 shadow-lg">
+          <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-primary-foreground/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-accent">
+            <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+            Exclusivo
+          </div>
+          <h3 className="font-serif text-lg font-bold text-primary-foreground">
+            Portal do Associado
+          </h3>
+          <p className="mt-1 text-sm leading-snug text-primary-foreground/80">
+            Acompanhe comunicados, mensalidades e o atendimento da AAFAB em um só lugar.
+          </p>
+          <a
+            href={portalUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-4 py-2.5 text-sm font-bold text-accent-foreground transition-all duration-200 hover:brightness-110"
+          >
+            <UserRound className="h-4 w-4" />
+            Entrar no Portal
+            <ExternalLink className="h-3.5 w-3.5 opacity-70" />
+          </a>
+        </div>
+      )}
+
       {/* Events */}
       <div className="bg-card rounded-xl border border-border p-5 shadow-sm">
         <div className="flex items-center gap-2 mb-4 pb-3 border-b border-border">
