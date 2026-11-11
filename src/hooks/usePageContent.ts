@@ -51,16 +51,18 @@ export function useUpdatePageContent() {
     mutationFn: async ({
       slug,
       content,
+      pageTitle,
     }: {
       slug: string;
       content: Record<string, unknown>;
+      pageTitle?: string;
     }) => {
       const { data, error } = await supabase
         .from("page_contents")
         .upsert({
           page_slug: slug,
           content: content as unknown as Json,
-          page_title: "CESD - Memorial Digital" // Default title for new ones
+          page_title: pageTitle || slug
         }, { onConflict: 'page_slug' })
         .select()
         .single();

@@ -1,0 +1,2 @@
+# Architecture rules
+- Store donation options as an ordered array in the existing page content JSON, with a shared legacy-field reader and validator; this keeps admin and public values consistent without a schema change.

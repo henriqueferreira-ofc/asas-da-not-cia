@@ -1,3 +1,4 @@
+import { getDonationOptions, isDonationLinkValid } from "@/lib/donations";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, BookOpen, Heart, Gift } from "lucide-react";
@@ -39,11 +40,7 @@ const AjudeNosPage = () => {
   const pixBeneficiary = (c.pixBeneficiary as string) || "Henrique Cesar Araujo Fer";
   const impactTitle = (c.impactTitle as string) || "Como sua ajuda é utilizada";
 
-  const donationValues = [
-    { value: (c.donationValue1 as string) || "19,90", pixCode: (c.donationPixCode1 as string) || "" },
-    { value: (c.donationValue2 as string) || "29,90", pixCode: (c.donationPixCode2 as string) || "" },
-    { value: (c.donationValue3 as string) || "49,90", pixCode: (c.donationPixCode3 as string) || "" },
-  ].filter(d => d.value);
+  const donationValues = getDonationOptions(c).filter(option => option.value.trim());
 
   const impactItems = [
     { title: (c.impact1Title as string) || "Conteúdo de Qualidade", description: (c.impact1Description as string) || "Produção de artigos, análises e materiais educativos sobre defesa nacional" },
@@ -59,7 +56,15 @@ const AjudeNosPage = () => {
   const impactBgs = ["bg-primary/10", "bg-accent/10", "bg-green-500/10"];
 
   // Handlers
-  const handleDonation = (value: string, pixCode: string) => {
+  const handleDonation = (value: string, pixCode: string, link: string) => {
+    if (link.trim()) {
+      if (!isDonationLinkValid(link.trim())) {
+        toast.error("Link de pagamento inválido. Entre em contato com a AAFAB.");
+        return;
+      }
+      window.open(link.trim(), "_blank", "noopener,noreferrer");
+      return;
+    }
     setSelectedValue(value);
     setSelectedItem("Doação");
     setSelectedPixCode(pixCode);

@@ -1,3 +1,5 @@
+import { getDonationOptions, validateDonationOptions } from '@/lib/donations';
+import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Save, Loader2 } from 'lucide-react';
@@ -41,7 +43,20 @@ const AdminPaginaForm = () => {
       cleanContent.publico = (cleanContent.publico as string[]).filter(v => typeof v === 'string' && v.trim());
     }
 
-    updateMutation.mutate({ slug, content: cleanContent });
+    if (slug === 'ajude-nos') {
+      const options = getDonationOptions(cleanContent);
+      const error = validateDonationOptions(options);
+      if (error) {
+        toast.error(error);
+        return;
+      }
+      cleanContent.donationOptions = options.map(option => ({
+        value: option.value.trim().replace('.', ','),
+        link: option.link.trim(),
+        pixCode: option.pixCode.trim(),
+      }));
+    }
+    updateMutation.mutate({ slug, content: cleanContent, pageTitle: pageData?.page_title });
   };
 
   const renderForm = () => {

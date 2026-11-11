@@ -1,3 +1,6 @@
+import { Plus, Trash2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { getDonationOptions, type DonationOption } from '@/lib/donations';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
@@ -8,7 +11,12 @@ interface AjudeNosFormFieldsProps {
     onChange: (content: Record<string, unknown>) => void;
 }
 
-export const AjudeNosFormFields = ({ content, onChange }: AjudeNosFormFieldsProps) => (
+export const AjudeNosFormFields = ({ content, onChange }: AjudeNosFormFieldsProps) => {
+    const options = getDonationOptions(content);
+    const updateOptions = (donationOptions: DonationOption[]) => onChange({ ...content, donationOptions });
+    const updateOption = (index: number, field: keyof DonationOption, value: string) =>
+        updateOptions(options.map((option, position) => position === index ? { ...option, [field]: value } : option));
+    return (
     <div className="space-y-6">
         <Card>
             <CardHeader>
@@ -65,47 +73,33 @@ export const AjudeNosFormFields = ({ content, onChange }: AjudeNosFormFieldsProp
                     <Input id="pixBeneficiary" value={(content.pixBeneficiary as string) || ''} onChange={(e) => onChange({ ...content, pixBeneficiary: e.target.value })} />
                 </div>
 
-                <div className="border-t pt-4 space-y-4">
-                    <p className="font-medium text-sm">Valor 1</p>
-                    <div className="grid grid-cols-2 gap-4">
+                {options.map((option, index) => (
+                    <div key={index} className="border-t pt-4 space-y-4">
+                        <div className="flex items-center justify-between gap-4">
+                            <p className="font-medium text-sm">Doação {index + 1}</p>
+                            <Button type="button" variant="ghost" size="icon" title={`Remover doação ${index + 1}`} aria-label={`Remover doação ${index + 1}`} onClick={() => updateOptions(options.filter((_, position) => position !== index))}>
+                                <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <Label htmlFor={`donation-value-${index}`}>Valor (R$)</Label>
+                                <Input id={`donation-value-${index}`} inputMode="decimal" placeholder="19,90" value={option.value} onChange={e => updateOption(index, 'value', e.target.value)} />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor={`donation-link-${index}`}>Link de pagamento</Label>
+                                <Input id={`donation-link-${index}`} type="url" placeholder="https://" value={option.link} onChange={e => updateOption(index, 'link', e.target.value)} />
+                            </div>
+                        </div>
                         <div className="space-y-2">
-                            <Label>Valor (ex: 19,90)</Label>
-                            <Input value={(content.donationValue1 as string) || ''} onChange={(e) => onChange({ ...content, donationValue1: e.target.value })} />
+                            <Label htmlFor={`donation-pix-${index}`}>Código PIX Copia e Cola (opcional quando há link)</Label>
+                            <Textarea id={`donation-pix-${index}`} rows={2} value={option.pixCode} onChange={e => updateOption(index, 'pixCode', e.target.value)} />
                         </div>
                     </div>
-                    <div className="space-y-2">
-                        <Label>Código PIX Copia e Cola</Label>
-                        <Textarea rows={2} value={(content.donationPixCode1 as string) || ''} onChange={(e) => onChange({ ...content, donationPixCode1: e.target.value })} />
-                    </div>
-                </div>
-
-                <div className="border-t pt-4 space-y-4">
-                    <p className="font-medium text-sm">Valor 2</p>
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                            <Label>Valor (ex: 29,90)</Label>
-                            <Input value={(content.donationValue2 as string) || ''} onChange={(e) => onChange({ ...content, donationValue2: e.target.value })} />
-                        </div>
-                    </div>
-                    <div className="space-y-2">
-                        <Label>Código PIX Copia e Cola</Label>
-                        <Textarea rows={2} value={(content.donationPixCode2 as string) || ''} onChange={(e) => onChange({ ...content, donationPixCode2: e.target.value })} />
-                    </div>
-                </div>
-
-                <div className="border-t pt-4 space-y-4">
-                    <p className="font-medium text-sm">Valor 3</p>
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                            <Label>Valor (ex: 49,90)</Label>
-                            <Input value={(content.donationValue3 as string) || ''} onChange={(e) => onChange({ ...content, donationValue3: e.target.value })} />
-                        </div>
-                    </div>
-                    <div className="space-y-2">
-                        <Label>Código PIX Copia e Cola</Label>
-                        <Textarea rows={2} value={(content.donationPixCode3 as string) || ''} onChange={(e) => onChange({ ...content, donationPixCode3: e.target.value })} />
-                    </div>
-                </div>
+                ))}
+                <Button type="button" variant="outline" onClick={() => updateOptions([...options, { value: '', link: '', pixCode: '' }])}>
+                    <Plus className="h-4 w-4" /> Adicionar valor
+                </Button>
             </CardContent>
         </Card>
 
@@ -154,4 +148,5 @@ export const AjudeNosFormFields = ({ content, onChange }: AjudeNosFormFieldsProp
             </CardContent>
         </Card>
     </div>
-);
+    );
+};

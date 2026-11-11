@@ -1,16 +1,14 @@
 import { Gift } from "lucide-react";
 
-interface DonationValue {
-    value: string;
-    pixCode: string;
-}
+import { Button } from "@/components/ui/button";
+import type { DonationOption } from "@/lib/donations";
 
 interface DonationSectionProps {
     title: string;
     description: string;
     footer: string;
-    values: DonationValue[];
-    onDonate: (value: string, pixCode: string) => void;
+    values: DonationOption[];
+    onDonate: (value: string, pixCode: string, link: string) => void;
 }
 
 export function DonationSection({
@@ -36,16 +34,17 @@ export function DonationSection({
                 </div>
 
                 <div className="flex flex-wrap justify-center gap-4 mb-8">
-                    {values.map((donation) => (
-                        <button
-                            key={donation.value}
-                            onClick={() => onDonate(donation.value, donation.pixCode)}
-                            className="group relative px-8 py-4 bg-card border-2 border-accent/30 rounded-xl hover:border-accent hover:bg-accent/5 transition-all hover:shadow-lg hover:-translate-y-1"
+                    {values.map((donation, index) => (
+                        <Button
+                            variant="outline"
+                            key={index}
+                            onClick={() => onDonate(donation.value, donation.pixCode, donation.link)}
+                            className="group relative h-auto min-h-16 max-w-full whitespace-normal break-words px-8 py-4 bg-card border-2 border-accent/30 rounded-xl hover:border-accent hover:bg-accent/5 transition-all hover:shadow-lg hover:-translate-y-1"
                         >
                             <span className="text-2xl font-bold text-headline group-hover:text-accent transition-colors">
                                 R$ {donation.value}
                             </span>
-                        </button>
+                        </Button>
                     ))}
                 </div>
 
