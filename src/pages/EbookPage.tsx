@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEbook } from "@/hooks/useEbooks";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { openEbookCheckout } from "@/lib/ebook-checkout";
 import { PrefetchLink } from "@/components/common/PrefetchLink";
 import { prefetchAjudeNos } from "@/App";
 
@@ -80,20 +80,10 @@ const EbookPage = () => {
     if (!ebook) return;
     setCheckingOut(true);
     try {
-      const successUrl = `${window.location.origin}${import.meta.env.BASE_URL.replace(/\/$/, "")}/pagamento-sucesso?session_id={CHECKOUT_SESSION_ID}`;
-      const cancelUrl = `${window.location.origin}${import.meta.env.BASE_URL.replace(/\/$/, "")}/ebook/${ebook.id}?cancelado=1`;
-
-      const { data, error } = await supabase.functions.invoke("create-payment", {
-        body: {
-          ebook_id: ebook.id,
-          success_url: successUrl,
-          cancel_url: cancelUrl
-        },
-      });
-      if (error || !data?.url) throw new Error(error?.message || "Erro ao criar sessão de pagamento");
-      window.location.href = data.url;
-    } catch (err: any) {
-      toast.error(err.message || "Erro ao iniciar pagamento. Tente novamente.");
+      await openEbookCheckout(ebook.id);
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Erro ao iniciar pagamento. Tente novamente.");
+    } finally {
       setCheckingOut(false);
     }
   };
