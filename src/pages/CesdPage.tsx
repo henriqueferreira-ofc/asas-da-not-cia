@@ -86,13 +86,9 @@ export default function CesdPage() {
             }
             // Check if visitor already rated
             const visitorId = getVisitorId();
-            const { data: existing } = await supabase
-                .from("cesd_ratings" as any)
-                .select("rating")
-                .eq("visitor_id", visitorId)
-                .maybeSingle();
-            if (existing) {
-                setUserRating((existing as any).rating);
+            const { data: existing } = await supabase.rpc("get_cesd_visitor_rating", { _visitor_id: visitorId });
+            if (existing && existing.length > 0) {
+                setUserRating(existing[0].rating);
                 setHasRated(true);
             }
         };
@@ -104,7 +100,12 @@ export default function CesdPage() {
         setIsSubmitting(true);
         setUserRating(star);
         const visitorId = getVisitorId();
-        await supabase.from("cesd_ratings" as any).insert({ rating: star, visitor_id: visitorId } as any);
+        const { error } = await supabase.from("cesd_ratings").insert({ rating: star, visitor_id: visitorId });
+        if (error) {
+            setUserRating(0);
+            setIsSubmitting(false);
+            return;
+        }
         setHasRated(true);
         // Refresh stats
         const { data } = await supabase.rpc("get_cesd_rating_stats");

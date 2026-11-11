@@ -364,6 +364,12 @@ export type Database = {
           total_ratings: number
         }[]
       }
+      get_cesd_visitor_rating: {
+        Args: { _visitor_id: string }
+        Returns: {
+          rating: number
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
